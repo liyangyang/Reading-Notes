@@ -1,829 +1,829 @@
 Thinking in java
-������
-��������
-	ֱ�Ӳ�������	O(n2)
-	������������
-		�۰���������	O(n2)	�Ƚϴ����Ż�
-		2-·��������	O(n2)	�ƶ������Ż�
-		����������	O(n2)	�������ƶ������Ż����Ƚϴ��������Ż�	ע��������������ʱ������ָ���ĵ���
-	ϣ������	���Ӷȷ����ܸ��ӣ���������������ͬ����ͬ
-		˼·��
-			1��	����������¼��������ʱ��ֱ�Ӳ��������㷨���ӶȽϺ�
-			2��	ֱ�Ӳ��������㷨�򵥣���nֵ��СʱЧ��Ҳ�Ƚϸ�
-		������
-			1��	����������ʱ���ؼ�����Ծʽ���ƶ���Ч�ʽϸ�
-			2��	����һ������Ϊ1�Ĳ��������������ѻ�������
-		ע�⣺
-			Ӧʹ���������е�ֵû�г�1֮���Ĺ����ӣ���������һ������ֵ��������1
-��������/��������
-	��������	O(n2)
-	��������	O(nlogn)
-		˼·��
-			ͨ��һ�����򽫴�������¼�ָ��ɶ����������֣�����һ���ּ�¼�Ĺؼ��־�����һ���ּ�¼�Ĺؼ���С�����ɵݹ����������ּ�¼���������������Դﵽ������������
-			������¼������һ�˿������������ٽ����ƶ�
-		ע�⣺
-			����ʼ�����������������򣬿��������˻����������򣬸��Ӷ�ΪO(n2)��Ϊ�Ľ�֮��ͨ����������ȡ�С��ķ�����ѡȡ������¼����L[low], L[(low+high)/2], L[high]������λ���м��Ĺؼ���Ϊ���ᡣ
-			�������ˣ�Ҳ����ʹ���������ڴ��ż�¼�����Ѱ��ؼ��������������´ﵽO(n)��ʱ�临�Ӷȡ�
-			Ϊ�ˣ������޸ġ�һ�λ��֡��㷨��
-				1����ָ��low��1��high��1��ͬʱ�������ܲ�������������������¼��������ʱ���л�����
-				2��ͬʱ���㷨�и������������ͱ����ֱ�ָʾָ��low��high�ڴ��������м��ƶ��Ĺ������Ƿ����й�������¼�Ĳ�������ָ��low�ڴӵͶ����м��ƶ��Ĺ�����û�н��н�����¼�Ĳ�����������Ҫ�ԵͶ��ӱ�����������
-ѡ������
-		˼·��ÿһ����n-i+1(i=1,2,...,n-1)����¼��ѡȡ�ؼ�����С�ļ�¼��Ϊ���������е�i����¼��
-	����ѡ������	O(n2)	��¼�ƶ��������٣��Ƚϴ�������
-		˼·��L[1..n]�ļ��������㷨Ϊ����i��1��n-1������n-1��ѡ������
-	����ѡ������/����������	O(nlogn)
-		˼·�����ս������Ĵ��ݹ�ϵ���Ǿ�ֻ�ܲ����ڷֱ��ھ������������͵�һ�֣���һ��Ϊ��һ�֣��������Ķ����������������������ھ���ѡ���С�
-		ȱ�㣺
-			�����洢�ռ��϶�
-			�͡�����ֵ�����ж����ıȽϣ���̫���ף�
-	������	O(nlogn)	�������ҲΪO(nlogn)
-		ֻ��Ҫһ����¼��С�ĸ����洢�ռ�
-		˼·��
-			1���������н���
-				��һ���������н��ѵĹ��̾���һ������ɸѡ�Ĺ��̡����������п�����һ����ȫ��������������һ�����ն˽ڵ��ǵ�[n/2]��Ԫ�أ��ɴ�ɸѡֻ���ӵ�[n/2]��Ԫ�ؿ�ʼ
-			2�������Ѷ�Ԫ�غ󣬵������¶�
-				�����Ѷ�Ԫ�غ����Զ�������һ��Ԫ������֮����ʱ���ڵ�������������Ϊ�ѣ��������������½��е������ɡ�
-�鲢����	O(nlogn)	���踨���ռ��ʹ��ż�¼������
-	˼·���鲢�ĺ����ǽ��������������ϵ����������ϳ�һ���µ�����������·�鲢�ĺ��Ĳ����ǽ�һά������ǰ�����ڵ������������й鲢Ϊһ���������С�
-	�ص㣺
-		�ȶ�����
-		�㷨���൫ʵ���Բ�������ö�·�鲢�����ڲ�����
-��������
-	���ؼ��ֵ�����
-		����������һ�ֽ������ؼ���������˼���Ե��߼��ؼ��ֽ��������ķ��������������ǽ��������䡱�͡��ռ������ֲ����Ե��߼��ؼ��ֽ���������һ���ڲ����򷽷���
-		������
-			����λ���ȣ�����MSD�������������ָ������������У�Ȼ���Ը������зֱ�����������
-			����λ���ȣ�����LSD�����طֳ������У���ÿ���ؼ��ֶ����������вμ����򣬵�ֻ�����ȶ������㷨��
-��ʽ��������	����������Ϊ�洢�ṹ����ʡ�����洢�ռ䡣
-	m���ؼ��ֽ���m��������ÿ���Ƚ���¼���䵽p���������У������ν����������е�Ԫ���ռ���
+排序：
+插入排序
+	直接插入排序	O(n2)
+	其他插入排序
+		折半插入排序	O(n2)	比较次数优化
+		2-路插入排序	O(n2)	移动次数优化
+		表插入排序	O(n2)	链表，移动次数优化，比较次数不能优化	注意链表重新排序时，链表指针的调整
+	希尔排序	复杂度分析很复杂，依子序列增量不同而不同
+		思路：
+			1。	当待排序记录基本有序时，直接插入排序算法复杂度较好
+			2。	直接插入排序算法简单，当n值很小时效率也比较高
+		结果：
+			1。	子序列排序时，关键字跳跃式的移动，效率较高
+			2。	最后一趟增量为1的插入排序，序列已基本有序
+		注意：
+			应使增量序列中的值没有出1之外的公因子，并且最后一个增量值必须等于1
+快速排序/交换排序
+	起泡排序	O(n2)
+	快速排序	O(nlogn)
+		思路：
+			通过一趟排序将待排序记录分割成独立的两部分，其中一部分记录的关键字均比另一部分记录的关键字小，则可递归对这两部分记录继续进行排序，以达到整个序列有序
+			枢轴记录可以在一趟快速排序完后再进行移动
+		注意：
+			若初始序列有序或基本有序，快速排序退化成起泡排序，复杂度为O(n2)。为改进之，通常依“三者取中”的法则来选取枢轴记录。即L[low], L[(low+high)/2], L[high]三者中位于中间的关键字为枢轴。
+			即便如此，也不能使快速排序在待排记录序列已按关键字有序的情况下达到O(n)的时间复杂度。
+			为此，可以修改“一次划分”算法：
+				1。在指针low加1或high减1的同时进行起跑操作，即在相邻两个记录处于逆序时进行互换；
+				2。同时在算法中辅设两个布尔型变量分别指示指针low和high在从两端向中间移动的过程中是否进行过交换记录的操作，若指针low在从低端向中间移动的过程中没有进行交换记录的操作，则不需要对低端子表进行排序。
+选择排序
+		思路：每一趟在n-i+1(i=1,2,...,n-1)个记录中选取关键字最小的记录作为有序序列中第i个记录。
+	简单选择排序	O(n2)	记录移动次数较少，比较次数不变
+		思路：L[1..n]的简单排序算法为：令i从1至n-1，进行n-1趟选择操作
+	树形选择排序/锦标赛排序	O(nlogn)
+		思路：按照锦标赛的传递关系，亚军只能产生于分别在决赛，半决赛和第一轮（不一定为第一轮，依产生的二叉树决定）比赛中输给冠军的选手中。
+		缺点：
+			辅助存储空间较多
+			和“最大值”进行多余的比较（不太明白）
+	堆排序	O(nlogn)	最坏情况下也为O(nlogn)
+		只需要一个记录大小的辅助存储空间
+		思路：
+			1。无序序列建堆
+				从一个无序序列建堆的过程就是一个反复筛选的过程。若将此序列看成是一个完全二叉树，则最后一个非终端节点是第[n/2]个元素，由此筛选只需从第[n/2]个元素开始
+			2。输出堆顶元素后，调整成新堆
+				输出堆顶元素后，以堆中最后一个元素替代之，此时根节点的左右子树均为堆，则仅需自上至下进行调整即可。
+归并排序	O(nlogn)	所需辅助空间和待排记录数相等
+	思路：归并的含义是将两个或两个以上的有序表组合成一个新的有序表。二路归并的核心操作是将一维数组中前后相邻的两个有序序列归并为一个有序序列。
+	特点：
+		稳定排序
+		算法简洁但实用性差，很少利用二路归并进行内部排序
+基数排序
+	多关键字的排序
+		基数排序是一种借助多关键字排序的思想对单逻辑关键字进行排序的方法。基数排序是借助“分配”和“收集”两种操作对单逻辑关键字进行排序的一种内部排序方法。
+		方法：
+			最高位优先，简称MSD。将序列逐层分割成若干字序列，然后对各子序列分别进行排序。
+			最低位优先，简称LSD。不必分成子序列，对每个关键字都是整个序列参加排序，但只能用稳定排序算法。
+链式基数排序	采用链表作为存储结构，节省辅助存储空间。
+	m个关键字进行m趟排序。每趟先将记录分配到p个链队列中，再依次将各个队列中的元素收集。
 
-�ܽ᣺
-	1����ƽ��ʱ����������˵�������������š�������������������µ�ʱ�����ܲ����鲢�����Ͷ����򡣺������ȽϵĽ����ǣ���n�ϴ�ʱ���鲢�������ţ��������踨���洢�����ࡣ
-	2����ϣ������֮���Ĳ����������������򣬼���ѡ���������ڹؼ��ֻ��������������������£������ѵ����򷽷������˳����������������򷽷������������򡢹鲢��������ʹ�á�
-	3���������ȶ�����˵�������������ȶ�����������ʱ�临�Ӷ�ΪO(n2)�ļ�������Ҳ���ȶ�������һ����˵�������������еıȽ��������������ؼ���֮�����е�����Ϊ�ȶ�������
+总结：
+	1。从平均时间性能上来说，快速排序最优。但快速排序在最坏情况下的时间性能不如归并排序和堆排序。后两个比较的结果是，当n较大时，归并排序更优，但其所需辅助存储量最多。
+	2。除希尔排序之外的插入排序，起跑排序，简单选择排序，在关键字基本有序或有序的情况下，是最佳的排序方法。因此常将他和其他的排序方法，如快速排序、归并排序结合使用。
+	3。从排序稳定性来说，基数排序是稳定排序，所有时间复杂度为O(n2)的简单排序也是稳定排序。一般来说，在排序过程中的比较是在相邻另个关键字之间进行的排序为稳定排序。
 	
 	
 
-����
-	�����Ķ�����
-		1���������ٶ�
-		2���Ľ���������
-	�������̻߳���
-		����������Runnable��
-			Thread.yield()�ĵ����Ƕ��̵߳�������һ�ֽ��飬�������������Ѿ�ִ������������������Ҫ�Ĳ����ˣ��������л��������߳�ִ��һ��ʱ��������ʱ����������ȫ�ǿ�ѡ���Եġ�
-			Runnable��run����
-		Thread��
-			Thread��start�������첽
-			���������ռ���˵��ÿ��Thread��ע�������Լ�������ȷʵ��һ�����������ã����������������˳���run֮ǰ�������ռ����޷���������
-		ʹ��Executor
-			java.util.concurrent.Executor�ڿͻ��˺�ִ������֮���ṩ��һ�����Ӳ㡣
-			Executor.CachedThreadPool()����������������ͬ���̣߳�Ȼ���������վ��߳�ʱֹͣ�������̡߳�
+并发
+	并发的多面性
+		1。更快的速度
+		2。改进代码设计
+	基本的线程机制
+		定义任务（Runnable）
+			Thread.yield()的调用是对线程调度器的一种建议，它在声明”我已经执行完生命周期中最重要的部分了，现在是切换给其他线程执行一段时间的最好时机“。这完全是可选择性的。
+			Runnable。run（）
+		Thread类
+			Thread。start（），异步
+			对于垃圾收集来说，每个Thread都注册了它自己，因此确实有一个对它的引用，而且在它的任务退出其run之前，垃圾收集器无法清除它。
+		使用Executor
+			java.util.concurrent.Executor在客户端和执行任务之间提供了一个间接层。
+			Executor.CachedThreadPool()创建与所需数量相同的线程，然后在它回收旧线程时停止创建新线程。
 			Executor.FixedThreadPool()
 			Executor.SingleThreadPool()
-		�������в�������ֵ
-			��Callable<T>����Runnable����ExecutorService.submit()�ύCallable<T>���񣬷���Future<T>��T��������ֵ���͡�
-		����
-			TimeUnit.MILLISENDS.sleep(10), sleep()���û��׳�InterruptedException��
-		���ȼ�
-			���ȼ��͵��߳̽�����ִ�е�Ƶ�ʽϵ�
+		从任务中产生返回值
+			用Callable<T>代替Runnable，用ExecutorService.submit()提交Callable<T>任务，返回Future<T>，T代表返回值类型。
+		休眠
+			TimeUnit.MILLISENDS.sleep(10), sleep()调用会抛出InterruptedException。
+		优先级
+			优先级低的线程仅仅是执行的频率较低
 			getPriority(), setPriority()
-			volatile��������ȷ�������б������Ż�����Ϊ���������������򣬽�û��ĳЩ������������ִ�й�����û�иı��ı��������ص������У��Ժ�ÿ�δӻ�����ȡ����volatile����ǿ�ȳ���ÿ�ζ�д���������ڴ��ж�д��
-			������̨��ӡҲ�ǿ����ϴ��Ĳ�����������̨��ӡ���ܱ��жϣ������Ļ����߳������¿���̨��ʾ�������ˣ���
-			JDK��10�����ȼ���������������ϵͳ������ӳ���ĺܺá�Ψһ����ֲ�ķ����ǵ��������ȼ���ʱ����ֻʹ��MAX_PRIORITY, MIN_PRIORITY, NOR_PRIORITY���ּ�����
-		�ò�
-			yield()���Ը��̵߳��Ȼ���һ����ʾ�����Ĺ����Ѿ����ɵĲ���ˣ������ñ����߳�ʹ��cpu�ˣ�������ֻ��һ����ʾ��û���κλ��Ʊ�֤���������ɡ�������yield()ʱ����Ҳ���ڽ���������ͬ���ȼ��������߳̿������С�
-		��̨�߳�
-			��ν��̨�̣߳��ǳ������е�ʱ���ں�̨�ṩһ��ͨ�÷������̡߳�
-			�����зǺ�̨�߳̽���ʱ������Ҳ����ֹ�ˣ�ͬʱ��ɱ�������е����зǺ�̨�̡߳���֮��ֻҪ���κηǺ�̨�̻߳������У������Ͳ�����ֹ��
-			��̨�߳��ڲ�ִ��finally�Ӿ��������¾ͻ���ֹ��run()������
-			����ͨ��setDeamon()���߳�����Ϊ��̨�̡߳�
-			����ͨ��ʵ��ThreadFactory��������Executor�������̵߳����ԣ����ȼ�����̨�����ƣ�
-			��̨�̴߳������κ��߳̽��Զ�������Ϊ��̨�̡߳�
-		�����ı���
-			�̳�Thread
-			�ڹ������������߳̿��ܻ��������⣬����ζ����һ�����������ڹ���������֮ǰ��ʼ���У��������ܹ����ʴ��ڲ��ȶ�״̬�Ķ�����
-		����
-		����һ���߳�
-			һ���߳�A��������һ���߳�B�ϵ���join()����Ч�����߳�A�ȴ�һ��ʱ��ֱ���߳�B�����ż���ִ�С�
-			join()Ҳ���Խ���һ����ʱ������ʹ�����ܷ��ء�
-			��join()�ĵ���ʱ���Ա�interrupt()�жϵġ����磬���߳�A���߳�B�ϵ���join()���߳�C��B�ϵ���interrupt()������B�������������Ǳ��жϣ�B��A��ͬʱ��������B������A����ִ��join()�������䡣
-			���߳��ϵ���interrupt()ʱ�����߳�����һ����־����ʾ�̱߳��жϡ����������ж��쳣ʱ���ñ�־��������������catch�����м���ʱ���ñ�־Ϊfalse.
-		��������Ӧ���û�����
-		�߳���
-			sun�������ܹ�ʦJoshua Bloch��һ�仰�����ð��߳��鿴����һ�β��ɹ��ĳ��ԣ���ֻҪ�������ͺ���
-		�����쳣
-			һ���쳣�ӳ�������run()�������������⴫��������̨��
-			Thread.UncaughtExceptionHandler��������ÿ��Thread�����ϸ���һ���쳣��������Thread.UncaughtExceptionHandler.uncaughtException()�����߳���δ�����쳣���ٽ�����ʱ�����á�
-			����ΪThread����һ��Ĭ�ϵ�δ�����쳣������Thread.setDefaultUncaughtExceptionHandler()������������ֻ���ڲ������߳�ר�е�δ�����쳣�������������²Żᱻ���á�ϵͳ�������̵߳�ר�а汾������û�з��֣��������߳����Ƿ�����ר�е�uncaughtException()����������Ҳû�У��ٵ���defaultUncaughtExceptionHandler��
-	����������Դ
-		����ȷ�ķ�����Դ
-		����������Դ����
-			������(mutex)
-			���������Ա�һ���������λ��ã��и�������
-			����ÿ���࣬Ҳ��һ����(��Ϊ����class������һ����)������synchronized static���������ķ�Χ�ڷ�ֹ��static���ݵĲ������ʡ�
-			ÿ�������ٽ繲����Դ�ķ��������뱻ͬ����
-		ʹ����ʾ��Lock����
+			volatile变量可以确保不进行编译器优化。因为编译器会分析程序，将没有某些变量，如程序执行过程中没有改变的变量，加载到缓存中，以后每次从缓存中取。而volatile变量强迫程序每次读写操作都从内存中读写。
+			向控制台打印也是开销较大的操作，但控制台打印不能被中断（否则的话多线程情况下控制台显示就乱套了）。
+			JDK有10个优先级，但与多数操作系统都不能映射的很好。唯一可移植的方法是当调整优先级的时候，只使用MAX_PRIORITY, MIN_PRIORITY, NOR_PRIORITY三种级别。
+		让步
+			yield()可以给线程调度机制一个暗示：你的工作已经完成的差不多了，可以让别的线程使用cpu了，不过这只是一个暗示，没有任何机制保证它将被采纳。当调用yield()时，你也是在建议具有相同优先级的其他线程可以运行。
+		后台线程
+			所谓后台线程，是程序运行的时候在后台提供一种通用服务的线程。
+			当所有非后台线程结束时，程序也就终止了，同时会杀死进程中的所有非后台线程。反之，只要有任何非后台线程还在运行，程序就不会终止。
+			后台线程在不执行finally子句的情况下就会终止其run()方法。
+			可以通过setDeamon()将线程设置为后台线程。
+			可以通过实现ThreadFactory来定制有Executor创建的线程的属性（优先级，后台，名称）
+			后台线程创建的任何线程将自动被设置为后台线程。
+		编码的变体
+			继承Thread
+			在构造器中启动线程可能会很有问题，这意味着另一个任务可能在构造器结束之前开始运行，该任务能够访问处于不稳定状态的对象。
+		术语
+		加入一个线程
+			一个线程A可以在另一个线程B上调用join()，其效果是线程A等待一段时间直到线程B结束才继续执行。
+			join()也可以接受一个超时参数，使其总能返回。
+			对join()的调用时可以被interrupt()中断的。比如，在线程A在线程B上调用join()，线程C在B上调用interrupt()。不论B是正常结束还是被中断，B和A都同时结束，即B结束，A继续执行join()后的语句。
+			在线程上调用interrupt()时将给线程设置一个标志，表示线程被中断。当捕获该中断异常时，该标志被清除。因此在catch方法中检测时，该标志为false.
+		创建有响应的用户界面
+		线程组
+			sun的软件架构师Joshua Bloch有一句话：最好把线程组看成是一次不成功的尝试，你只要忽略它就好了
+		捕获异常
+			一旦异常逃出任务的run()方法，它就向外传播到控制台。
+			Thread.UncaughtExceptionHandler允许你在每个Thread对象上附着一个异常处理器。Thread.UncaughtExceptionHandler.uncaughtException()会在线程因未捕获异常而临近死亡时被调用。
+			可以为Thread设置一个默认的未捕获异常处理器Thread.setDefaultUncaughtExceptionHandler()，这个处理器只有在不存在线程专有的未捕获异常处理器的情况下才会被调用。系统会检查线程的专有版本，如果没有发现，则检查线程组是否有其专有的uncaughtException()方法，如果也没有，再调用defaultUncaughtExceptionHandler。
+	共享受限资源
+		不正确的访问资源
+		解决共享资源竞争
+			互斥量(mutex)
+			对象锁可以被一个任务多次获得，有个计数器
+			针对每个类，也有一个锁(作为类的class对象的一部分)，所以synchronized static可以在类的范围内防止对static数据的并发访问。
+			每个访问临界共享资源的方法都必须被同步。
+		使用显示的Lock对象
 			java.util.concurrent.locks
 			Lock lock = new ReentrantLock(), lock.lock(), lock.unlock().
-			��ʽ��Lock�����ڼ������ͷ������棬�������ڽ���synchronized����˵������������ϸ���ȵĿ�������
-		ԭ�������ױ���
-			����ȷ����ʶ��ԭ���Բ�������Ҫ����ͬ�����ơ����������Ա�д�����ִ�΢�������ĸ�����jvm����ô�����ʸ�ȥ�����Ƿ����Ա���ͬ����
-			ԭ���Կ���Ӧ������long��double֮�������л��������ϵļ򵥲������ڶ���long��doubleʱ������ʹ��volatile�ؼ��֣��Ϳ��Ա�֤ԭ���ԡ�
-			volatile�ؼ��ֱ�֤��Ӧ���еĿ����ԡ�
-			����һ������ֵ��������֮ǰ��ֵʱ������������volatile���޷������ˡ�
-			����ĳ������ֵ�ܵ���������ֵ�����ƣ���Range����low��high����volatile���޷������ˡ�
-			���޷���д��������ԭ���Ե�c++��ƽ̨���룬��Ϊc++û����java����һ�µ��ڴ�ģ�͡�
-		ԭ����
-			AtomicInteger��
-		�ٽ���
+			显式的Lock对象在加锁和释放锁方面，相对于内建的synchronized锁来说，赋予了你更细粒度的控制力。
+		原子性与易变性
+			不正确的认识：原子性操作不需要进行同步控制。如果你可以编写用于现代微处理器的高性能jvm，那么就有资格去考虑是否可以避免同步。
+			原子性可以应用与除long和double之外的所有基本类型上的简单操作。在定义long和double时，如果使用volatile关键字，就可以保证原子性。
+			volatile关键字保证了应用中的可视性。
+			如果一个域的值依赖于它之前的值时（如递增），volatile就无法工作了。
+			如果某个域的值受到其他域的值得限制（如Range类的low和high），volatile就无法工作了。
+			你无法编写出依赖于原子性的c++跨平台代码，因为c++没有像java那样一致的内存模型。
+		原子类
+			AtomicInteger等
+		临界区
 			synchronized(syncObject){}
-			synchronized�ؼ��ֲ����ڷ�������ǩ����һ���֣����Կ����ڸ��Ƿ�����ʱ������ȥ��
-		������������ͬ��
-		�̱߳��ش洢
+			synchronized关键字不属于方法特征签名的一部分，所以可以在覆盖方法的时候加上去。
+		在其它对象上同步
+		线程本地存储
 			java.lang.ThreadLocal
-	�ս�����
-		װ���Ի�԰
-			ExecutorService.awaitTermination()�ȴ�ÿ�������������������������ڳ�ʱʱ�䵽��֮ǰȫ���������򷵻�true�����򷵻�false��
-		������ʱ�ս�
-			�߳�״̬���½�����ʱ���Ѿ������˱�����ϵͳ��Դ����ִ���˳�ʼ����������������������
-			�߳̽�������״̬�ļ���ԭ����
+	终结任务
+		装饰性花园
+			ExecutorService.awaitTermination()等待每个任务结束，如果所有任务在超时时间到达之前全部结束，则返回true，否则返回false。
+		在阻塞时终结
+			线程状态：新建（此时它已经分配了必须的系统资源，并执行了初始化），就绪，阻塞，死亡
+			线程进入阻塞状态的几个原因；
 				sleep
 				wait(), notify(), notifyAll(), signal(), signalAll()
-				�ȴ���������
-				�ȴ�������
-			������������״̬���������㲻�ܵȴ��䵽�������п��Լ�����״ֵ̬��ĳһ�㣬��������������������ֹ����ô���ͱ���ǿ�����������˳�����״̬��
-		�ж�
-			Thread��interrupt����������ֹ�����ķ���������һ���߳��Ѿ�������������ͼִ��һ��������������ô���������̵߳��ж�״̬���׳�һ��InterruptedException���������쳣�����������õ���Thread.interrupted()ʱ�����̵߳��ж�״̬����λ��
-			Executor.shutdownNow()������interrupt���������������̡߳�����Ҫ��ֹExecutor�����ĵ����̣߳�������submit�ύ��������Future<T>.cancel(boolean mayInterruptIfRunning)���������ж�ĳ���ض�������
-			sleep()Ϊ���ж�������I/O��synchronizedΪ�����ж����������˴�����������I/O���ǳ��Ե���synchronized������������ҪInterruptedException��������I/O���������жϣ�����ζ��I/O����������ס���̳߳�����Ǳ�ڿ��ܡ�
-			�������������и����Ա�׾����֮��Ч�ķ��������ر����������Ϸ��������ĵײ���Դ����Socket.close(), System.in.close()��һ���ײ���Դ���رգ����񽫽�������������Socket.close()�����ж�״̬����System.in.close()���ᡣ
-			nio�ṩ�˸����Ի���I/O�жϣ���������nioͨ�����Զ�����Ӧ�жϡ�
-			ֻҪ�����Բ��ɱ��жϵ���ʽ����ס������Ǳ�ڵ���ס�����Ŀ��ܡ�
-			Java SE5����������������һ�������ԣ�����ReentrantLock���������߳̾߱����Ա��жϵ�������������synchronized�������ٽ������������߳���ȫ��ͬ��
-		�����ж�
-			�������߳��ϵ���interruptʱ���жϷ�����Ψһʱ����������Ҫ���뵽����״̬�л��Ѿ������������ڲ�ʱ������һ���߳��ϵ���interrupt()ʱ�����������̵��¸��߳��׳�InterruptedException��ֻ�е�����ͼ����һ�������жϣ�����������ʱ�����׳�InterruptedException�쳣��
-			���Ե���Thread.interrupted()�������ж�״̬���������Է����ж�״̬�����ҿ��������ж�״̬��
-			����ͨ��InterruptedException��Thread.interrupted()�������ж�֪ͨ��
-			��ͨ��InterruptedException�ж��뿪�߳�ʱ��������Դ�Ǻ��б�Ҫ�ģ�һ��ͨ��try-catch-finally���䣬��finally��ȷ����Դ�������Ǳ����á�
-	�߳�֮����Э��
-		wait()��notifyAll()
-			����Object��
-			����sleep��yieldʱ������û�б��ͷţ�����waitʱ�������ͷ�
-			ֻ����synchronized�������ٽ����е���wait()��notify()��notifyAll()����Ϊֻ�е�ǰӵ�ж��������̲߳��ܵ�����Щ������������ǰ�̲߳����ж�������������3���������׳�IllegalMonitorStateException�쳣��
-			���÷�������whileѭ���м�������Ȥ�������Ƿ����㣬��Ϊ�п����ж����̵߳ȴ�ͬһ��Դ����ĳһ�̼߳���ʱ������Դ�Ѿ�����һ�߳����ĵ�������ֻ���ٴ�wait().
-			wait(), notify(), notifyAll()�������������ϵ��á���ͬ������Ϊthis���ٽ���Ϊͬ��������
-			ʹ��wait()��notify()����Э������ʱ�����ܳ����ź���ȱʧ���Ӷ��п��ܵ���������������������Ԥ�����������ж�����(someCondition)�ϲ���������
-			�磺while(someCondition){ synchronized(monitorObject){monitorObject.wait()}}��synchronized(monitorObject){while(someCondition){monitorObject.wait()}}
-		notify()��notifyAll()
-			ʹ��notify()����ʹ��notifyAll()��һ���Ż���
-		�����ߺ�������
-			������Lock.lock(), Condition.await(), Condition.signal(), Condition.signalAll()����synchronized, Object.wait(), Object.notify(), Object.notifyAll().
-		������-������������
+				等待输入输出
+				等待获得锁
+			如果对于阻塞状态的任务，你不能等待其到达代码中可以检查其状态值的某一点，因而决定让它主动地终止，那么你就必须强制这个任务退出阻塞状态。
+		中断
+			Thread的interrupt方法可以终止阻塞的方法。如果一个线程已经被阻塞，或试图执行一个阻塞操作，那么设置这个线程的中断状态将抛出一个InterruptedException。当这个异常被捕获或调用的是Thread.interrupted()时，该线程的中断状态被复位。
+			Executor.shutdownNow()将发送interrupt给所有它启动的线程。如果要终止Executor启动的单个线程，可以用submit提交任务，在Future<T>.cancel(boolean mayInterruptIfRunning)可以用来中断某个特定任务。
+			sleep()为可中断阻塞，I/O和synchronized为不可中断阻塞。因此代码中无论是I/O还是尝试调用synchronized方法，都不需要InterruptedException处理器。I/O操作不可中断，这意味着I/O操作具有锁住多线程程序的潜在可能。
+			解决这个问题有个略显笨拙但行之有效的方法，即关闭任务在其上发生阻塞的底层资源。如Socket.close(), System.in.close()，一旦底层资源被关闭，任务将解除阻塞。另外Socket.close()设置中断状态，但System.in.close()不会。
+			nio提供了更人性化的I/O中断，被阻塞的nio通道会自动地响应中断。
+			只要任务以不可被中断的形式被锁住，都有潜在的锁住程序的可能。
+			Java SE5并发类库中增加了一个新特性，即在ReentrantLock上阻塞的线程具备可以被中断的能力。这与在synchronized方法或临界区上阻塞的线程完全不同。
+		检查中断
+			当你在线程上调用interrupt时，中断发生的唯一时刻是在任务要进入到阻塞状态中或已经在阻塞操作内部时。当在一个线程上调用interrupt()时，并不能立刻导致该线程抛出InterruptedException，只有当其试图进入一个（可中断）的阻塞操作时，才抛出InterruptedException异常。
+			可以调用Thread.interrupted()来检测中断状态，不仅可以返回中断状态，而且可以清楚中断状态。
+			可以通过InterruptedException和Thread.interrupted()来获得中断通知。
+			当通过InterruptedException中断离开线程时，清理资源是很有必要的，一般通过try-catch-finally语句，在finally中确保资源清理总是被调用。
+	线程之间的协作
+		wait()与notifyAll()
+			来自Object类
+			调用sleep和yield时，锁并没有被释放；调用wait时，锁被释放
+			只能在synchronized方法或临界区中调用wait()，notify()和notifyAll()，因为只有当前拥有对象锁的线程才能调用这些方法。如果当前线程不具有对象锁，调用这3个方法将抛出IllegalMonitorStateException异常。
+			惯用方法是在while循环中检查感兴趣的条件是否满足，因为有可能有多个线程等待同一资源，当某一线程检测时，该资源已经被另一线程消耗掉，它就只能再次wait().
+			wait(), notify(), notifyAll()必须在锁对象上调用。即同步方法为this，临界区为同步对象。
+			使用wait()和notify()进行协作控制时，可能出现信号量缺失，从而有可能导致死锁。解决方法就是预防在阻塞的判断条件(someCondition)上产生竞争。
+			如：while(someCondition){ synchronized(monitorObject){monitorObject.wait()}}与synchronized(monitorObject){while(someCondition){monitorObject.wait()}}
+		notify()与notifyAll()
+			使用notify()而不使用notifyAll()是一种优化。
+		生产者和消费者
+			可以用Lock.lock(), Condition.await(), Condition.signal(), Condition.signalAll()代替synchronized, Object.wait(), Object.notify(), Object.notifyAll().
+		生产者-消费者与队列
 			BlockingQueue
-		������ʹ�ùܵ�������������
-			PipedWriter��PipedReader
-			PipedReader����ͨI/O����Ҫ���������ڣ�PipedReader.read()�ǿ��жϵģ�System.in.read()�ǲ����жϵġ�
-	����
-	�������еĹ���
+		任务间使用管道进行输入输出
+			PipedWriter，PipedReader
+			PipedReader与普通I/O最重要的区别在于：PipedReader.read()是可中断的，System.in.read()是不可中断的。
+	死锁
+	新类库中的构件
 		CountDownLatch
-			CountDownLatch������Ϊֻ����һ�Σ�����ֵ���ܱ����á�������Ҫ�ܹ����ü���ֵ�İ汾������ʹ��CyclicBarrier��
-			Random.nextInt()���̰߳�ȫ�ġ�
+			CountDownLatch被设计为只触发一次，计数值不能被重置。如果需要能够重置计数值的版本，可以使用CyclicBarrier。
+			Random.nextInt()是线程安全的。
 		CyclicBarrier
 		DelayQueue
-			���򣬶�ͷ�������ӳٵ���ʱ�����
+			有序，队头对象的延迟到期时间最长。
 		PriorityBlockingQueue
 			order by comparable implementation or comparator
 		ScheduledThreadPoolExecutor
-			�����ӳ�һ��ʱ����ִ��ĳ�߳�һ�λ���ָ��Ƶ��ִ��ĳ�߳�
+			可以延迟一定时间后执行某线程一次或按指定频率执行某线程
 		Semaphore
-			�ź���������������ͬʱ������Դ
+			信号量允许多个任务同时访问资源
 		Exchanger
-			Exchanger�����������߳�֮�佻��������һ���߳�ִ��exchange����ʱ������ֱ����һ�߳�ִ����exchange������
-	����
-		���г���Ա����
-		��������
-			SynchronousQueue��һ��û���ڲ��������������У�����ÿ��put�������ȴ�һ��take����֮��Ȼ��
-			ʹ�ö������̼߳�ͨ�ż����ؼ����˲������̵Ĺ��̡��߳�û��ֱ�ӵ��໥���棬���Ǿ��ɶ��л��෢�Ͷ�����
-		�ַ�����
-	���ܵ���
-		�Ƚϸ��໥�⼼��
-		��������
-			Java SE5ͨ��ʹ�ø����ɵļ��������������Ӷ������̰߳�ȫ�����ܡ�
-			������������ͨ�õĲ����ǣ����������޸Ŀ�������ȡ����ͬʱ������ֻҪ����ֻ�ܿ����޸����ɵĽ������ɡ��޸�ʱ���������ݽṹ��ĳ�����ֵ�һ�������ĸ�������ʱ���������ݽṹ�ĸ�������ִ�еģ����������������޸ĵĹ������ǲ����ӵġ�ֻ�е��޸�����ʱ�����޸ĵĽṹ�Ż��Զ����������ݽṹ���н�����֮����ȡ�߾Ϳ��Կ��������޸��ˡ�
-			��CopyOnWriteArrayList�У�д�뽫���´��������ײ������ĸ�������ԭ���齫������ԭ�أ�ʹ�ø��Ƶ������ڱ��޸�ʱ����ȡ�������԰�ȫ��ִ�С����޸�����ʱ��һ��ԭ���ԵĲ������µ����黻�룬ʹ���µĶ�ȡ�������Կ��������µ��޸ġ�CopyOnWriteArrayList�ĺô�֮һ�ǵ�����������ͬʱ�������޸������б�ʱ�������׳�ConcurrentModificationException��
-			ConcurrentHashMap��ConcurrentLinkedQueueʹ�������Ƶļ���������������ֻ�в������ݶ����������������Ա����ƺ��޸ġ�
-			synchronized ArrayList���۶�ȡ�ߺ�д���ߵ������Ƕ��٣������д�����ͬ�����ܡ�CopyOnWriteArrayList��û��д����ʱ���ٶȻ������ࡣ
-		�ֹۼ���
+			Exchanger用于在两个线程之间交换对象。一个线程执行exchange方法时阻塞，直至另一线程执行其exchange方法。
+	仿真
+		银行出纳员仿真
+		饭店仿真
+			SynchronousQueue是一个没有内部容量的阻塞队列，因此每个put都必须等待一个take，反之亦然。
+			使用队列在线程间通信极大地简化了并发编程的过程。线程没有直接的相互干涉，而是经由队列互相发送对象。
+		分发工作
+	性能调优
+		比较各类互斥技术
+		免锁容器
+			Java SE5通过使用更灵巧的技术消除加锁，从而提高线程安全的性能。
+			免锁容器背后通用的策略是：对容器的修改可以与读取操作同时发生，只要读者只能看到修改完成的结果即可。修改时在容器数据结构的某个部分的一个单独的副本（有时是整个数据结构的副本）上执行的，并且这个副本在修改的过程中是不可视的。只有当修改完成时，被修改的结构才会自动的与主数据结构进行交换，之后读取者就可以看到这个修改了。
+			在CopyOnWriteArrayList中，写入将导致创建整个底层数组的副本，而原数组将保留在原地，使得复制的数组在被修改时，读取操作可以安全的执行。当修改完成时，一个原子性的操作把新的数组换入，使得新的读取操作可以看到这个新的修改。CopyOnWriteArrayList的好处之一是当多个迭代器同时遍历和修改这个列表时，不会抛出ConcurrentModificationException。
+			ConcurrentHashMap和ConcurrentLinkedQueue使用了类似的技术，但是容器中只有部分内容而不是整个容器可以被复制和修改。
+			synchronized ArrayList无论读取者和写入者的数量是多少，都具有大致相同的性能。CopyOnWriteArrayList在没有写入者时，速度会快许多。
+		乐观加锁
 		ReadWriteLock
-			ReadWriteLock�������ݽṹ���Բ�Ƶ����д�룬�����ж�������Ҫ������ȡ�������ݽṹ�����������������Ż���ReadWriteLock�Ƿ������߳�������������ȫ��ȷ���ģ���ȡ�������ݱ���/д��Ƶ�ʡ�ʱ���ȡ�
-	�����
-	�ܽ�
-		�̵߳�һ�������ô��������ṩ����������ִ���������л�����Լ100��ָ����������������Ľ����������л���Ҫ��ǧ��ָ�����Ϊһ�����������ڵ������̹߳�����ͬ���ڴ��ռ䣬���������������л�ֻ�Ǹı��˳�����ִ�����к;ֲ������������л������������������л��������ı������ڴ��ռ䡣
+			ReadWriteLock对向数据结构相对不频繁的写入，但是有多个任务要经常读取这个数据结构的这类情况进行了优化。ReadWriteLock是否能提高程序的性能是完全不确定的，它取决于数据被读/写的频率、时间等。
+	活动对象
+	总结
+		线程的一个额外好处是他们提供了轻量级的执行上下文切换（大约100条指令），而不是重量级的进程上下文切换（要上千条指令）。因为一个给定进程内的所有线程共享相同的内存空间，轻量级的上下文切换只是改变了程序的执行序列和局部变量。进程切换（重量级的上下文切换）必须改变所有内存空间。
 		
-ע��
-	ע��ʹ�������ܹ��Խ��ɱ����������Ժ���֤�ĸ�ʽ���洢�йس����Ķ�����Ϣ��
-	Java SE5������3�ֶ�����java.lang�е�ע�⣺@Override, @Deprecated, @SuppressWarnings
-	�����﷨
-		����ע��
-			����@�����⣬ע���Ķ�������һ���յĽӿڡ�
-			��ע����һ�㶼������һЩԪ���Ա�ʾĳЩֵ��ע���е�Ԫ�ؿ����������ӿ��еķ�����Ψһ��������������Ϊ��ָ��Ĭ��ֵ��û��Ԫ�ص�ע����Ϊ����ע�⡣ע��Ԫ����ʹ��ʱ����Ϊ��-ֵ�Ե���ʽ��
-		Ԫע��
-			@Target����ʾע����������ʲô�ط���
-				���ܵ�ElementType����������
-					CONSTRUCTOR��������������
-					FIELD��������
-					LOCAL_VARIABLE���ֲ�����
-					METHOD����������
-					PACKAGE��������
-					PARAMETER����������
-					TYPE���࣬�ӿڣ�����ע�����ͣ���Enum����
-			@Retention����ʾ��Ҫ��ʲô���𱣴���ע����Ϣ��
-				��ѡ��RetentionPolicy����������
-					SOURCE��ע�⽫������������
-					CLASS��ע����class�ļ��п��ã����ᱻVM����
-					RUNTIME��VM����������Ҳ����ע�⣬���˿���ͨ���������ƶ�ȡע������Ϣ��
-			@Documented������ע��������doc�ĵ���
-			@Inherited�����������̳и����е�ע��
-	��дע�⴦����
-		getDeclaredMethods()��getAnnotation()������AnnotatedElement�ӿڣ�Class, Method, Field���඼ʵ���˸ýӿڡ�
-		ע��Ԫ��
-			ע��Ԫ�ؿ��õ��������£�
-				���л�������
+注解
+	注解使得我们能够以将由编译器来测试和验证的格式，存储有关程序的额外信息。
+	Java SE5内置了3种定义在java.lang中的注解：@Override, @Deprecated, @SuppressWarnings
+	基本语法
+		定义注解
+			除了@符号外，注解的定义很像一个空的接口。
+			在注解中一般都会包含一些元素以表示某些值。注解中的元素看起来就像接口中的方法，唯一的区别是你可以为其指定默认值。没有元素的注解称为标记注解。注解元素在使用时表现为名-值对的形式。
+		元注解
+			@Target：表示注解可以用于什么地方。
+				可能的ElementType参数包括：
+					CONSTRUCTOR：构造器的声明
+					FIELD：域声明
+					LOCAL_VARIABLE：局部变量
+					METHOD：方法声明
+					PACKAGE：包声明
+					PARAMETER：参数声明
+					TYPE：类，接口（包括注解类型）或Enum声明
+			@Retention：表示需要在什么级别保存该注解信息。
+				可选的RetentionPolicy参数包括：
+					SOURCE：注解将被编译器丢弃
+					CLASS：注解在class文件中可用，但会被VM丢弃
+					RUNTIME：VM将在运行期也保留注解，因此可以通过反射机制读取注解的信息。
+			@Documented：将此注解包含在doc文档中
+			@Inherited：允许子类继承父类中的注解
+	编写注解处理器
+		getDeclaredMethods()和getAnnotation()都属于AnnotatedElement接口，Class, Method, Field等类都实现了该接口。
+		注解元素
+			注解元素可用的类型如下：
+				所有基本类型
 				Class
 				String
 				enum
-				Annotation��ע��������ΪԪ�ص����ͣ�Ҳ����˵ע������Ƕ�ס�
-				�������͵�����
-		Ĭ��ֵ����
-			Ԫ��Ҫô��Ĭ��ֵ��Ҫô��ʹ��ע�����ṩԪ�ص�ֵ
-			�ǻ������͵�Ԫ�أ���Ĭ��ֵ���ṩ��ֵ������Ϊnull��
-		�����ⲿ�ļ�
-			ע���������������ļ���ʹ��������Ϣ��������JavaԴ�ļ���
-		ע�ⲻ֧�ּ̳�
-		ʵ�ִ�����
-	ʹ��apt����ע��
+				Annotation：注解可以作为元素的类型，也就是说注解可以嵌套。
+				以上类型的数组
+		默认值限制
+			元素要么有默认值，要么在使用注解是提供元素的值
+			非基本类型的元素，其默认值或提供的值都不能为null。
+		生成外部文件
+			注解用来替代描述文件，使得所有信息都包含在Java源文件中
+		注解不支持继承
+		实现处理器
+	使用apt处理注解
 
-ö��		
-	����Enum����
-		����̬����enum
+枚举		
+	基本Enum特性
+		将静态导入enum
 			import static
-		��enum�������·���
-			JavaҪ�������ȶ���enumʵ���������ڶ���enumʵ��֮ǰ�������κ����Ի򷽷�������ʱ�ᱨ����
-			enum�Ĺ�������ʹ������Ϊprivate��Ҳֻ����enum�ڲ�ʹ���乹��enumʵ����һ��enum�Ķ����������������Ͳ���������ʹ�ù������������κ�ʵ���ˡ�
-		����enum�ķ���
-	switch�����е�enum
-		��Ȼһ������������Ҫ��enum����������enumʵ��������case���䲻�����ˡ�
-		������case�����е���return���������ͻᱧԹȱ��default�����ˡ�
-	values������֮��
-		�Զ�����enum���̳���Enum�࣬��Enum���в�û��values()�������������Զ�Ϊ�Զ�����enum������static ��values()��valueOf()�������Զ�����enum�е�valueOf()ֻ��һ��������Enum�е�valueOf()������������
-		���������Զ�����enum����Ϊfinal�࣬�����޷��̳���enum��
-		Class.getEnumConstants()����Ҳ�ܷ����Զ���enumʵ�������顣
-	ʵ�֣����Ǽ̳�
-		���е�enum���̳���Enum�࣬����Javaֻ�ܵ��̳У�����enum�����ټ̳������ࡣ����enumʱ������ʵ��һ���������ӿڡ�
-	����ѡȡ
-		����ʹ�÷���
-	ʹ�ýӿ���֯ö��
-		�����ýӿ�����֯ö�٣��罫ö�ٷ��࣬������ÿ��ö��ʵ����ͬһ���ӿڣ�������������ͬһ�ࡣ
-		enumǶ����һ��enum
-	ʹ��EnumSet������־
-		EnumSet�Ļ�����long��һ��long��64λ����һ��enumʵ��ֻ��Ҫһ��bit��ʾ���Ƿ����ڡ���enumʵ����������64ʱ��EnumSet����Ӧ��չ��
-	ʹ��EnumMap
-		EnumMap��һ��������Map����Ҫ������������ĳ��enum������enum���������ƣ�����EnumMap�ڲ�����������ʵ�֡�
-		��EnumSetһ����enumʵ������ʱ��˳������������EnumMap�е�˳����
-	�������صķ���
-		����Ϊenumʵ����д����������ÿ��enumʵ�����и��Բ�ͬ����Ϊ��Ҫʵ������������Ϊenum����һ��������abstract������Ȼ��Ϊÿ��enumʵ��ʵ�ָ÷�����
-		ÿ��enumʵ��Ҳ���Ը���enum�����еķ�abstract������
-		��������������һ��enumʵ������class���ͣ���Ϊÿ��enumʵ�����Ǹ�enum������һ��static finalʵ��������enumʵ����static�ģ��������޷������ⲿ���ķ�static�����ͷ��������˶����ڲ���enumʵ�����ԣ�����Ϊ��һ�����ڲ��ಢ����ͬ��
-		ʹ��enum��ְ����
-			ְ����(chain of responsibility)����ģʽ������Ա�Զ��ֲ�ͬ��ʽ����һ�����⣬Ȼ��������������һ�𡣵�һ����������ʱ����������������ֱ�����е�ĳ�������������Դ�����������
-		ʹ��enum��״̬��
-	��·����
+		向enum中添加新方法
+			Java要求必须先定义enum实例。如果在定义enum实例之前定义了任何属性或方法，编译时会报错。
+			enum的构造器即使不声明为private，也只能在enum内部使用其构建enum实例。一旦enum的定义结束，编译器就不允许我们使用构造器来创建任何实例了。
+		覆盖enum的方法
+	switch语句中的enum
+		虽然一般情况我们需要用enum类型来修饰enum实例，但在case语句不必如此。
+		如果在case语句中调用return，编译器就会抱怨缺少default语句了。
+	values的神秘之处
+		自定义的enum都继承自Enum类，但Enum类中并没有values()方法。编译器自动为自定义的enum插入了static 的values()和valueOf()方法。自定义的enum中的valueOf()只有一个参数，Enum中的valueOf()有两个参数。
+		编译器将自定义的enum标记为final类，所以无法继承自enum。
+		Class.getEnumConstants()方法也能返回自定义enum实例的数组。
+	实现，而非继承
+		所有的enum都继承自Enum类，由于Java只能单继承，所以enum不能再继承其它类。创建enum时，可以实现一个或多个接口。
+	随机选取
+		可以使用泛型
+	使用接口组织枚举
+		可以用接口来组织枚举，如将枚举分类，但由于每个枚举实现了同一个接口，因此它们仍是同一类。
+		enum嵌套另一个enum
+	使用EnumSet替代标志
+		EnumSet的基础是long，一个long有64位，而一个enum实例只需要一个bit表示其是否存在。当enum实例个数大于64时，EnumSet会相应扩展。
+	使用EnumMap
+		EnumMap是一类特殊的Map，它要求键必须来自某个enum。由于enum自身的限制，所以EnumMap内部可用数组来实现。
+		与EnumSet一样，enum实例定义时的顺序决定了其在EnumMap中的顺序。
+	常量相关的方法
+		可以为enum实例编写方法，这样每个enum实例就有各自不同的行为。要实现这个，可以为enum定义一个或多个abstract方法，然后为每个enum实例实现该方法。
+		每个enum实例也可以覆盖enum定义中的非abstract方法。
+		编译器不允许将一个enum实例当作class类型，因为每个enum实例都是该enum定义的一个static final实例。由于enum实例是static的，所以其无法访问外部类的非static变量和方法，因此对于内部的enum实例而言，其行为与一般的内部类并不相同。
+		使用enum的职责链
+			职责链(chain of responsibility)设计模式：程序员以多种不同方式解决一个问题，然后将它们链接在一起。当一个请求到来时，它遍历整个链，直到链中的某个解决方案可以处理该请求。
+		使用enum的状态机
+	多路并发
 
-Java I/Oϵͳ
-	File��
-		Ŀ¼�б���
+Java I/O系统
+	File类
+		目录列表器
 			FilenameFilter
-			�����ڲ�������ֱ��ʹ��args[0]��˵�����ݸ�main�����Ĳ���������final�ġ�
-		Ŀ¼ʵ�ù���
-		Ŀ¼�ļ����ʹ���
-	����������
-		�������κ��������������ݵ�����Դ�������������������ݵĽ��ն˶�������������ʵ�ʵ�I/O�豸�д������ݵ�ϸ�ڡ�
-		InputStream����
+			匿名内部类可以直接使用args[0]，说明传递给main方法的参数现在是final的。
+		目录实用工具
+		目录的检查和创建
+	输入和输出
+		流代表任何有能力产生数据的数据源对象或有能力接受数据的接收端对象。流屏蔽了实际的I/O设备中处理数据的细节。
+		InputStream类型
 			ByteArrayInputStream
 			StringBufferInputStream
 			FileInputStream
 			PipedInputStream
 			SequenceInputStream
 			FilterInputStream
-		OutputStream����
+		OutputStream类型
 			ByteArrayOutputStream
 			FileOutputStream
 			PipedOutputStream
 			FilterOutputStream
-	�������Ժ����õĽӿ�
-		ͨ��FilterInputStream��InputStream��ȡ����
+	添加属性和有用的接口
+		通过FilterInputStream从InputStream读取数据
 			DateInputStream
 			BufferedInputStream
 			LineNumberInputStream
 			PushbackInputStream
-		ͨ��FilterOutputStream��OutputStreamд������
+		通过FilterOutputStream向OutputStream写入数据
 			DataOutputStream
 			PrintStream
-				PrintStream���ܻ������⣬�����������е�IOException���������Ǳ���ʹ��checkError()���в��Դ���״̬��PrintStreamҲδ��ȫ���ʻ���������ƽ̨�޹صķ�ʽ�������ж�����
+				PrintStream可能会有问题，它捕获了所有的IOException，因此我们必须使用checkError()自行测试错误状态。PrintStream也未完全国际化，不能以平台无关的方式处理换行动作。
 			BufferedOutputStream
-	Reader��Writer
-		InputStream��OutputStream���������ֽ���ʽ��I/O��Reader��Writer���ṩ����Unicode�������ַ���I/O����
-		InputStreamReader���԰�InputStreamת��ΪReader��OutputStreamWriter���԰�OutputStreamת����Writer
-		����Reader��Writer�̳в��νṹ��Ҫ��Ϊ�˹��ʻ����ϵ�I/O�̳в��νṹ������ָInputStream/OutputStream����֧��8λ���ֽ����������ܺܺõĴ���16λ��Unicode�ַ�������Unicode�����ַ����ʻ���Java������charҲ��16λ��Unicode��������Reader��Writer����Ϊ��������I/O�����ж�֧��Unicode��
-		���ݵ���Դ��ȥ��
-			java.util.zip�����������ֽڵģ������������ַ��ġ�
-			Java 1.0 ��								��Ӧ��Java 1.1 ��
-			InputStream								Reader����������InputStreamReader��
-			OutputStream							Writer����������OutputStreamWriter��
+	Reader和Writer
+		InputStream和OutputStream是以面向字节形式的I/O，Reader和Writer则提供兼容Unicode和面向字符的I/O功能
+		InputStreamReader可以把InputStream转换为Reader，OutputStreamWriter可以把OutputStream转换成Writer
+		设计Reader和Writer继承层次结构主要是为了国际化。老的I/O继承层次结构（可能指InputStream/OutputStream）仅支持8位的字节流，并不能很好的处理16位的Unicode字符。由于Unicode用于字符国际化（Java本身的char也是16位的Unicode）。添加Reader和Writer就是为了在所有I/O操作中都支持Unicode。
+		数据的来源和去处
+			java.util.zip类库是面向字节的，而不是面向字符的。
+			Java 1.0 类								相应的Java 1.1 类
+			InputStream								Reader（适配器：InputStreamReader）
+			OutputStream							Writer（适配器：OutputStreamWriter）
 			FileInputStream							FileReader
 			FileOutputStream						FileWriter
-			StringBufferInputStream�������ã�		StringReader
-			����Ӧ����								StringWriter
+			StringBufferInputStream（已弃用）		StringReader
+			无相应的类								StringWriter
 			ByteArrayInputStream					CharArrayReader
 			ByteArrayOutputStream					CharArrayWriter
 			PipedInputStream						PipedReader
 			PipedOutputStream						PipedWriter
-		����������Ϊ
-			��������java 1.0��						��Ӧ��java 1.1��
+		更改流的行为
+			过滤器：java 1.0类						相应的java 1.1类
 			FilterInputStream						FilterReader
-			FilterOutputStream						FilterWriter�������࣬û�����ࣩ
+			FilterOutputStream						FilterWriter（抽象类，没有子类）
 			BufferedInputStream						BufferedReader
 			BufferedOutputStream					BufferedWriter
-			DateInputStream							ʹ��DateInputStream�����˵���Ҫʹ��readLine()ʱ���⣬��ʱӦ��ʹ��BufferedReader��
+			DateInputStream							使用DateInputStream（除了当需要使用readLine()时以外，这时应该使用BufferedReader）
 			PrintStream								PrintWriter
-			LineNumberInputStream�������ã�			LineNumberReader
-			StreamTokenizer							StreamTokenizer��ʹ�ý���Reader�Ĺ�������
+			LineNumberInputStream（已弃用）			LineNumberReader
+			StreamTokenizer							StreamTokenizer（使用接受Reader的构造器）
 			PushbackInputStream						PushbackReader
-			Ϊ�˸����׵Ĺ��ɵ�PrintWriter��PrintWriter�ṩ��һ�����ܽ���Writer�����ܽ���OutputStream�Ĺ�������
-		δ�����仯����
+			为了更容易的过渡到PrintWriter，PrintWriter提供了一个既能接受Writer，又能接受OutputStream的构造器。
+		未发生变化的类
 			DataOutputStream
 			File
 			RandomAccessFile
 			SequenceInputStream
-	���Ҷ������ࣺRandomAccessFile
-		RandomAccessFile�������ɴ�С��֪�ļ�¼���ɵ��ļ������ǿ�����seek()��ָ����һ���ƶ�����һ�����Ӷ���ȡ���޸ļ�¼��
-		RandomAccessFile��һ����ȫ�������࣬���Ĵ������������Ǳ��ط�������InputStream/OutputStream��Reader/Writer�̳в���û�й�ϵ����ʵ��DataInput��DataOutput(DataInputStream��DataOutputStreamҲʵ�����������ӿ�)
-		RandomAccessFile֧����Ѱ����������ֻ�������ļ���BufferedInputStream֧�ֱ�עλ�ã�mark������ֵ�洢��ĳ���򵥱����ڣ��������趨λ�ã�reset����
-	I/O���ĵ���ʹ�÷�ʽ
-		���������ļ�
+	自我独立的类：RandomAccessFile
+		RandomAccessFile适用于由大小已知的记录构成的文件，我们可以用seek()将指针从一处移动到另一处，从而读取或修改记录。
+		RandomAccessFile是一个完全独立的类，它的大多数方法都是本地方法。和InputStream/OutputStream和Reader/Writer继承层次没有关系。仅实现DataInput和DataOutput(DataInputStream和DataOutputStream也实现了这两个接口)
+		RandomAccessFile支持搜寻方法，并且只适用于文件。BufferedInputStream支持标注位置（mark），其值存储与某个简单变量内，和重新设定位置（reset）。
+	I/O流的典型使用方式
+		缓冲输入文件
 			new BufferedReader(new FileReader())
-		���ڴ�����
-			StringReader.read()ÿ�ζ�ȡһ���ַ�����int��ʽ���أ�����Ҫת����char���͡�
-		��ʽ�����ڴ�����
-			DataInputStream.available()�������Բ鿴���ж��ٿɹ���ȡ���ַ��������������������Ƿ���������available()�Ĺ�����ʽ���ܻ�����ȡý�����͵Ĳ�ͬ����ͬ��������˼�ǡ���û�����������������ܶ�ȡ���ֽ������������ļ�������ζ�������ļ��������ڲ�ͬ���͵��������ܾͲ�������������������ʹ�á�
-		�������ļ�����
+		从内存输入
+			StringReader.read()每次读取一个字符，以int形式返回，所以要转换成char类型。
+		格式化的内存输入
+			DataInputStream.available()方法可以查看还有多少可供读取的字符，可以用来检测输入是否结束。但available()的工作方式可能会随读取媒介类型的不同而不同。字面意思是“在没有阻塞的情况下所能读取的字节数”。对于文件，这意味着整个文件。但对于不同类型的流，可能就不是这样，因此需谨慎使用。
+		基本的文件输出
 			PrintWriter(BufferedWriter(FileWriter))
-			PrintWriter()Ҳ�ṩ���������ϵļ򻯵Ŀ��ݷ�ʽ��
-		�洢�ͻָ�����
-			DataOutputStreamд�����ݣ�DataInputStream��ȡ����
-			������ʹ��DataOutputStreamд�ַ�����������DataInputStream�ܹ��ָ�����Ψһ�ɿ�������ʹ��UTF-8���룬��writeUTF()��readUTF()������ʹ�õ��ʺ���java��UTF-8���壬��������Ҫʹ���������Զ�ȡwriteUTF()��д���ַ���ʱ������дһЩ�������롣
-			Ҫ��֤��ȡ�����ܹ��������������Ǳ���֪���������ݵ�ȷ��λ�á�����Ҫôʹ�ù̶���ʽ��Ҫô����������Ϣ�������ļ��С�
-		��д���������ļ�
-			RandomAccessFile������������DataInputStream��DataOutputStream����Ϊ����ʹ������ͬ�Ľӿ�DateInput��DataOutput����
-			ʹ��RandomAccessFile������֪���ļ��Ű棬���ļ���ʽ�ɡ�
-		�ܵ���
-			�ܵ�����������֮����ͨ�š�
-	�ļ���д��ʵ�ù���
-		java.util.Scannerֻ��������ȡ�ļ�������д�롣��������Ҫ�����������������Ե�ɨ��������С���ԡ��ġ�
-		��ȡ�������ļ�
-	��׼IO
-		�ӱ�׼�����ж�ȡ
-			System.out��System.error�����ȱ���װ��PrintStream����System.in��Ȼ��InputStream����Ϊʹ��System.inʱ��һ��ʹ��in.readLine()������Ҫ��System.in��װ��BuferedReader����BufferedReader(InputStreamReader(System.in))
-		��System.outת����PrintWriter
-			PrintWriter��һ�����Խ���OutputStream�Ĺ�������
-		��׼IO�ض���
+			PrintWriter()也提供了上面组合的简化的快捷方式。
+		存储和恢复数据
+			DataOutputStream写出数据，DataInputStream读取数据
+			当我们使用DataOutputStream写字符串，并且让DataInputStream能够恢复它的唯一可靠做法是使用UTF-8编码，即writeUTF()和readUTF()。他们使用的适合于java的UTF-8变体，因此如果要使用其他语言读取writeUTF()所写的字符串时，必须写一些特殊代码。
+			要保证读取方法能够正常工作，我们必须知道流中数据的确切位置。因此要么使用固定格式，要么将额外的信息保存在文件中。
+		读写随机访问文件
+			RandomAccessFile类似于组合了DataInputStream和DataOutputStream（因为他们使用了相同的接口DateInput和DataOutput）。
+			使用RandomAccessFile，必须知道文件排版，即文件格式吧。
+		管道流
+			管道流用于任务之间的通信。
+	文件读写的实用工具
+		java.util.Scanner只能用来读取文件，不能写入。这个类主要是用来创建编程语言的扫描器或“小语言”的。
+		读取二进制文件
+	标准IO
+		从标准输入中读取
+			System.out和System.error已事先被包装成PrintStream，而System.in仍然是InputStream。因为使用System.in时，一般使用in.readLine()，所以要将System.in包装成BuferedReader，即BufferedReader(InputStreamReader(System.in))
+		将System.out转换成PrintWriter
+			PrintWriter有一个可以接受OutputStream的构造器。
+		标准IO重定向
 			System.setIn(InputStream)
 			System.setOut(PrintStream)
 			System.setErr(PrintStream)
-	���̿���
-		java.lang.ProcessBuilder������������ϵͳ�Ľ���
-	��IO
-		�ٶȵ�������������ʹ�õĽṹ���ӽ��ڲ���ϵͳִ��IO�ķ�ʽ��ͨ���ͻ�������ͨ���൱�����ݣ��������ǳ��������ݴ򽻵���ý�顣
-		Ψһֱ����ͨ���򽻵��Ļ�������java.nio.ByteBuffer
-		��IO�����е�FileInputStream��FileOutputStream��RandomAccessFile����д�����Բ���FileChannel����Щ�����ֽڲ�������
-		Reader��Writer�����ַ�ģʽ�಻�����ڲ���ͨ������java.nio.channels.Channels���ṩ��ͨ�÷�����������ͨ���в���Reader��Writer��
-		һ������read����֪FileChannel��ByteBuffer�洢�ֽڣ��ͱ������û������ϵ�flip()�����������ñ��˶�ȡ�ֽڵ�׼�����������Ǵ���ʹ�û�����ִ�н�һ����read()�������ͱ�������clear()��Ϊÿ��read()����׼����flip()��ByteBuffer��Դ���п�����������������Enum��values()�������ɱ��������ӡ�
-		transferTo()��transferFrom()�������ڽ�һ��ͨ������һ��ͨ��ֱ��������
-		ת������
-			ByteBuffer.asCharBuffer()�����������ɵ�����ͨ���ֽڣ�Ϊ�˰���ת�����ַ���
-				1��Ҫô����ByteBuffer��д��ʱ����CharBuffer����ByteBuffer.asCharBuffer().put(String)��������ʱ��ֱ��ByteBuffer.asCharBuffer()
-				2��Ҫô����ByteBuffer��д��ʱ���ÿ�����ʾ�ı�����ʽ���б��룬��ByteBuffer.wrap(String.getBytes("UTF-8"))��������ʱ��ֱ��ByteBuffer.asCharBuffer()
-				3��Ҫô������ʱʹ����Ӧ�Ľ��뷽ʽ���н��룬�� Charset.forName(encoding).decode(ByteBuffer)��
-			java.nio.charset.Charsetʵ���˽����ݱ����ɶ��ֲ�ͬ���͵��ַ����Ĺ��ߡ�
-			ByteBuffer.rewind()���ڷ������ݿ�ʼ���֡�
-		��ȡ��������
-			ByteBuffer�������ķ��䷽ʽ�ǽ��������Զ���Ϊ0��
-			ByteBuffer���������������͵ļ򵥷�����ʹ����asCharBuffer, asShortBuffer, asIntBuffer����ͼ������ͼ�ϵ���put()������ʹ�������еĻ����������͡������ǵ�����short����ʱҪ��������ת����ByteBuffer.asShortBuffer((short)111)
-		��ͼ������
-			��ͼ��������������ͨ��ĳ���ض������������͵���ͼ�鿴���ײ���ByteBuffer��ByteBuffer��Ȼ��ʵ�ʴ洢���ݵĵط���
-			��ͼ��������������һ��һ���������Ķ�ȡ��д��������������
-			ByteBuffer���Ը�λ���ȵ���ʽ�洢���ݵģ���BigEndian����������ͨ��ByteOrder.BIG_ENDIAN��ByteOrder.LITTLE_ENDIAN�����á�ByteBuffer.order(ByteOrder)
-			��ͼ��������array()�����ǿ�ѡ�ģ�����ֻ�ܶ�������֧�ֵĻ��������ø÷��������򣬻��׳�UnsupportedOperationException��
-		�û�������������
-			ByteBuffer�ǽ������ƽ��Ƴ�ͨ����Ψһ��ʽ�����ǿ��Ծ�����ͼ���������������������ƽ��Ƴ�ByteBuffer
-			��������ϸ��
-				����Charset��ByteBuffer�е����ݽ��б��������룺Charset.forName("UTF-8").newEncoder().encode()/newDecoder.decode()
-				Buffer�����ݺͿ��Ը�Ч������Щ���ݵ�4���������ɣ���4�������ǣ�mark(����), position(λ��), limit(����), capacity(����)
-				��Ӧ�ķ�����
-					capacity()						���ػ���������					
-					clear()							���ջ���������position����Ϊ0��limit����Ϊ���������ǿ����ڸ�д������ǰ���ô˷���
-					flip()							��limit����Ϊposition����position����Ϊ0���˷�������׼���ӻ�������ȡ�Ѿ�д��������
-					limit()							����limitֵ
-					limit(int limit)				����limitֵ
-					mark()							��mark��Ϊposition
-					position()						����position
-					position(int pos)				����position
-					remaining()						����(limit - position)
-					hasRemaining()					���н���limit��position֮����Ԫ�أ��򷵻�true
+	进程控制
+		java.lang.ProcessBuilder用来创建操作系统的进程
+	新IO
+		速度的提高来自于所使用的结构更接近于操作系统执行IO的方式：通道和缓冲器。通道相当于数据，缓冲器是程序和数据打交道的媒介。
+		唯一直接与通道打交道的缓冲器是java.nio.ByteBuffer
+		旧IO类库中的FileInputStream、FileOutputStream、RandomAccessFile被改写，用以产生FileChannel。这些都是字节操纵流。
+		Reader和Writer这种字符模式类不能用于产生通道，但java.nio.channels.Channels类提供了通用方法，用以在通道中产生Reader和Writer。
+		一旦调用read来告知FileChannel向ByteBuffer存储字节，就必须调用缓冲器上的flip()，让它做好让别人读取字节的准备。如果我们打算使用缓冲器执行进一步的read()操作，就必须调用clear()来为每个read()做好准备。flip()在ByteBuffer的源码中看不到，可能类似于Enum的values()方法，由编译器添加。
+		transferTo()和transferFrom()方法用于将一个通道和另一个通道直接相连。
+		转换数据
+			ByteBuffer.asCharBuffer()。缓冲器容纳的是普通的字节，为了把它转换成字符：
+				1。要么在往ByteBuffer里写入时就用CharBuffer，如ByteBuffer.asCharBuffer().put(String)，输出的时候直接ByteBuffer.asCharBuffer()
+				2。要么在往ByteBuffer里写入时就用可以显示的编码格式进行编码，如ByteBuffer.wrap(String.getBytes("UTF-8"))，输出的时候直接ByteBuffer.asCharBuffer()
+				3。要么在输出时使用相应的解码方式进行解码，如 Charset.forName(encoding).decode(ByteBuffer)。
+			java.nio.charset.Charset实现了将数据编码成多种不同类型的字符集的工具。
+			ByteBuffer.rewind()用于返回数据开始部分。
+		获取基本类型
+			ByteBuffer缓冲器的分配方式是将其内容自动置为0。
+			ByteBuffer插入基本数据类型的简单方法是使用如asCharBuffer, asShortBuffer, asIntBuffer等视图，在视图上调用put()。这个使用于所有的基本数据类型。例外是当插入short类型时要进行类型转换：ByteBuffer.asShortBuffer((short)111)
+		视图缓冲器
+			视图缓冲器允许我们通过某种特定基本数据类型的视图查看其底层的ByteBuffer。ByteBuffer依然是实际存储数据的地方。
+			视图缓冲器允许我们一次一个或成批的读取或写入基本类型数据
+			ByteBuffer是以高位优先的形式存储数据的，即BigEndian。这个可以通过ByteOrder.BIG_ENDIAN和ByteOrder.LITTLE_ENDIAN来设置。ByteBuffer.order(ByteOrder)
+			视图缓冲器的array()方法是可选的，我们只能对有数组支持的缓冲器调用该方法，否则，会抛出UnsupportedOperationException。
+		用缓冲器操纵数据
+			ByteBuffer是将数据移进移出通道的唯一方式，我们可以经由视图缓冲器将基本类型数据移进移出ByteBuffer
+			缓冲器的细节
+				利用Charset对ByteBuffer中的数据进行编码或解码：Charset.forName("UTF-8").newEncoder().encode()/newDecoder.decode()
+				Buffer由数据和可以高效访问这些数据的4个索引组成，这4个索引是：mark(标记), position(位置), limit(界限), capacity(容量)
+				相应的方法：
+					capacity()						返回缓冲器容量					
+					clear()							清空缓冲区，将position设置为0，limit设置为容量。我们可以在复写缓冲区前调用此方法
+					flip()							将limit设置为position，将position设置为0。此方法用于准备从缓冲区读取已经写入的数据
+					limit()							返回limit值
+					limit(int limit)				设置limit值
+					mark()							将mark置为position
+					position()						返回position
+					position(int pos)				设置position
+					remaining()						返回(limit - position)
+					hasRemaining()					若有介于limit和position之间的元素，则返回true
 				Underlying FileSystem/Network -> FileInputStream, FileOutputStream, RandomAccessFile/Socket, DatagramSocket, ServerSocket -> FileChannel -> ByteBuffer
-		�ڴ�ӳ���ļ�
-			�ڴ�ӳ���ļ��������Ǵ������޸���Щ��Ϊ̫�������ܷ����ڴ����ļ�
-			MappedByteBuffer�̳���ByteBuffer����һ���������͵�ֱ�ӻ����������Ǳ���ָ��ӳ���ļ��ĳ�ʼλ�ú�ӳ�������ĳ��ȣ�����ζ�����ǿ���ӳ��һ�����ļ��Ľ�С�Ĳ��֡�
-			���ܡ��ɡ���I/O������nioʵ�ֺ������������ߣ����ǡ�ӳ���ļ����ʡ��������Ը��������ļӿ��ٶȡ�
-			���ܡ�ӳ�������ƺ�Ҫ�õ�FileInputStream����FileChannel fc = new FileInputStream(new File(String filename)).getChannel(); IntBuffer ib = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size()).asIntBuffer()����ӳ���ļ��е�������������ʹ��RandomAccessFile��
-		�ļ����� 
-			Java���ļ�����ֱ��ӳ�䵽���ز���ϵͳ�ļ�������
-			FileChannel.tryLock()�Ƿ�����ʽ�ģ�һ�����ܻ��������������ء�lock()������ʽ�ģ�����ֱ����������������lock()���߳��жϣ�������lock()��ͨ���رա�release()�����ͷ�����
-			SocketChannel��DatagramChannel, ServerSocketChannel����Ҫ��������Ϊ�����Ǵӵ�����ʵ���̳ж���������ͨ������Ҫ����������֮�乲������socket��
-			���Զ��ļ���һ���ּ�������tryLock(int position, int size, boolean shared)
-			�Զ�ռ���͹�������֧�ֱ����ɵײ�����ϵͳ�ṩ��
-			���ǲ��ܻ�ȡ�������ϵ�����ֻ�ܻ�ȡͨ���ϵ�����
-	ѹ��
-		ѹ����������InputStream/OutputStream�̳в��ε�һ����
-		ѹ����										����
-		CheckedInputStream							GetCheckSum()Ϊ�κ�InputStream����У���ͣ������ǽ�ѹ����
-		CheckedOutputStream							GetCheckSum()Ϊ�κ�OutputStream����У���ͣ�������ѹ����
-		DefalterOutputStream						ѹ�����Ļ���
-		ZipOutputStream								һ��DeflaterOutputStream�����ڽ�����ѹ����zip��ʽ	
-		GZIPOutputStream							һ��DeflaterOutputStream�����ڽ�����ѹ����gzip��ʽ	
-		InflaterInputStream							��ѹ�����Ļ���
-		ZipInputStream								һ��DeflaterInputStream�����ڽ�ѹ��zip��ʽ������
-		GZIPInputStream								һ��DeflaterInputStream�����ڽ�ѹ��gzip��ʽ������	
+		内存映射文件
+			内存映射文件允许我们创建或修改那些因为太大而不能放入内存的文件
+			MappedByteBuffer继承自ByteBuffer，是一种特殊类型的直接缓冲器，我们必须指定映射文件的初始位置和映射区域的长度，这意味着我们可以映射一个大文件的较小的部分。
+			尽管“旧”的I/O流在用nio实现后性能有所提高，但是“映射文件访问”往往可以更加显著的加快速度。
+			尽管“映射读”似乎要用到FileInputStream，如FileChannel fc = new FileInputStream(new File(String filename)).getChannel(); IntBuffer ib = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size()).asIntBuffer()，但映射文件中的所有输出必须使用RandomAccessFile。
+		文件加锁 
+			Java的文件加锁直接映射到本地操作系统的加锁工具
+			FileChannel.tryLock()是非阻塞式的，一旦不能获得锁，立即返回。lock()是阻塞式的，阻塞直到获得锁，或调用lock()的线程中断，或调用lock()的通道关闭。release()方法释放锁。
+			SocketChannel，DatagramChannel, ServerSocketChannel不需要加锁，因为他们是从单进程实体继承而来，我们通常不需要在两个进程之间共享网络socket。
+			可以对文件的一部分加锁，如tryLock(int position, int size, boolean shared)
+			对独占锁和共享锁的支持必须由底层操作系统提供。
+			我们不能获取缓冲器上的锁，只能获取通道上的锁。
+	压缩
+		压缩类是属于InputStream/OutputStream继承层次的一部分
+		压缩类										功能
+		CheckedInputStream							GetCheckSum()为任何InputStream产生校验和（不仅是解压缩）
+		CheckedOutputStream							GetCheckSum()为任何OutputStream产生校验和（不仅是压缩）
+		DefalterOutputStream						压缩类的基类
+		ZipOutputStream								一个DeflaterOutputStream，用于将数据压缩成zip格式	
+		GZIPOutputStream							一个DeflaterOutputStream，用于将数据压缩成gzip格式	
+		InflaterInputStream							解压缩类的基类
+		ZipInputStream								一个DeflaterInputStream，用于解压缩zip格式的数据
+		GZIPInputStream								一个DeflaterInputStream，用于解压缩gzip格式的数据	
 		
-		��GZIP���м���ѹ��
-		��ZIP���ж��ļ�����
-			һ��������checksum���ͣ�Adler32����һЩ����CRC32����һЩ��
-			����ÿһ��Ҫ����ѹ���������ļ�������������putNextEntry()�������䴫��һ��ZipEntry������
-			��ѹ���ļ��и��������ķ�����ʹ��ZipFile������ȡ�ļ�������entries()��������ZipEntries�ļ��ϡ�
-			GZip��Zip����ʹ�ò����������ļ���������ѹ���κζ���������ͨ�����緢�͵����ݡ�
-		Java�����ļ�
-			Jar�ļ�Ҳ�ǿ�ƽ̨�ģ����Ҳ�����ѹ����Ϊ�˰�ȫ�Ŀ��ǣ�Jar�ļ��е�ÿ����Ŀ�����Լ������ֻ�ǩ����
-			һ��jar�ļ���һ��ѹ���ļ����ɣ�ͬʱ����һ��������������Щ�ļ��ġ��ļ��嵥����
-			���ܶ����е�jar�ļ��������Ӻ͸��²�����ֻ�ܴ�ͷ����һ��jar�ļ�
-	�������л�
-		java�Ķ������л��ܹ�����Щʵ�ֵ�Serializable�ӿڵĶ���ת�����ֽ����У����ܹ����Ժ��������ֽ�������ȫ�ָ���ԭ���Ķ�����
-		�������л���Ϊ��֧��javaԶ�̷������ã�RMI��
-		���л����������͵ķ�װ���������������Լ����������Ķ���������class����Ҳ���Ա����л���
-		�������л������ܱ���ĳ�����󣬶�����׷�ٶ����ڰ������������ã���������Щ�������������ơ�
-		ObjectOutputStream.writeObject()��ObjectInputStream.readObject()
+		用GZIP进行简单压缩
+		用ZIP进行多文件保存
+			一共有两种checksum类型：Adler32（快一些）和CRC32（慢一些）
+			对于每一个要加入压缩档案的文件，都必须调用putNextEntry()，并给其传递一个ZipEntry对象。
+			解压缩文件有个更简便的方法是使用ZipFile对象读取文件，它的entries()方法返回ZipEntries的集合。
+			GZip和Zip库的使用并不局限于文件，它可以压缩任何东西，包括通过网络发送的数据。
+		Java档案文件
+			Jar文件也是跨平台的，并且采用了压缩。为了安全的考虑，Jar文件中的每个条目都可以加上数字化签名。
+			一个jar文件由一组压缩文件构成，同时还有一张描述了所有这些文件的“文件清单”。
+			不能对已有的jar文件进行添加和更新操作，只能从头创建一次jar文件
+	对象序列化
+		java的对象序列化能够将那些实现的Serializable接口的对象转换成字节序列，并能够在以后将这个字节序列完全恢复成原来的对象。
+		对象序列化是为了支持java远程方法调用（RMI）
+		所有基本数据类型的封装器、所有容器类以及许多其它的东西，甚至class对象也可以被序列化。
+		对象序列化不仅能保存某个对象，而且能追踪对象内包含的所有引用，并保存那些对象，依次类推。
+		ObjectOutputStream.writeObject()，ObjectInputStream.readObject()
 		
-		Ѱ����
-			�����л�����������������Ҫ�иö�����class�ļ����ſ���ʹ�øö�������Ϊ�����л����õ���ֻ��Object���͵�����
-		���л��Ŀ���
-			Externalizable�ӿڼ̳���Serializable�ӿڣ�����writeExternal()��readExternal()�����л��ͷ����л�ʱ�ᱻ���á�
-			�����л�ʱ�����ö����Ĺ��캯���������������캯����˽�еģ������л�ʱ�ᱨ����
-			����Serializable���󣬶�����ȫ�����洢�Ķ�����λΪ���������죬�������ù�����������һ��Externalizable������������ͨ��Ĭ�Ϲ��������ᱻ���ã������ֶζ���ʱ�ĳ�ʼ������Ȼ������readExternal()��
-			��ֹ���������в��ֱ����л���һ�������ǽ���ʵ��ΪExternalizable������û���κζ��������Զ����л���������writeExternal()�ڲ������貿�ֽ�����ʾ���л�������Serializable���������л��������Զ����У��������ǿ�����transient��
-			���غ���+����������Stringʱ��null���ûᱻ�Զ�ת�����ַ���null��
-			��ʹSerializable��������������ʱ�г�ʼ�����䣬���ָ�ʱ�������ó�ʼ�����䣬���ǻָ������л�ʱ�����Ե�ֵ��
-			Externalizable����Ĭ�������²����Զ������������κ����ԡ�
-			Externalizable������������ʵ��Serializable�ӿڣ�������readObject()��writeObject()���������������л��ͷ����л�ʱ���Զ��������ǣ�������ʹ��Ĭ�ϵ����л����ơ�
-			readObject()��writeObject()������ǩ����ָ����ʽ��
+		寻找类
+			反序列化对象后，虚拟机需要有该对象的class文件，才可以使用该对象，因为反序列化后得到的只是Object类型的引用
+		序列化的控制
+			Externalizable接口继承自Serializable接口，它的writeExternal()和readExternal()在序列化和反序列化时会被调用。
+			反序列化时会调用对象的构造函数，所以如果构造函数是私有的，反序列化时会报错。
+			对于Serializable对象，对象完全以它存储的二进制位为基础来构造，而不调用构造器。对于一个Externalizable对象，所有普通的默认构造器都会被调用（包括字段定义时的初始化），然后调用readExternal()。
+			防止对象的敏感部分被序列化的一种做法是将类实现为Externalizable，这样没有任何东西可以自动序列化，可以在writeExternal()内部对所需部分进行显示序列化。对于Serializable对象，序列化动作是自动进行，所以我们可以用transient。
+			重载后的+运算符连接String时，null引用会被自动转换成字符串null。
+			即使Serializable对象的属性声明时有初始化语句，但恢复时不会调用初始化语句，而是恢复成序列化时该属性的值。
+			Externalizable对象默认情况下不会自动保存对象的任何属性。
+			Externalizable的替代方法：实现Serializable接口，并添加readObject()和writeObject()。这样对象在序列化和反序列化时会自动调用它们，而不会使用默认的序列化机制。
+			readObject()和writeObject()方法的签名的指定格式：
 				private void writeObject(ObjectOutputStream stream) throws IOException;
 				private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException;
-			ע��������������˽�еģ�����û�б�Serializable�������ڲ��������ã�����ObjectOutputStream��ObjectInputStream��writeObject()��readObject()���õġ��ڵ���ObjectOutputStream��writeObject()����ʱ���������������ݵ�Serializable�����Ƿ�ʵ�����Լ���writeObject()�����������ǣ������ã�������Ĭ�ϵ����л����ơ�
-			��Serializable������writeObject()�����п��Ե���defaultWriteObject()����ִ��Ĭ�ϵ����л����ơ�readObject()һ��������defaultWriteObject()����������writeObject()�б����á�
-		ʹ�á��־��ԡ�
-			ͨ��һ���ֽ�������ʹ�ö������л����Ӷ�ʵ�ֶ��κο�Serializable���������ȸ��ƣ�deep copy����
-			ֻҪ���κζ������л�����һ���У��Ϳ��Իָ���������д��ʱһ���Ķ�����������û���κ��ظ����ƵĶ��󣬼����ö��󲻻ᱻ�ظ����ơ�
-			���л�ʱ��Ҫͬ����
-			Serializable�����ڱ����л�ʱ��static����û�б����л�������Class������Serializable�ġ�Ҫ���л�static���ݣ������ֶ����С�
+			注意这两个方法是私有的，而且没有被Serializable对象的内部方法调用，而是ObjectOutputStream和ObjectInputStream的writeObject()和readObject()调用的。在调用ObjectOutputStream的writeObject()方法时，它会检查所传递的Serializable对象是否实现了自己的writeObject()方法，如果是，则调用，并跳过默认的序列化机制。
+			在Serializable对象的writeObject()方法中可以调用defaultWriteObject()，来执行默认的序列化机制。readObject()一样。并且defaultWriteObject()必须首先在writeObject()中被调用。
+		使用“持久性”
+			通过一个字节数组来使用对象序列化，从而实现对任何可Serializable对象的深度复制（deep copy）。
+			只要将任何对象序列化到单一流中，就可以恢复出与我们写出时一样的对象网，并且没有任何重复复制的对象，即公用对象不会被重复复制。
+			序列化时需要同步。
+			Serializable对象在被序列化时，static数据没有被序列化，尽管Class对象是Serializable的。要序列化static数据，必须手动进行。
 	XML
-		Java���л�����������ֻ��Ӧ����Java����֮�䣬��Ϊֻ��java�������Խ��䷴���л���XML��һ�ֿ����ڲ�ͬ���Լ佻�����ݵĸ�ʽ��
+		Java序列化来交换数据只能应用于Java程序之间，因为只有java程序可以将其反序列化。XML是一种可以在不同语言间交换数据的格式。
 	Preferences
-		���ڴ洢�û���ϲ�����ݣ��洢�ṹ������map�����Կ�ƽ̨��������windows���ߣ��������ô洢��ע�����
+		用于存储用户的喜好数据，存储结构类似于map。可以跨平台，比如在windows里边，会把设置存储在注册表里。
 		
-���������о�
-	�������������෨
-		Java SE5�������ӵģ�
-			Queue�ӿڼ���ʵ��PriorityQueue��BlockingQueue��
-			ConcurrentMap����ʵ��ConcurrentHashMap
-			CopyOnWriteArrayList��CopyOnWriteArraySet
-			EnumSet��EnumMap��Ϊʹ��enum�����Ƶ�Set��Map������ʵ��
-			Collections�еĶ�����������
-	��������
+容器深入研究
+	完整的容器分类法
+		Java SE5种新添加的：
+			Queue接口及其实现PriorityQueue和BlockingQueue。
+			ConcurrentMap及其实现ConcurrentHashMap
+			CopyOnWriteArrayList和CopyOnWriteArraySet
+			EnumSet和EnumMap，为使用enum而设计的Set和Map的特殊实现
+			Collections中的多个便利方法
+	填充容器
 		Collections.nCopies(), Collections.fill()
-		Object.toString()��������Ϊ��������+@+�ö�����ɢ�������޷���ʮ�����Ʊ�ʾ��ͨ��hashCode()���ɵģ���
-		һ��Generator��������
-			����������ģʽ��CollectionType(Generator, quantity)
-		Map������
-		ʹ��Abstract��
-			��Ԫ����ģʽ��ÿ��Map.Entry������ֻ�洢������������������ʵ�ʵļ���ֵ��������getKey()��getValue()ʱ������������������Ӧ��ֵ����������ͼ���Լ����⡣
-		Collection�Ĺ��ܷ���
-			<T> T[] toArray(T[] a)������һ�����飬���������������е�����Ԫ�ء����ؽ���������ʱ��������������a��������ͬ�������ǵ�����Object��
-	��ѡ����
-		δ��֧�ֵĲ���
-			�����δ��֧�ֵĲ�������Դ�ڱ����ɹ̶��ߴ������ݽṹ֧�ֵ�����������Arrays.asList()������һ���̶���С�����飬��֧����Щ�����ı�������С�Ĳ������κζԵײ����ݽṹ�ĳߴ������޸ĵķ�����������UnsupportedOperationException�쳣��
+		Object.toString()输出结果为类的名字+@+该对象的散列码的无符号十六进制表示（通过hashCode()生成的）。
+		一种Generator解决方案
+			适配器设计模式：CollectionType(Generator, quantity)
+		Map生成器
+		使用Abstract类
+			享元设计模式：每个Map.Entry对象都只存储了它的索引，而不是实际的键和值。当调用getKey()和getValue()时，会根据索引返回相应的值。类似于视图，自己理解。
+		Collection的功能方法
+			<T> T[] toArray(T[] a)：返回一个数组，该数组包含容器中的所有元素。返回结果的运行时类型与参数数组a的类型相同，而不是单纯的Object。
+	可选操作
+		未获支持的操作
+			最常见的未获支持的操作都来源于背后由固定尺寸的数据结构支持的容器，比如Arrays.asList()它基于一个固定大小的数组，仅支持那些不会改变数组大小的操作，任何对底层数据结构的尺寸进行修改的方法都会产生UnsupportedOperationException异常。
 			Collections.unmodifiableList()
-	List�Ĺ��ܷ���
-	Set�ʹ洢˳��
-		SortedSet.comparator()���ص�ǰsetʹ�õ�Comparator���򷵻�null����ʾ����Ȼ˳��������
-	����
-		���ȼ�����
-		˫������
-	����Map
-		IdentityHashMap�ڱȽ�keyʱʹ���������ȣ�==���������Ƕ������ȣ�equals()��
-		TreeMap�Ǻ�������һ��ʵ�֡�
-		����
+	List的功能方法
+	Set和存储顺序
+		SortedSet.comparator()返回当前set使用的Comparator，或返回null，表示以自然顺序排序。
+	队列
+		优先级队列
+		双向队列
+	理解Map
+		IdentityHashMap在比较key时使用引用相等（==），而不是对象相等（equals()）
+		TreeMap是红黑树的一个实现。
+		性能
 			HashMap, LinkedHashMap, TreeMap, WeakHashMap, ConcurrentHashMap, IdentityHashMap
 		SortedMap
-			TreeMap�����ֽ׶ε�Ψһʵ��
+			TreeMap是其现阶段的唯一实现
 		LinkedHashMap
-	ɢ����ɢ����
-		instanceof���ߵĲ�������Ϊnull������false��
-		����hashcode()
-		Ϊ�ٶȶ�ɢ��
-			HashMap��key��hashcode()�������������±꣬������ͻ�����ⲿ���ӵ���ʽ��������list������ͬhashcode��keyֵ������ʱ����equals����������list��
-		����hashcode()
-			������ͬ�ַ������е�String������ӳ�䵽ͬһ���ڴ�����
-			ɢ���벻���Ƕ�һ�޶��ģ�Ӧ�ø����������ٶȣ�������Ψһ�ԣ���ͨ��hashcode()��equals()�����ܹ���ȫȷ��������
-			�õ�hashcodeӦ�ò����ֲ����ȵ�ɢ����
-	ѡ���ӿڵĲ�ͬʵ��
-		����֮��������ͨ����������ʲô�ڱ���֧�����ǡ�
-		���ܲ��Կ���
-		��list��ѡ��
-		΢��׼���Ե�Σ��
-			Math.random()�����ķ�ΧΪ��(0, 1]
-		��Set��ѡ��
-			HashSet������һ���ܱ�TreeSet�ã�ʹ��TreeSet��Ψһԭ����������ά��Ԫ�ص�˳����LinkedHashSet������Ҳ����HashSet����Ϊά������Ҫ�������⿪����
-		��Map��ѡ��
-	ʵ�÷���
-		nCopies(int n, T x)���ش�СΪn��List<T>����List���ɸı䣬���е����ö�ָ��x��
-		min()��max()ֻ��������Collection���󣬲���������List��
-		emptyList(), emptySet(), emptyMap(), singleton(T x), singletonList(T x), singletonMap(K key, V value)���صļ��϶��ǲ��ɱ��ġ�
-		List�������Ͳ�ѯ
-		�趨Collection��MapΪ�����޸�
-			unmodifiableCollection(), unmodifiableList(), unmodifiableSet(), unmodifiableSortedSet(), unmodifiableMap(), unmodifiableSortedMap()��Щ�����������ɵ�ֻ�������⣬�����㱣��ԭ���Ŀ��޸ĵ�������ͨ��ԭ�������������޸���������ֻ��������ֻ���ġ�
-		Collection��Map��ͬ������
+	散列与散列码
+		instanceof左边的参数如果为null，返回false。
+		理解hashcode()
+		为速度而散列
+			HashMap以key的hashcode()来计算数组的下标，如果冲突，以外部链接的形式解决，以list存放相同hashcode的key值，查找时再用equals方法遍历该list。
+		覆盖hashcode()
+			包含相同字符串序列的String对象都映射到同一块内存区域
+			散列码不必是独一无二的（应该更关心生成速度，而不是唯一性）。通过hashcode()和equals()必须能够完全确定对象。
+			好的hashcode应该产生分布均匀的散列码
+	选择接口的不同实现
+		容器之间的区别通常归结于由什么在背后支持它们。
+		性能测试框架
+		对list的选择
+		微基准测试的危险
+			Math.random()输出的范围为：(0, 1]
+		对Set的选择
+			HashSet的性能一般总比TreeSet好，使用TreeSet的唯一原因是它可以维护元素的顺序。LinkedHashSet的性能也不如HashSet，因为维护链表要带来额外开销。
+		对Map的选择
+	实用方法
+		nCopies(int n, T x)返回大小为n的List<T>，此List不可改变，其中的引用都指向x。
+		min()和max()只能作用于Collection对象，不能作用于List。
+		emptyList(), emptySet(), emptyMap(), singleton(T x), singletonList(T x), singletonMap(K key, V value)返回的集合都是不可变的。
+		List的排序和查询
+		设定Collection或Map为不可修改
+			unmodifiableCollection(), unmodifiableList(), unmodifiableSet(), unmodifiableSortedSet(), unmodifiableMap(), unmodifiableSortedMap()这些方法除了生成的只读容器外，允许你保留原来的可修改的容器，通过原来的引用允许修改容器，但只读引用是只读的。
+		Collection和Map的同步控制
 			synchronizedCollection(), synchronizedList(), synchronizedSet(), synchronizedSortedSet(), synchronizedMap(), synchronizedSortedMap()
-	��������
-		�����̳��Գ�����Reference���ࣺSoftReference, WeakReference, PhantomReference��������ǿ�������У���Ӧ��ͬ�����Ŀɻ����ԡ����ǰ���������ָ���Ķ������Ա������ռ������ա�
-		ʹ��SoftReference��WeakReference������ѡ���Ƿ�Ҫ�����Ƿ���ReferenceQueue����������ǰ���������Ĺ��ߣ�����PhantomReferenceֻ��������ReferenceQueue��
+	持有引用
+		三个继承自抽象自Reference的类：SoftReference, WeakReference, PhantomReference，三个由强到弱排列，对应不同级别的可获得性。它们包含的引用指向的对象可以被垃圾收集器回收。
+		使用SoftReference和WeakReference，可以选择是否要将它们放入ReferenceQueue（用作回收前清理工作的工具）。而PhantomReference只能依赖于ReferenceQueue。
 		WeakHashMap
-		SoftReference���ã����������ڴ治��ʱ���Żᱻ���ա�Ҳ����˵����������ΪOutOfMemory�쳣�ҵ�ʱ����֤���е�SoftReference���������ˡ�
-		WeakReference���ã�������WeakReference����֮�⣬û������������ָ���ö��󣬸ö����ͻᱻ�������������ա�
-		WeakHashMap��key�������������ͣ�����û������������ָ����key����key��Ӧ��entry�ͻᱻɾ������
-		ReferenceQueue����SoftReference/WeakReference����ָ���Ķ�������û����������ָ��ʱ����SoftReference/WeakReference�ͻᱻ�Զ����뵽������SoftReference/WeakReferenceʱ������ReferenceQueue�С�����finalization����������֮ǰ������������֮ǰ���ö������ܱ���finalize()�����н�һ��ǿ����ָ���ö��󣬴Ӷ������ö��󡣵�ԭ����WeakReference��һֱ����null�������ᱻ���
-		PhantomReference���������ã�
-			1��������ָ���Ķ�����ʱ�����գ��Ӷ�����ĳЩ��������������ͨ�������ú�ʱ����ReferenceQueue�����ġ�PhantomReferenceָ���Ķ������ڴ��ռ䱻���պ���������ReferenceQueue��
-			2��������������finalize�Ĺ��ܡ�finalize()����������һ�����������յĶ�����Ϊ�������գ�ͨ������һ��ǿ����ָ��������PhantomReferenceָ���Ķ����ǲ��ɻ��õģ�����get������Զ����null��
-		finalize()�����ռ����ᱣ��finalize()�����еĶ��󣬲��������л��ա���Ϊ�п�����finalize()�����н�һ��ǿ����ָ���ö�����ʹ�ö��󸴻
+		SoftReference引用，当虚拟机内存不足时，才会被回收。也就是说虚拟机在因为OutOfMemory异常挂掉时，保证所有的SoftReference都被回收了。
+		WeakReference引用，当除了WeakReference引用之外，没有其他的引用指向该对象，该对象就会被垃圾回收器回收。
+		WeakHashMap的key就是弱引用类型，如果没有其他的引用指向该key，该key对应的entry就会被删除掉。
+		ReferenceQueue，当SoftReference/WeakReference引用指向的对象变得没有其他引用指向时，该SoftReference/WeakReference就会被自动插入到构造该SoftReference/WeakReference时传入的ReferenceQueue中。这在finalization和垃圾回收之前。在垃圾回收之前，该对象可能被在finalize()方法中将一个强引用指向该对象，从而复活该对象。但原来的WeakReference将一直返回null，即不会被复活。
+		PhantomReference有两个作用：
+			1。跟踪其指向的对象何时被回收，从而进行某些清理动作。这是通过该引用何时进入ReferenceQueue决定的。PhantomReference指向的对象的内存空间被回收后，其进入ReferenceQueue。
+			2。可以用来替代finalize的功能。finalize()方法可以让一个即将被回收的对象变为不被回收，通过生成一个强引用指向它。而PhantomReference指向的对象是不可获得的，它的get方法永远返回null。
+		finalize()垃圾收集器会保存finalize()方法中的对象，不立即进行回收。因为有可能在finalize()方法中将一个强引用指向该对象，使该对象复活。
 		
 			
-����
-	����Ϊʲô����
+数组
+	数组为什么特殊
 		Arrays.toString(Object[])
-	�����ǵ�һ������
-		�������鱣���������ã������������鱣�����ǻ������͵�ֵ
-	����һ������
-	��ά����
-		Arrays.deepToString(Object[])����������ӡ��ά����
-		��ά������ÿһά�����Ծ��������ĳ��ȡ���ʼ��ʱ�������㿪ʼ��ʼ����
-	�����뷺��
-		�����뷺�Ͳ��ܺܺõĽ��ϡ���������֪���������е�ȷ�����ͣ���ǿ�Ʊ�֤���Ͱ�ȫ�����ǿ��Բ��������鱾�������͡���class ClassParameter<T>{public T[] f(T[] arg) {return arg;}}������T[] array = new T[size];��д���Ǵ����ģ�Ӧ����T[] array = (T[])new Object[size];
-		���ܴ�������������˵������ʮ��׼ȷ��������ȷʵ������ʵ�����������飬�������㴴�����������������á��磺List<String>[] ls;
-		���ܲ��ܴ���ʵ�ʵĳ��з��͵��������󣬵������Դ����Ƿ��͵����飬Ȼ������ת�͡�
-	������������
+	数组是第一级对象
+		对象数组保存的是引用，基本类型数组保存的是基本类型的值
+	返回一个数组
+	多维数组
+		Arrays.deepToString(Object[])可以用来打印多维数组
+		多维数组的每一维都可以具有任意的长度。初始化时从最外层开始初始化。
+	数组与泛型
+		数组与泛型不能很好的结合。数组必须知道它所持有的确切类型，以强制保证类型安全。但是可以参数化数组本身的类型。如class ClassParameter<T>{public T[] f(T[] arg) {return arg;}}。但是T[] array = new T[size];的写法是错误的，应该是T[] array = (T[])new Object[size];
+		不能创建泛型数组的说法并不十分准确。编译器确实不让你实例化泛型数组，但允许你创建对这种数组的引用。如：List<String>[] ls;
+		尽管不能创建实际的持有泛型的数组对象，但你可以创建非泛型的数组，然后将其转型。
+	创建测试数据
 		Arrays.fill()
-		����������
-		��Generator�д�������
-			Class.getClasses()��������class������public���͵������ӿڳ�Ա��
-	Arraysʵ�ù���
-		��������
-			System.arrayCopy()����������������forѭ�����ܶ࣬�������������������ء���������֧���Զ�������װ�䡣
-		�����ıȽ�
-			Arrays.equals()������ͬ�����ƶ�λ���ϵ�Ԫ��Ҳ��ͬ
-		����Ԫ�صıȽ�
-		��������
-			java��׼�����е������㷨�������������������ͽ������Ż�-���Ի����������Ƶġ��������򡱣��Լ����Զ������Ƶġ��ȶ��鲢������
-		���������������в���
+		数据生成器
+		从Generator中创建数组
+			Class.getClasses()返回这个class中所有public类型的类或接口成员。
+	Arrays实用功能
+		复制数组
+			System.arrayCopy()用它来复制数组比for循环快很多，它对所有类型做了重载。但它不会支持自动拆箱和装箱。
+		数组的比较
+			Arrays.equals()长度相同并且制定位置上的元素也相同
+		数组元素的比较
+		数组排序
+			java标准类库中的排序算法针对正排序的特殊类型进行了优化-针对基本类型设计的“快速排序”，以及针对对象设计的“稳定归并排序”
+		在已排序的数组中查找
 			Arrays.binarySearch()
-			���������а����ظ���Ԫ�أ����޷���֤�ҵ�������Щ�����е���һ����
-			����ʹ��Comparator������ĳ����������(�������������޷�ʹ��Comparator��������)����ʹ��binarySearch()ʱ�����ṩͬ����Comparator��
-	�ܽ�
-		��ʹ��java����ʱ��Ӧ�á���ѡ�������������顱��ֻ������֤�����ܳ�Ϊ���⣨�����л���������������������������ʱ���������ý������ع������顣
-		java�е�boolean���ͣ���Ȼһ��bit���ܱ�ʾ����ֵ����������С���ڴ�Ѱַ��Ԫ����byte������ռ��һ��byte��
+			如果数组中包含重复的元素，则无法保证找到的是这些副本中的哪一个。
+			如果使用Comparator排序了某个对象数组(基本类型数组无法使用Comparator进行排序)，在使用binarySearch()时必须提供同样的Comparator。
+	总结
+		当使用java编程时，应该“优选容器而不是数组”，只有在已证明性能成为问题（并且切换到数组对性能提高有所帮助）时，你才因该将程序重构成数组。
+		java中的boolean类型，虽然一个bit就能表示它的值，但由于最小的内存寻址单元就是byte，所以占用一个byte。
 
-		Character���б��������ֽ���
-		UTF-16�����淶����ά���ٿ�UTF-16
-		java��char����ֻ�ܱ�ʾ����������ƽ���е��ַ���int���Ϳ��Ա�ʾ���е�unicode�ַ�����������ƽ���е��ַ���
+		Character类中编码数和字节数
+		UTF-16编码规范：见维基百科UTF-16
+		java中char类型只能表示基本多文种平面中的字符，int类型可以表示所有的unicode字符，包括辅助平面中的字符。
 
 		
-����
-	��C++�ıȽ�
-	�򵥷���
-		һ��Ԫ������
-			������������Ϊpublic final���������Ա���ȡ��ʹ�ã����ǲ����޸�����
-		һ����ջ��
+泛型
+	与C++的比较
+	简单泛型
+		一个元组类库
+			把类的属性设为public final，允许属性被读取和使用，但是不能修改属性
+		一个堆栈类
 		RandomList
-	���ͽӿ�
-	���ͷ���
-		�Ƿ�ӵ�з��ͷ������������ڵ����Ƿ��Ƿ���û�й�ϵ��
-		����һ��static�ķ������ԣ��޷����ʷ����������Ͳ��������ˣ�����static������Ҫʹ�÷����������ͱ���ʹ����Ϊ���ͷ�����
-		�ܸ��������Ͳ����ƶ�
-			�����ƶ�ֻ�Ը�ֵ������Ч������ʱ�򲢲������á�������һ�����ͷ���������Ϊ�������ݸ���һ����������ʱ������������ִ�������ƶϡ������������±�������Ϊ���䷵��ֵ������һ��Object���͵ı�����
-			��ʾ����˵��
-				�ڷ��ͷ����У�������ʾָ�����ͣ����������﷨����ʹ�á�Ҫ��ʾָ�����ͣ���������.�������Ϸ�����֮�����������ţ�Ȼ�����������������ڡ��������ڶ����÷��������ڲ�����Ҫ��.������ǰ��this��������static��������Ҫ��.������ǰ��������
-		�ɱ������뷺�ͷ���
-			�ɱ������ͷ��ͷ������Թ��档T... args
-		����Generator�ķ��ͷ���
-		һ��ͨ�õ�Generator
-		����Ԫ����ʹ��
-		һ��Setʵ�ù���
+	泛型接口
+	泛型方法
+		是否拥有泛型方法，与其所在的类是否是泛型没有关系。
+		对于一个static的方法而言，无法访问泛型类的类型参数，因此，如果static方法需要使用泛型能力，就必须使其成为泛型方法。
+		杠杆利用类型参数推断
+			类型推断只对赋值操作有效，其它时候并不起作用。如果将一个泛型方法调用作为参数传递给另一个方法，这时编译器并不会执行类型推断。在这种情况下编译器认为，其返回值被赋给一个Object类型的变量。
+			显示类型说明
+				在泛型方法中，可以显示指明类型，不过这种语法很少使用。要显示指明类型，必须在在.操作符合方法名之间插入尖括号，然后把类型置于括号内。如果是在定义该方法的类内部，需要在.操作符前加this。如果是static方法，需要在.操作符前加类名。
+		可变参数与泛型方法
+			可变参数和泛型方法可以共存。T... args
+		利用Generator的泛型方法
+		一个通用的Generator
+		简化元组的使用
+		一个Set实用工具
 			EnumSet.range()
-	�����ڲ���
-	��������ģ��
-	����������֮��
-		�ڷ��ʹ����ڲ����޷������κ��йط��Ͳ������͵���Ϣ���磺new ArrayList<String>().getClass().getTypeParameters()����[E]��
-		Class.getTypeParameters()����һ��TypeVariable�������顣
-		C++�ķ�ʽ
-			Java�������Ͳ��������������ĵ�һ���߽磬��<T extends HasF>��������HasF
-		Ǩ�Ƽ�����
-			����������һ���������ԣ�����java�ڷ����ϵ�һ�����У���Ϊ���Ͳ�����java���Գ���ʱ���е����ɲ��֡�
-			��������ֻ���ھ�̬���ͼ����ڼ��ų��֣��ڴ�֮�󣬳����е����з������Ͷ������������滻Ϊ���ǵķǷ����Ͻ硣
-			�����������µ�ʹ�÷��͵ĳ����;ɵ�û��ʹ�÷��͵Ĵ������ݡ�
-		����������
-			���������������ǣ��ӷǷ������뵽����������ת�����̣��Լ��ڲ��ƻ����������������£�����������java���ԡ�����ʹ�����еķǷ��Ϳͻ��˴����ܹ��ڲ��ı��������¼���ʹ�ã�ֱ���ͻ���׼�����÷�����д��Щ������
-			���Ͳ���������ʽ����������ʱ���͵Ĳ���֮�У�����ת�ͣ�instanceof������new����ʽ
-		�߽紦�Ķ���
-			�����е����ж����������ڱ߽紦--�Դ��ݽ�����ֵ���ж����ı����ڼ��飬�������Դ��ݳ�ȥ��ֵ��ת�͡���ס���߽����Ƕ��������ĵط���
-	�����Ĳ���
-		������ʧ���ڷ��ʹ�����ִ��ĳЩ�������������κ�������ʱ��Ҫ֪��ȷ��������Ϣ�Ĳ��������޷���������������ͨ����ʽ�Ĵ����������͵�class�������Ա������������ͱ���ʽ��ʹ������
-		instanceOf��Class.isInstance()
+	匿名内部类
+	构建复杂模型
+	擦除的神秘之处
+		在泛型代码内部，无法获得任何有关泛型参数类型的信息。如：new ArrayList<String>().getClass().getTypeParameters()返回[E]。
+		Class.getTypeParameters()返回一个TypeVariable对象数组。
+		C++的方式
+			Java泛型类型参数将擦除到它的第一个边界，如<T extends HasF>将擦除到HasF
+		迁移兼容性
+			擦除并不是一个语言特性，而是java在泛型上的一个折中，因为泛型并不是java语言出现时就有得组成部分。
+			泛型类型只有在静态类型检查期间才出现，在此之后，程序中的所有泛型类型都将被擦除，替换为他们的非泛型上界。
+			擦除用来是新的使用泛型的程序和旧的没有使用泛型的代码兼容。
+		擦除的问题
+			擦除的正当理由是：从非泛化代码到泛化代码的转变过程，以及在不破坏现有类库的情况下，将泛型融入java语言。擦除使得现有的非泛型客户端代码能够在不改变的情况下继续使用，直到客户端准备好用泛型重写这些方法。
+			泛型不能用于显式的引用运行时类型的操作之中，例如转型，instanceof操作和new表达式
+		边界处的动作
+			泛型中的所有动作都发生在边界处--对传递进来的值进行额外的编译期检查，并插入对传递出去的值的转型。记住：边界就是动作发生的地方。
+	擦除的补偿
+		擦除丢失了在泛型代码中执行某些操作的能力，任何在运行时需要知道确切类型信息的操作都将无法工作。这个可以通过显式的传递你的类型的class对象，以便你可以在类型表达式中使用它。
+		instanceOf和Class.isInstance()
 		Class.newInstance()
-		��������ʵ��
-			����ʹ��new T()��ԭ��һ��������Ϊ��������һ�����Ǳ�����������֤T����Ĭ�ϣ��޲Σ��Ĺ�����
-			��������ͨ������������������һ���Ǵ���һ�������������ɹ�����������������һ����ʹ��ģ��ģʽ����������ʵ�־����Ĵ����������߼���
-		��������
-			�ɹ���������������Ψһ��ʽ�Ǵ���һ�����������͵������飬Ȼ������ת�͡��磺T[] array = (T[])new Object[size]�����齫�������ǵ�ʵ�����ͣ�������ʵ�����������鱻����ʱȷ���ġ����˶���ǰ���Ĵ��룬����TΪInteger����ʹarray�����ͱ�ת��ΪInteger[]������������Ϣֻ�����ڱ����ڡ�������ʱ�����Ծ��Ǹ�Object[]���飬������������Integer[] anotherArray = array;���׳�ClassCastException�����������ǿ��Դ���һ�����ͱ���Class<T>���Ա��Ӳ����лָ�������T[] array = (T[])Array.newInstance(Class, size)����������TΪInteger���Ϳ���ִ��Integer[] anotherArray = array���ˡ�
-			javaԴ����Ҳ���ںܶ෺�������ײ���Object[]���洢���Ⲣ���ǺܺõĽ���֮����
-	�߽�
-		�߽�ʹ�����������ڷ��͵Ĳ���������������������������һ��Ǳ�ڵ�Ч���������԰����Լ��ı߽����������÷�����
-		java����������extends�ؼ��֣�T extends class & interface & interface, ע��������д��ǰ�棬�ӿ�д�ں��档
-		class A<T>, class B<T extends interfaceA> extends A<T>, class C<T extends interfaceA & interfaceB> extends B<T>��ע���̳�ʱҪ���������еķ����������г����еı߽硣
-	ͨ����
-		Apple extends Fruit, Orange extends Fruit, Fruit[] fruits = new Apple[size], fruits[0] = new Orange()���׳�ArrayStoreException����Orange�����ŵ�fruits�����еĴ����ڱ�����û���쳣����������ʱ�׳��쳣����Ϊ����������ʱ������Apple������ֻ�ܷ�Apple�������ࡣ
-		���͵���ҪĿ��֮һ���ǽ����ּ����Ƶ������ڡ�List<Fruit> list = new ArrayList<Apple>();���ڱ����ڱ�����
-		�������ж�����
-		����
-			<? super aClass> �� <? super T>
-		�޽�ͨ����
+		创建类型实例
+			不能使用new T()的原因一部分是因为擦除，另一部分是编译器不能验证T具有默认（无参）的构造器
+			这个可以通过两个方法来解决：一个是传入一个工厂对象，由工厂来创建对象；另一个是使用模板模式，由子类来实现具体的创建对象的逻辑。
+		泛型数组
+			成功创建泛型数组的唯一方式是创建一个被擦除类型的新数组，然后对其转型。如：T[] array = (T[])new Object[size]。数组将跟踪他们的实际类型，而这个实际类型是数组被创建时确定的。因此对于前面的代码，如果T为Integer，即使array的类型被转型为Integer[]，但是这个信息只存在于编译期。在运行时，它仍旧是个Object[]数组，因此如果尝试Integer[] anotherArray = array;将抛出ClassCastException。解决方法是可以传递一个类型标记Class<T>，以便从擦除中恢复。例如T[] array = (T[])Array.newInstance(Class, size)，这样如果T为Integer，就可以执行Integer[] anotherArray = array；了。
+			java源码中也存在很多泛型数组底层用Object[]类存储，这并不是很好的解决之道。
+	边界
+		边界使你可以在用于泛型的参数类型上设置限制条件，这样一个潜在的效果是你可以按照自己的边界类型来调用方法。
+		java泛型重用了extends关键字，T extends class & interface & interface, 注意类必须写在前面，接口写在后面。
+		class A<T>, class B<T extends interfaceA> extends A<T>, class C<T extends interfaceA & interfaceB> extends B<T>，注意继承时要在类声明中的泛型类型中列出所有的边界。
+	通配符
+		Apple extends Fruit, Orange extends Fruit, Fruit[] fruits = new Apple[size], fruits[0] = new Orange()会抛出ArrayStoreException，把Orange对象放到fruits数组中的代码在编译期没有异常，但在运行时抛出异常。因为数组的运行时类型是Apple，所以只能放Apple或其子类。
+		泛型的主要目标之一就是将这种检测移到编译期。List<Fruit> list = new ArrayList<Apple>();会在编译期报错。
+		编译器有多聪明
+		逆变
+			<? super aClass> 或 <? super T>
+		无界通配符
 			<?>
-		����ת��
-			������һ��ʹ��<?>�ķ�������ԭ�����ͣ����ڱ�������˵�����ܻ��ƶϳ�ʵ�ʵĲ������ͣ�ʹ�������������Ի�ת��������һ��ʹ������ȷ�����͵ķ�����
-			����ת��ֻ���ڷ����ڲ��ſ��������ã�����Ҫʹ��ȷ�е����͡�
-	����
-		�κλ������Ͷ�������Ϊ���Ͳ���
-			�Զ���װ���Ʋ���Ӧ��������
-		ʵ�ֲ������ӿ�
-			һ���������ظ�ʵ��ͬһ���ӿڣ����ǲ���ͬʱʵ��ͬһ�����ͽӿڵ��������壬��Ȼ��������������������Ϊ��ͬ�Ľӿڡ�ʵ��ͬһ���ͽ��ڵ���ͬ���壬�����Ͳ�����ͬ���������ġ�
-		ת�ͺ;���
-			T��ת��Ϊ���ĵ�һ���߽磬Ĭ����������Object��
-		����
-			f(List<T>)��f(List<V>)�����ڲ�����������ͬ�ķ���ǩ�������˲��ܱ����롣
-		�����ٳ��˽ӿ�
-			һ��Comparable<T>ȷ����T��������ô�����κ�ʵ���඼������T֮�����κζ����Ƚϡ�
-	���޶�������
+		捕获转换
+			如果向一个使用<?>的方法传递原生类型，对于编译器来说，可能会推断出实际的参数类型，使得这个方法可以回转并调用另一个使用这个确切类型的方法。
+			捕获转换只有在方法内部才可以起作用，你需要使用确切的类型。
+	问题
+		任何基本类型都不能作为类型参数
+			自动包装机制不能应用于数组
+		实现参数化接口
+			一个类可以重复实现同一个接口，但是不能同时实现同一个泛型接口的两个变体，虽然擦除会让这两个变体成为相同的接口。实现同一泛型借口的相同变体，即类型参数相同，是允许的。
+		转型和警告
+			T被转型为它的第一个边界，默认情况下是Object。
+		重载
+			f(List<T>)和f(List<V>)，由于擦除将产生相同的方法签名，因此不能被编译。
+		基类劫持了接口
+			一旦Comparable<T>确定了T参数，那么其它任何实现类都不能与T之外的任何对象比较。
+	自限定的类型
 		class SelfBounded<T extends SelfBounded<T>>{}
-		�Źֵ�ѭ������
+		古怪的循环泛型
 			class SubType extends BasicHolder<SubType>{}
-		���޶�
-		����Э��
-			���޶����͵ļ�ֵ�������ǿ��Բ���Э����������--�����������ͻ��������仯��
-	��̬���Ͱ�ȫ
-		Collections.checkedCollection()�ܼ���������������ͼ�������Ͳ���ȷ�Ķ���ʱ���׳�ClassCastException�����뷺��֮ǰ�ģ�ԭ���������γ��˶Աȡ����ں��ߣ�������������ȡ������ʱ����֪ͨ�����������⣬
-	�쳣
-		catch���䲻�ܲ����������͵��쳣����Ϊ�ڱ����ں������ڶ�����֪���쳣��ȷ�����͡�������Ҳ����ֱ�ӻ����ӵļ̳���Throwable�����Ƿ������Ϳ��ܻ���һ��������throws�Ӿ����õ�����class A<T, E extends Exception> {throws E;}
-	����
-		C++�еĻ���
-		���ӿڻ���
-		ʹ��װ����ģʽ
-		�붯̬��������
+		自限定
+		参数协变
+			自限定类型的价值在于他们可以产生协变参数类型--方法参数类型会随子类变化。
+	动态类型安全
+		Collections.checkedCollection()受检查的容器在你试图插入类型不正确的对象时将抛出ClassCastException，这与泛型之前的（原生）容器形成了对比。对于后者，当你从容器中取出对象时，才通知你出现了问题，
+	异常
+		catch语句不能捕获泛型类型的异常，因为在编译期和运行期都必须知道异常的确切类型。泛型类也不能直接或间接的继承自Throwable。但是泛型类型可能会在一个方法的throws子句中用到。如class A<T, E extends Exception> {throws E;}
+	混型
+		C++中的混型
+		与接口混合
+		使用装饰器模式
+		与动态代理混合
 			InvocationHandler
-	Ǳ�����ͻ���
-		Ѽ�����ͻ��ƣ���������������Ѽ�ӣ����ҽ�������Ѽ�ӣ���ô���Ϳ��Խ�������Ѽ�ӶԴ���
-	��ȱ��Ǳ�����ͻ��ƵĲ���
-		��һ������Ӧ��������
-		���㲢δ����ӵ����ȷ�Ľӿ�ʱ
-		������������Ǳ�����ͻ���
-	������������������
-	�ܽ᣺ת����������֮����
+	潜在类型机制
+		鸭子类型机制：如果它走起来像鸭子，并且叫起来像鸭子，那么你就可以将它当作鸭子对待。
+	对缺乏潜在类型机制的补偿
+		将一个方法应用于序列
+		当你并未碰巧拥有正确的接口时
+		用适配器仿真潜在类型机制
+	将函数对象用作策略
+	总结：转型真的如此之糟吗
 		
 
-������Ϣ
+类型信息
 	RTTI run time type information
-	Ϊʲô��ҪRTTI
-	Class����
-		ԭ�������������ص�����ν�Ŀ����࣬����Java API�࣬����ͨ���Ǵӱ����̼��صġ���ʼ�����ӳٵ��˶Ծ�̬��������������ʽ���Ǿ�̬�ģ����߷Ǿ�̬�����������״�����ʱ��ִ�С�
-		�����泣��
+	为什么需要RTTI
+	Class对象
+		原生类加载器加载的是所谓的可信类，包括Java API类，他们通常是从本地盘加载的。初始化被延迟到了对静态方法（构造器隐式的是静态的）或者非静态数据域进行首次引用时才执行。
+		类字面常量
 			ClassName.class
-			��ʹ��.class��������Class����������ʱ�������Զ��ĳ�ʼ���ö�����
-			Ϊ��ʹ����������׼������ʵ�ʰ����������裺
-				1�����ء�����������ִ�У������ֽ��룬����Щ�ֽ����д���һ��Class������
-				2�����ӡ������ӽ׶ν���֤�����ֽ��룬Ϊ��̬�������洢�ռ䣬�������������Ļ��������������ഴ���Ķ������������������á�
-				3����ʼ���������������г��࣬��������ʼ����ִ�о�̬��ʼ�����;�̬��ʼ���顣
-			���������и��ֶ���static final�ģ������ڱ���������ȷ����ֵ���������ڳ�������ôʹ�ø��ֶ�ʱ�����ᴥ����ʼ���������������ֶ���static final�ģ����Ǳ���������ȷ����ֵ����ôʹ�ø�ֵʱ�ͻᴥ����ʼ����
-			����һ������static��������final�ģ���ô����Ҫ����������ȡ֮ǰ��Ҫ�Ƚ������ӣ�Ϊ�����������洢�ռ䣩�ͳ�ʼ������ʼ���ô洢�ռ䣩��
-		������Class����
-			Class�����������ľ�̬��Ա���Լ����еķ������롣
-			����������ֻ�ܸ�ֵΪָ�������������ͣ�����ͨ�����ÿ��Ա����¸�ֵΪָ���κ�������Class������
-			���������﷨������Class����ʱ��newInstance()�����ض�����ȷ�����ͣ�������Object��
-		�µ�ת���﷨
-			Class.cast()�������ܲ������󣬲�����ת��ΪClass���õ����͡��÷�����������ֻ�ù�һ�Σ���̫���á�
-			Class.asSubClass()������û���ô���
-	����ת��ǰ��������
-		���������б�д��������instanceOf����ʽ����˵���������ƿ��ܴ���覴�
-		ʹ�������泣��
-		��̬��instanceOf
-		�ݹ����� 
-	ע�Ṥ�� 
-	instanceOf��Class�ĵȼ���
-	���䣺����ʱ������Ϣ
-		�෽����ȡ��
-			Class.getConstructors()�����������������Զ����ӵ�Ĭ�Ϲ��캯��
-	��̬����
-		�����ǻ���������ģʽ֮һ��������Ϊ���ṩ�����Ļ���ͬ�Ĳ���������������������ʵ�ʶ����Ķ�������Щ����ͨ���漰��ʵ�ʶ�����ͨ�ţ����˴���ͨ���䵱���м��˵Ľ�ɫ��
+			当使用.class来创建对Class对象的引用时，不会自动的初始化该对象。
+			为了使用类而作的准备工作实际包含三个步骤：
+				1。加载。有类加载器执行，查找字节码，从这些字节码中创建一个Class对象。
+				2。链接。在链接阶段将验证类的字节码，为静态域分配存储空间，并且如果必须的话，将解析这个类创建的对于其它类的所有引用。
+				3。初始化。如果该类具有超类，则对其初始化。执行静态初始化器和静态初始化块。
+			如果类中有个字段是static final的，并且在编译器可以确定其值，即编译期常量。那么使用该字段时，不会触发初始化操作。但如果字段是static final的，但是编译器不能确定其值，那么使用该值时就会触发初始化。
+			如果一个域是static，而不是final的，那么总是要求在它被读取之前，要先进行链接（为这个域分配存储空间）和初始化（初始化该存储空间）。
+		泛化的Class引用
+			Class对象包含类的静态成员，以及所有的方法代码。
+			泛型类引用只能赋值为指向其声明的类型，但普通类引用可以被重新赋值为指向任何其它的Class对象。
+			当将泛型语法作用于Class对象时，newInstance()将返回对象的确切类型，而不是Object。
+		新的转型语法
+			Class.cast()方法接受参数对象，并将其转型为Class引用的类型。该方法在类库中只用过一次，不太常用。
+			Class.asSubClass()，基本没有用处。
+	类型转换前先做检查
+		如果程序中编写了许多的instanceOf表达式，就说明你的设计可能存在瑕疵
+		使用类字面常量
+		动态的instanceOf
+		递归计数 
+	注册工厂 
+	instanceOf和Class的等价性
+	反射：运行时的类信息
+		类方法提取器
+			Class.getConstructors()方法会包含编译器自动添加的默认构造函数
+	动态代理
+		代理是基本的设计模式之一，它是你为了提供额外的或不同的操作，而插入的用来代替实际对象的对象。这些操作通常涉及与实际对象的通信，因此代理通常充当着中间人的角色。
 		Proxy.newProxyInstance()
 		InvocationHandler
-	�ն���
-		������Null�ӿ�������һ����ΪNull���ͣ�Ȼ���Զ���ʵ��Null�ӿڵ��ࡣ
-	�ӿ���������Ϣ
-		Ϊ�˷�ֹ��ʵ������ʵ���ϵ����κνӿ�֮���ķ���������ʹ�ð�����Ȩ�ޣ��ǽӿ�֮���ķ�����Ϊ������Ȩ�ޣ�������Ҳ�ǰ�����Ȩ�ޣ������ڰ�֮�⣬�Ͳ��ܽ�������ת�ͣ���Ϊ�������ʲ���ʵ���ࡣ
+	空对象
+		可以用Null接口来标记一个类为Null类型，然后自定义实现Null接口的类。
+	接口与类型信息
+		为了防止在实现类的实例上调用任何接口之外的方法，可以使用包访问权限，是接口之外的方法均为包访问权限，并且类也是包访问权限，这样在包之外，就不能进行向下转型，因为包外访问不到实现类。
 		Method.setAccessible()
 		Field.setAccessible()
-		��final�����޸Ĳ���������ʱϵͳ���ڲ��׳��쳣�������½����κ��޸ĳ��ԣ�����ʵ���ϲ��ᷢ���κ��޸ġ�
-	�ܽ�
+		对final域的修改操作，运行时系统会在不抛出异常的情况下接受任何修改尝试，但是实际上不会发生任何修改。
+	总结
 	
 
-�ַ���
-	���ɱ�String
-		String��������ֻ������
-		����һ���������ԣ�������Ϊ���ṩ��Ϣ�ģ����������ø÷����ı��Լ��ġ�
-	����"+"��StringBuilder
-		javap -c AClass��������AClass�࣬-c��ʾ������JVM�ֽ���
-		��Ȼ��������ΪString��+���������Ż���ʹ��StringBuilder��������ֻ�����Լ򵥵��ַ��������������Ǹ�������������forѭ����ʹ��+��������ÿ��ѭ���ڶ�����һ��StringBuilder���������������Լ�����һ��StringBuilder��
-		StringBuilder.append(StringA + StringB)���������������ַ�ʽ�߽ݾ�����ô�������ᱻ�󵼣��Ӷ����ⴴ��һ��StringBuilderΪ�����ڵĲ�����
-		StringBuffer���̰߳�ȫ�ģ����˿���Ҳ�ϴ���
-	����ʶ�ĵݹ�
-		��toString()������ʹ��this�ؼ���ʱ����������ʽ�ĵ���this��toString()���ͻ���������ѭ��
-	String�ϵĲ���
-	��ʽ������
+字符串
+	不可变String
+		String对象具有只读特性
+		对于一个方法而言，参数是为其提供信息的，而不是想让该方法改变自己的。
+	重载"+"与StringBuilder
+		javap -c AClass，反编译AClass类，-c表示将生成JVM字节码
+		虽然编译器会为String的+操作进行优化，使用StringBuilder，但是这只是针对简单的字符串操作，如果是复杂情况，如在for循环中使用+，则会在每次循环内都生成一个StringBuilder。这种情况最好自己创建一个StringBuilder。
+		StringBuilder.append(StringA + StringB)，如果你想用这种方式走捷径，那么编译器会被误导，从而另外创建一个StringBuilder为括号内的操作。
+		StringBuffer是线程安全的，因此开销也较大。
+	无意识的递归
+		在toString()方法中使用this关键字时，如果再隐式的调用this的toString()，就会陷入无限循环
+	String上的操作
+	格式化输出
 		System.out.printf()
 		System.out.format()
-		Formatter��
-			Java�У������µĸ�ʽ�����ܶ���java.util.Formatter�ദ����
-			����һ��Formatter����ʱ����Ҫ������������һЩ��Ϣ���Ը��������յĽ������������������磬new Formatter(System.out);
-		��ʽ��˵����
-		Formatterת��
-			String.format()����������Formatter.format()һ���Ĳ���������һ��String������ֻ��ʹ��format����һ��ʱ�����������ܷ��㡣
-	��������ʽ
-		����
-			Java�Է�б��\�в�ͬ�Ĵ����������������У�\\��ʾ������Ҫ����������ʽ�в���һ����ͨ�ģ������ϵģ���б�ߣ��벻Ҫ�����κ����������塣��������java�У�\\����˼�ǡ���Ҫ����һ����������ʽ�ķ�б�ߣ������������ַ��������������塱�����磬��������Ҫ��ʾһλ���֣���������ʽӦ����\\d��������������һ����ͨ�ķ�б�ߣ���Ӧ����\\\\���������з����Ʊ���֮���Ķ���ֻ��Ҫʹ�õ���б�ߣ�\n\t��
+		Formatter类
+			Java中，所有新的格式化功能都由java.util.Formatter类处理。
+			构造一个Formatter对象时，需要向构造器传递一些信息，以告诉它最终的结果将向哪里输出。如，new Formatter(System.out);
+		格式化说明符
+		Formatter转换
+			String.format()方法接受与Formatter.format()一样的参数，返回一个String，当你只需使用format方法一次时，它用起来很方便。
+	正则表达式
+		基础
+			Java对反斜线\有不同的处理。在其他语言中，\\表示“我想要在正则表达式中插入一个普通的（字面上的）反斜线，请不要给他任何特殊的意义。”。而在java中，\\的意思是“我要插入一个正则表达式的反斜线，所以其后的字符具有特殊的意义”。例如，如果你想要表示一位数字，正则表达式应该是\\d。如果你想插入一个普通的反斜线，则应该是\\\\。不过换行符和制表符之类的东西只需要使用单反斜线：\n\t。
 			String.matches(pattern)
 			String.split()
-		������������ʽ
-		����
-			̰����
-				Ĭ��ֵ������ͨ��ģʽ�������ܶ���ƥ���ַ� 
-			��ǿ��
-				����ͨ��ģʽ���ӣ���ƥ������ģʽ��������С�ַ�����
-			ռ����
-				����ͨ��ģʽ����+������������ʽ��Ӧ�����ַ���ʱ�����������൱����״̬���Ա���ƥ��ʧ��ʱ���Ի��ݡ���ռ�������ʲ���������Щ�м�״̬�����˿�ʹ��������ʽִ����������Ч��
-			�ӿ�CharSequence��CharBuffer��String��StringBuilder��StringBuffer��֮�г��������ַ����е�һ�㻯���塣������������ʽ����������CharSequence���͵Ĳ���
-		Pattern��Matcher
+		创建正则表达式
+		量词
+			贪婪型
+				默认值，即普通的模式。尽可能多的匹配字符 
+			勉强型
+				在普通的模式后加？。匹配满足模式所需的最小字符数。
+			占有型
+				在普通的模式后加+。当正则表达式被应用于字符串时，它会产生相当多的状态，以便在匹配失败时可以回溯。而占有型量词并不保存这些中间状态，因此可使正则表达式执行起来更有效。
+			接口CharSequence从CharBuffer、String、StringBuilder、StringBuffer类之中抽象出了字符序列的一般化定义。多数正则表达式操作都接受CharSequence类型的参数
+		Pattern和Matcher
 			Pattern.compile()
 			Pattern.matcher()
-			Pattern.matches()�൱��Matcher.matches()���������ж�ģʽ�Ƿ���ƥ�������������ǲ��֣��ַ���������һ��ģʽҪʹ�ö��Σ���ô�ú����ķ�������ģʽ����һ�Σ�ʹ�ö��Ρ�
+			Pattern.matches()相当于Matcher.matches()，均用来判断模式是否能匹配整个（而不是部分）字符串。如果一个模式要使用多次，那么用后面的方法，将模式编译一次，使用多次。
 			Pattern.split()
-			Matcher.lookingAt()�ж�ģʽ�Ƿ�ƥ���ַ����Ŀ�ͷ���֣���from��������������Ҫ��ƥ�������ַ���
-			Matcher.find()������һ����ģʽƥ�����ַ�����
-			Matcher.group()�����ϴ�ƥ�䵽���ַ����С�Matcher.group()��CharSequence.subString(Matcher.start(), Matcher.end())
-			Matcher.start()������һ��ƥ�䵽���ַ����е���ʼλ��
-			Matcher.end()������һ��ƥ�䵽���ַ����еĽ���λ��
-			��
-				���������Ż��ֵ���������ʽ�������ñ���������ĳ���顣����Ϊ0��ʾ��������ʽ������Ϊi��ʾ����i���������������顣
+			Matcher.lookingAt()判断模式是否匹配字符串的开头部分（由from变量决定），不要求匹配整个字符串
+			Matcher.find()查找下一个与模式匹配的字符序列
+			Matcher.group()返回上次匹配到的字符序列。Matcher.group()和CharSequence.subString(Matcher.start(), Matcher.end())
+			Matcher.start()返回上一个匹配到的字符序列的起始位置
+			Matcher.end()返回上一个匹配到的字符序列的结束位置
+			组
+				组是用括号划分的正则表达式，可以用编号来引用某个组。组号为0表示整个表达式，组号为i表示被第i对括号括起来的组。
 				Matcher.groupCount()
 				Matcher.group()
-				Matcher.group(int i)��CharSequence.subString(Matcher.start(i), Matcher.end(i))�൱�������ϴ�ƥ�����ַ������У���ָ����ƥ�����ַ����С�
-				Matcher.start(int group)�����ϴ�ƥ�����ַ������У���ָ����ƥ�����ַ����е���ʼλ�á�
-				Matcher.end(int group)�����ϴ�ƥ�����ַ������У���ָ����ƥ�����ַ����е���ֹλ�á�
-				ƥ��ʧ��֮������start()��end()�����׳�IllegalStateException��
-			Pattern����
+				Matcher.group(int i)和CharSequence.subString(Matcher.start(i), Matcher.end(i))相当。返回上次匹配的字符序列中，与指定组匹配的字符序列。
+				Matcher.start(int group)返回上次匹配的字符序列中，与指定组匹配的字符序列的起始位置。
+				Matcher.end(int group)返回上次匹配的字符序列中，与指定组匹配的字符序列的终止位置。
+				匹配失败之后调用start()和end()将会抛出IllegalStateException。
+			Pattern标记
 				Pattern.compile(String regex, int flag)
 				Pattern.CANON_EQ
 				Pattern.CASE_INSENSITIVE(?i)
@@ -832,378 +832,378 @@ Java I/Oϵͳ
 				Pattern.MULTILINE(?m)
 				Pattern.UNICODE_CASE(?u)
 				Pattern.UNIX_LINES(?d)
-				����ͨ����������(|)���϶�������
+				可以通过或操作符(|)组合多个标记
 		split()
-		�滻����
+		替换操作
 			replaceFirst(String replacement)
 			replaceAll(String replacement)
-			appendReplacement(StringBuffer sbuf, String replacement)�� replacement�е�$��\���������塣�÷���ͨ����appendTail(StringBuffer sbuf), find()һ��ʹ����ʵ�ָ����滻��
+			appendReplacement(StringBuffer sbuf, String replacement)， replacement中的$和\有特殊意义。该方法通常和appendTail(StringBuffer sbuf), find()一起使用来实现复杂替换。
 		reset()
-			ʹ�ò���������reset()���������Խ�Matcher�����������õ���ǰ�ַ����е���ʼλ�á�
-		��������ʽ��java I/O
-	ɨ������
-		Scanner�Ĺ��������Խ����κ����͵����룬����File������InputStream��String�����������е�Readable�������������е����룬�ִ��Լ�ת���Ĺ����������ڲ�ͬ���͵�next�����С�
-		Scanner��һ�����裬����������ʱ���׳�IOException������������IOException�̵���
-		Scanner������
-			Ĭ��������Scannerʹ�ÿո������зִʡ�����ʹ��useDelimiter()�Զ��嶨������delimiter()���ص�ǰʹ�õĶ�������
-		����������ʽɨ��
+			使用不带参数的reset()方法，可以将Matcher对象重新设置到当前字符序列的起始位置。
+		正则表达式与java I/O
+	扫描输入
+		Scanner的构造器可以接受任何类型的输入，包括File对象、InputStream、String或者像此例中的Readable对象。它将所有的输入，分词以及转化的工作都隐藏在不同类型的next方法中。
+		Scanner有一个假设，在输入结束时会抛出IOException，所以它会把IOException吞掉。
+		Scanner定界符
+			默认情况下Scanner使用空格符进行分词。可以使用useDelimiter()自定义定界符，delimiter()返回当前使用的定界符。
+		用正则表达式扫描
 			Scanner.hasNext(Pattern)
 			Scanner.next(Pattern)
 			Scanner.match()
 	StringTokenizer
-		StringTokenizer��Java������������ʽ��Scanner��֮ǰ���ָ��ַ�����Ψһ�����������������Ѿ���������������ʽ��Scanner�����ˡ�
+		StringTokenizer是Java引入正则表达式和Scanner类之前，分隔字符串的唯一方法。所以它现在已经基本被正则表达式和Scanner替代了。
 		
 
-ͨ���쳣��������
-	����
-	�����쳣
-		�쳣����
-	�����쳣
-		try��
-		�쳣��������
-			�쳣����������������ģ�ͣ���ֹģ�ͺͻָ�ģ��
-	�����Զ����쳣
-		�쳣����¼��־
-	�쳣˵��
-		����ʱ��ǿ�Ƽ������쳣��Ϊ���������쳣
-	���������쳣
+通过异常处理错误
+	概念
+	基本异常
+		异常参数
+	捕获异常
+		try块
+		异常处理程序
+			异常处理理论上有两种模型：终止模型和恢复模型
+	创建自定义异常
+		异常与记录日志
+	异常说明
+		编译时被强制检查的异常称为被检查的异常
+	捕获所有异常
 		Throwable.getMessage()
 		Throwable.getLocalizedMessage()
 		Throwable.toString()
 		Throwable.printStackTrace()
 		Throwable.printStackTrace(PrintStream)
 		Throwable.printStackTrace(PrintWriter)
-		Throwable.fillInStackTrace()������Throwable�ڲ���¼ջ֡�ĵ�ǰ״̬�����ڳ��������׳��쳣������ʱ�����á�
-		ջ�켣
-			getStackTrace()����һ����ջ�켣�е�Ԫ�����ɵ����飬ÿ��Ԫ�ر�ʾջ�е�һ֡��
-		�����׳��쳣
-			����ֻ�ǰѵ�ǰ�쳣���������׳�����ôprintStackTrace()������ʾ����ԭ���쳣�׳����ĵ���ջ��Ϣ�����������׳�������Ϣ����ʱ����ʹ��fillInStackTrace()���ѵ�ǰ����ջ��Ϣ����ԭ���Ǹ��쳣�������Ǹ��Ƕ�����׷�ӣ���ԭ���ĵ���ջ��Ϣ�ᶪʧ��
-		�쳣��
-			Throwable�����Ĺ������н���һ��cause������Ϊ����������ԭʼ�쳣���ݸ��µ��쳣��
-			��Throwable�������У�ֻ�����ֻ������쳣���ṩ�˴�cause�����Ĺ�������������Error������java����������ϵͳ���󣩡�Exception�Լ�RuntimeException������Ҫ���������͵��쳣��������������ʹ��initCause()������
-	Java��׼�쳣
-		Throwable�������Է�Ϊ���ࣺError��ʾ����ʱ��ϵͳ������Exception�ǿ��Ա��׳��Ļ������͡�
-		������RuntimeException
+		Throwable.fillInStackTrace()用于在Throwable内部记录栈帧的当前状态，这在程序重新抛出异常或错误时很有用。
+		栈轨迹
+			getStackTrace()返回一个由栈轨迹中的元素组成的数组，每个元素表示栈中的一帧。
+		重新抛出异常
+			如果只是把当前异常对象重新抛出，那么printStackTrace()方法显示的是原来异常抛出点的调用栈信息，而非重新抛出点的信息。此时可以使用fillInStackTrace()来把当前调用栈信息填入原来那个异常对象。是覆盖而不是追加，即原来的调用栈信息会丢失。
+		异常链
+			Throwable子类的构造器中接受一个cause对象作为参数，来把原始异常传递给新的异常。
+			在Throwable的子类中，只有三种基本的异常类提供了带cause参数的构造器。他们是Error（用于java虚拟机报告系统错误）、Exception以及RuntimeException。如果要把其他类型的异常连接起来，可以使用initCause()方法。
+	Java标准异常
+		Throwable对象可以分为两类：Error表示编译时或系统错误。Exception是可以被抛出的基本类型。
+		特例：RuntimeException
 			NullPointException
-			�����쳣Ҳ�в��ܼ������쳣�������ڴ�����
-			ֻ���ڴ����к���RuntimeException���͵��쳣���������͵Ĵ��������ɱ�����ǿ��ʵʩ�ġ�����ԭ����RuntimeException�������Ǳ��̴�����
-	ʹ��finally��������
+			这种异常也叫不受检查的异常，它属于错误。
+			只能在代码中忽略RuntimeException类型的异常，其它类型的处理都是由编译器强制实施的。究其原因，RuntimeException代表的是编程错误。
+	使用finally进行清理
 	
-		finally������ʲô
-			�������쳣��û�б���ǰ�쳣�������򲶻��������£��쳣��������Ҳ������������һ�����쳣��������֮ǰ��ִ��finally�Ӿ䡣
-		��return��ʹ��finally
-			finally�Ӿ����ǻᱻִ�еģ�������һ�������У����ԴӶ����㷵�أ����ҿ��Ա�֤��Ҫ�����������Ծɻ�ִ�С�
-		ȱ�����쳣��ʧ
-			finally�ᵼ��try���е��쳣����������
-	�쳣������
-		�����Ƿ�����ʱ����ֻ���׳��ڸ��෽�����쳣˵�����г�����Щ�쳣��
-		���������̳��Ի��ಢ��ͬʱʵ����ĳ���ӿڣ����������ͽӿ�������ͬ�ķ�������ô�ӿڵ��쳣�б����ܱ����ӵ��������쳣�б��У��������е���Ӧ�ķ������쳣�б����ܰ����ӿڵ��쳣�б���
-		�쳣���ƶԹ������������ã����������Ĺ����������׳��κ��쳣�������쳣�б������������๹�������쳣�б��������๹�������ܲ������๹�����׳����쳣��
-		����������������ת��Ϊ���࣬�������ͻ���Ӧ��Ҫ���㲶���������쳣��
-		�ڼ̳л򸲸ǵĹ����У�ĳ���ض��������쳣�б����Ǳ����˶��Ǳ�С�ˡ�
-	������
-		finallyҲ���ܺܺõĽ������⡣��Ϊfinallyÿ�ζ���ִ���������롣�������������乹�������а�;���ϣ�Ҳ���ö�����ĳЩ���ֻ�û�б��ɹ�����������Щ������finally��ȴ��Ҫ�������ġ�
-		�����ڹ����׶ο��ܻ��׳��쳣������Ҫ���������࣬��InputStream��Ҫ�رյȣ��ȫ��ʹ�÷�ʽ��ʹ��Ƕ�׵�try�Ӿ䡣���������ǣ��ڴ�����Ҫ�����Ķ���֮������������һ��try-finally�����顣
-		���ڲ����׳��쳣�Ĺ��������������������������������󡣵��Ƕ��ڿ����׳��쳣�Ĺ��������������乹����ÿ������������һ��try-finally�飬�Ա�֤�ڳ����쳣ʱ�������ѱ������Ķ��󶼻ᱻ������
-	�쳣ƥ��
-	������ѡ��ʽ
-		��ʷ
-		�۵�
-		���쳣���ݸ�����̨
-		�ѱ��������쳣ת��Ϊ���������쳣
-	�쳣ʹ��ָ��
-	�ܽ�
+		finally用来做什么
+			甚至在异常在没有被当前异常处理程序捕获的情况下，异常处理机制也会在跳到更高一层的异常处理程序之前，执行finally子句。
+		在return中使用finally
+			finally子句总是会被执行的，所以在一个方法中，可以从多个点返回，并且可以保证重要的清理工作仍旧会执行。
+		缺憾：异常丢失
+			finally会导致try块中的异常不被输出。
+	异常的限制
+		当覆盖方法的时候，只能抛出在父类方法的异常说明里列出的那些异常。
+		当派生类继承自基类并且同时实现了某个接口，如果基类和接口中有相同的方法，那么接口的异常列表不能被添加到基类的异常列表中，派生类中的相应的方法的异常列表不能包含接口的异常列表。
+		异常限制对构造器不起作用，即派生类的构造器可以抛出任何异常，但其异常列表必须包含基类构造器的异常列表。派生类构造器不能捕获基类构造器抛出的异常。
+		如果将派生类向上转型为基类，编译器就会相应的要求你捕获基类的异常。
+		在继承或覆盖的过程中，某个特定方法的异常列表不是变大了而是变小了。
+	构造器
+		finally也不能很好的解决问题。因为finally每次都会执行清理代码。如果构造器在其构造过程中半途而废，也许该对象的某些部分还没有被成功创建，而这些部分在finally中却是要被清理的。
+		对于在构造阶段可能会抛出异常，并且要求清理的类，如InputStream需要关闭等，最安全的使用方式是使用嵌套的try子句。基本规则是：在创建需要清理的对象之后，立即进入一个try-finally语句块。
+		对于不会抛出异常的构造器，可以连续调用来创建多个对象。但是对于可能抛出异常的构造器，必须在其构造的每个对象后紧跟一个try-finally块，以保证在出现异常时，所有已被创建的对象都会被清理。
+	异常匹配
+	其它可选方式
+		历史
+		观点
+		把异常传递给控制台
+		把被检查的异常转换为不检查的异常
+	异常使用指南
+	总结
 
 	
-���ж���
-	���ͺ����Ͱ�ȫ������
-	��������
-	����һ��Ԫ��
-		Arrays.asList����һ�������򶺺ŷָ���Ԫ���б����ɱ���������������ת��Ϊlist������
-		��Arrays.asList������list���������ײ������飬���˲���ִ�иı����ߴ��Ĳ������������׳�UnsupportedException�Ĳ�����
-		Arrays.<T>asListʹ����ʾ���Ͳ���˵�������߱�����������list��������ʲô��
-	�����Ĵ�ӡ
+持有对象
+	泛型和类型安全的容器
+	基本概念
+	添加一组元素
+		Arrays.asList接受一个数组或逗号分隔的元素列表（可变参数），并将其转化为list对象。
+		由Arrays.asList产生的list，由于其底层是数组，因此不能执行改变其尺寸的操作，否则会抛出UnsupportedException的操作。
+		Arrays.<T>asList使用显示类型参数说明来告诉编译器产生的list的类型是什么。
+	容器的打印
 	List
-	������
-		Iterator�ڵ���remove֮ǰ�����ȵ���next
+	迭代器
+		Iterator在调用remove之前必须先调用next
 		ListIterator
-			ListIterator�ǹ��ܸ�ǿ����Iterator����ֻ�����ڸ���list�ķ��ʣ�������˫���ġ�
+			ListIterator是功能更强大的Iterator，它只能用于各种list的访问，而且是双向的。
 	LinkedList
-		LinkedList�����˿���ʹ������ջ�����к�˫�˶��еķ�����
+		LinkedList添加了可以使其用作栈、队列和双端队列的方法。
 	Stack
-		LinkedList�����ܹ�ֱ��ʵ��ջ�Ĺ��ܵķ��������˿���ֱ�ӽ�LinkedList����ջʹ�á�
-		�����Ѿ�����java.util.Stack������LinkedList���Բ������õ�Stack
+		LinkedList具有能够直接实现栈的功能的方法，因此可以直接将LinkedList当作栈使用。
+		尽管已经存在java.util.Stack，但是LinkedList可以产生更好的Stack
 	Set
-		Set����������Ԫ�صĹ����ԡ���Ԫ���Ƿ�����ĳ������
+		Set常用来测试元素的归属性。即元素是否属于某个集合
 	Map
 	Queue
-		���г�������һ�ֿɿ��Ľ������ӳ�����ĳ���������䵽��һ��������;����
-		Queue�ӿ�խ����LinkedList�����ķ���Ȩ�ޣ���ʹ��ֻ��ǡ���ķ������ܱ����ʡ�
+		队列常被当作一种可靠的将对象从程序的某个区域传输到另一个区域的途径。
+		Queue接口窄化了LinkedList方法的访问权限，以使得只有恰当的方法才能被访问。
 		PriorityQueue
 			Collections.reverseOrder
-	Collection��Iterator
-	Foreach��������
-		��������Ӧ����foreach���䣬��������ζ������Iterable���͡�
-		�������������÷�
-			����Collections.shuffle()�����Ƿ���Ӱ��ԭ���ļ��Ϻ�����һ��������һ����ϵ��Arrays.asList()���������������ݸ�ArrayList�Ĺ�������������һ����������Ԫ�ص�ArrayList�����˴�����Щ���ò������޸����顣����������һ������ֱ��ʹ��Arrays.asList()�Ľ��������ִ��һ��޸�����Ԫ�ص�˳����
-			��ӡ�����ķ���Arrays.toString()
-	�ܽ�
-		�³����в�Ӧ��ʹ�ù�ʱ��Vector,HashTable,Stack
+	Collection与Iterator
+	Foreach与迭代器
+		数组可以应用于foreach语句，但并不意味着它是Iterable类型。
+		适配器方法惯用法
+			关于Collections.shuffle()方法是否会影响原来的集合和其第一个参数有一定关系。Arrays.asList()的输出如果被传递个ArrayList的构造器，将创建一个引用数组元素的ArrayList，因此打乱这些引用并不会修改数组。但是如果第一个参数直接使用Arrays.asList()的结果，这种打乱会修改数组元素的顺序。
+			打印数组的方法Arrays.toString()
+	总结
+		新程序中不应该使用过时的Vector,HashTable,Stack
 		
 
-�ӿ�
-	�������ͳ��󷽷�
-		����һ��������һ�����������󷽷����������뱻�޶�Ϊ�����ġ�
-		������һ���������̳У�����ʵ�������г��󷽷���������Ҳ��������Ϊ�����ġ�
-	�ӿ�
-		�ӿڵ�Ĭ�Ϸ���Ȩ��Ϊ������Ȩ��
-		�ӿ�Ҳ���԰����򣬵�����Щ����ʽ��Ϊstatic��final�ġ�
-		�ӿ��еķ�����ʹ��ʹ��public���η���Ҳ��public���͵ġ���ʵ�ֽӿ��еķ���ʱ������������Ϊpublic�ģ������Ļ��ͻᵼ���ڼ̳еĹ����У�����Ȩ�޽��ͣ����Ǳ������������ġ�
-	��ȫ����
-	java�еĶ��ؼ̳�
-		���̳�����ʵ�ֽӿ�ͬʱ����ʱ���̳е���д��ǰ�档�����ӿںͻ����к�����ͬ�ķ�������ô���������п��Բ���ʵ�ֽӿ��еĸ÷���
-	ͨ���̳�����չ�ӿ�
-		���Ͻӿ�ʱ�����ֳ�ͻ
-	�����ӿ�
-	�ӿ��е���
-		��ʼ���ӿ��е���
-			�ӿ��е��������ǿ�final�ģ����ǿ��Ա��ǳ�������ʽ��ʼ����
-			��Щ�����ǽӿڵ�һ���֣����ǵ�ֵ���洢�ڸýӿڵľ�̬�洢�����ڡ�
-	Ƕ�׽ӿ�
-		���п���Ƕ��private�Ľӿڣ�����ֻ���ڸ�����ʵ�ָýӿڣ��������ⲿʵ�֡��ӿ��в���Ƕ��private�Ľӿڡ�
-		ʵ��ĳ���ӿ�ʱ��������Ҫʵ�ָýӿ���Ƕ�׵Ľӿ�
-	�ӿ��빤��
-		����ģʽ
-	�ܽ�
+接口
+	抽象类和抽象方法
+		如果一个类包含一个或多个抽象方法，该类必须被限定为抽象的。
+		如果从一个抽象类继承，除非实现其所有抽象方法，否则它也必须声明为抽象的。
+	接口
+		接口的默认访问权限为包访问权限
+		接口也可以包含域，但是这些域隐式的为static和final的。
+		接口中的方法即使不使用public修饰符，也是public类型的。在实现接口中的方法时，必须声明其为public的，否则的话就会导致在继承的过程中，访问权限降低，这是编译器不允许的。
+	完全解耦
+	java中的多重继承
+		当继承类和实现接口同时发生时，继承的类写在前面。如果接口和基类中含有相同的方法，那么在派生类中可以不用实现接口中的该方法
+	通过继承来扩展接口
+		组合接口时的名字冲突
+	适配接口
+	接口中的域
+		初始化接口中的域
+			接口中的域不能是空final的，但是可以被非常量表达式初始化。
+			这些域不是接口的一部分，他们的值被存储在该接口的静态存储区域内。
+	嵌套接口
+		类中可以嵌套private的接口，但是只能在该类内实现该接口，不能在外部实现。接口中不能嵌套private的接口。
+		实现某个接口时，并不需要实现该接口内嵌套的接口
+	接口与工厂
+		工厂模式
+	总结
 		
 	
-��̬
-	Ҳ�ƶ�̬�󶨡����ڰ󶨡�����ʱ����
-	��������ת��
-	���Ƕ�������
-	ת��
-		�������ð���
-			Java�г���static������final������private��������final�������⣬�������з������Ǻ��ڰ󶨡�
-			ΪʲôҪ��������Ϊfinal���ͣ�һ�����Ƿ�ֹ���˸��ǣ���һ�����ǹرն�̬�󶨣�����˵���߱���������Ҫ�������ж�̬�󶨣������������Ϳ���Ϊfinal���ɸ���Ч�Ĵ��롣���ǲ�Ӧ�ó�����ͼ�������ܵ�Ŀ����ʹ��final�ؼ��֡�
-		������ȷ����Ϊ
-		����չ��
-		ȱ�ݣ������ǡ�˽�з���
-			ֻ�з�private�������ܱ�����
-			�ڵ������У����ò�Ҫ������������private������ͬ�����֡�
-		ȱ�ݣ����뾲̬����
-			ֻ����ͨ�ķ������ÿ����Ƕ�̬�ģ�������ֱ�ӷ���ĳ�������������ʾͽ��ڱ����ڽ��н�����
-			��̬���������ж�̬��
-		����������̬
-			�������������ж�̬�ԣ�����ʵ������static������ֻ������static��������ʽ�ġ�
-			�������ĵ���˳��
-				�����Ĺ����������ڵ������Ĺ��������б����ã����Ұ��ռ̳в��������������ӣ���ʹÿ�������Ĺ��������ܵõ����á�
-			�̳�������
-				�����빹�������෴���ȶ������������������ٶԻ�������������
-			�������ڲ��Ķ�̬��������Ϊ
-				��д������ʱ��һ���򵥵�׼�����þ����ܼ򵥵ķ���ʹ������������״̬���������ԵĻ��������������������������ڹ��캯����ʹ�ö�̬�������п�����Ϊ��̬�Ե����������еĸķ����ڵ���ʱ�������໹û�б���ȫ��ʼ�����Ӷ��������⡣�ڹ�������Ψһ���Ե��õķ�����final���͵ģ�����private���ͣ���Ϊ���ǲ��ܱ����า�ǡ�
-		Э�䷵������
-			JavaSE5��������Э�䷵�����͡�����ʾ�ڵ������еı����Ƿ������Է��ػ��෽���ķ������͵�ĳ�ֵ������͡�
-	�ü̳н�������
-		���ڼ̳к����ϣ�һ��ͨ�õ�׼���ǣ��ü̳б�����Ϊ�ϵĲ��죬���ֶα���״̬�ϵı仯��
-		���̳�����չ
-			����ת�͵��µ������е���չ���ֲ��ܱ��������ʡ�
-		����ת��������ʱ����ʶ��
-	�ܽ�
+多态
+	也称动态绑定、后期绑定、运行时绑定
+	再论向上转型
+	忘记对象类型
+	转机
+		方法调用绑定
+			Java中除了static方法和final方法（private方法属于final方法）外，其他所有方法都是后期绑定。
+			为什么要将方法设为final类型，一方面是防止别人覆盖，另一方面是关闭动态绑定，或者说告诉编译器不需要对其进行动态绑定，这样编译器就可以为final生成更有效的代码。但是不应该出于试图提高性能的目的来使用final关键字。
+		产生正确的行为
+		可扩展性
+		缺陷：“覆盖”私有方法
+			只有非private方法才能被覆盖
+			在导出类中，最好不要采用与基类中private方法相同的名字。
+		缺陷：域与静态方法
+			只有普通的方法调用可以是多态的，如果你直接访问某个域，这个访问就将在编译期进行解析。
+			静态方法不具有多态性
+		构造器与多态
+			构造器并不具有多态性，他们实际上是static方法，只不过该static方法是隐式的。
+			构造器的调用顺序
+				基类的构造器总是在导出类的构造过程中被调用，而且按照继承层次逐渐向上链接，以使每个基类的构造器都能得到调用。
+			继承与清理
+				清理与构造正好相反，先对派生类进行清理，再对基类进行清理。
+			构造器内部的多态方法的行为
+				编写构造器时有一条简单的准则：用尽可能简单的方法使对象进入正常状态，如果可以的话，避免调用其它方法。如果在构造函数中使用多态方法，有可能因为多态性导致派生类中的改方法在调用时，派生类还没有被完全初始化，从而出现问题。在构造器内唯一可以调用的方法是final类型的，包括private类型，因为他们不能被子类覆盖。
+		协变返回类型
+			JavaSE5中添加了协变返回类型。它表示在导出类中的被覆盖方法可以返回基类方法的返回类型的某种导出类型。
+	用继承进行设计
+		关于继承和组合，一条通用的准则是：用继承表达行为上的差异，用字段表达状态上的变化。
+		纯继承与扩展
+			向上转型导致导出类中的扩展部分不能被基类访问。
+		向下转型与运行时类型识别
+	总结
 
 
-������
-	�����﷨
-	�̳��﷨
-		super.method()��ʽ���û����ķ���
-		��ʼ������
-			java���Զ��ڵ������Ĺ������в����Ի��๹�����ĵ��á�
-	����
-		������һ�ֽ������Ϻͼ̳�֮������ӹ֮����
-	����ʹ�����Ϻͼ̳�
-		ȷ����ȷ����
-			����������������Զ�޷������ã���ʹ�����ã���Ҳ�������κ�����Ҫ��˳�������ն��������õİ취�ǳ����ڴ����⣬������������������ȥ���κ��¡�������Ҫ���������������Ǳ�д���Լ�����������������Ҫʹ��finalize��
-		��������
-			@Overrideע�����Է�ֹ���ڲ�������ʱ�������Ľ��������ء�
-	�����Ϻͼ̳�֮��ѡ��
-	protected�ؼ���
-		protectedȨ����ͬ�����������з���Ȩ�ޣ�Ĭ��Ȩ����ͬ�����з���Ȩ�ޡ�
-	����ת��
-		Ϊʲô��Ϊ����ת��
-		���ۼ̳к�����
-	final�ؼ���
-		final����
-			���Զ�������ʹ��finalʱ����ֻ��ʾָ�벻�䣬������֤�������ݲ��䡣��һ����ͬ�����������飬��Ҳ�Ƕ�����
-			���������Ķ��崦��ÿ���������ж�final���и�ֵ��
-		final����
-			��������private��������ʽ��ָ��Ϊfinal�ġ�
-		final��
-			final���е����з�������ʽ�ı�ָ��Ϊfinal�ġ�
-		�й�final���Ҹ�
-	��ʼ�������ļ���
-		���ڱ�����ʱ�����ȳ�ʼ��static�ֶκʹ����Ρ�������������ʱ����ִ��ʵ���ֶκ�ʵ�������Σ�����ִ�й��캯����������Щ˳�������Ȼ����������ࡣ
-	�ܽ�
-
-	
-����Ȩ�޿���
-	�����ⵥԪ
-		������֯
-		������һ�޶��İ���
-		���ƹ��߿�
-		��import�ı���Ϊ
-		��ʹ�ð����Ҹ�
-	Java����Ȩ�����δ�
-		������Ȩ��
-		public���ӿڷ���Ȩ��
-			��ĳ������Ĭ�ϰ�������ĳ������ָ����������ͬһ�ļ�����ʱ�������ļ�ϵͳ�ϵķ��ã�������Ҳ�������ڰ�����Ȩ�ޡ�
-		private�����޷�����
-		protected���̳з���Ȩ��
-	�ӿں�ʵ��
-	���ķ���Ȩ��
-		�಻������private��protected�ġ��ڲ������⡣
-	�ܽ�
+复用类
+	组合语法
+	继承语法
+		super.method()显式调用基类的方法
+		初始化基类
+			java会自动在导出类的构造器中插入对基类构造器的调用。
+	代理
+		代理是一种介于组合和继承之间的中庸之道。
+	组合使用组合和继承
+		确保正确清理
+			垃圾回收器可能永远无法被调用，即使被调用，它也可能以任何它想要的顺序来回收对象。最好的办法是除了内存以外，不能依赖垃圾回收器去做任何事。如果需要进行清理，最好是编写你自己的清理方法，但不要使用finalize。
+		名称屏蔽
+			@Override注解可以防止你在不想重载时而意外的进行了重载。
+	在组合和继承之间选择
+	protected关键字
+		protected权限是同包和子类具有访问权限，默认权限是同包具有访问权限。
+	向上转型
+		为什么称为向上转型
+		再论继承和组合
+	final关键字
+		final数据
+			当对对象引用使用final时，它只表示指针不变，并不保证对象内容不变。这一限制同样适用于数组，它也是对象。
+			必须在域的定义处或每个构造器中对final进行赋值。
+		final方法
+			类中所有private方法都隐式的指定为final的。
+		final类
+			final类中的所有方法都隐式的被指定为final的。
+		有关final的忠告
+	初始化及类的加载
+		类在被加载时，首先初始化static字段和代码段。当生成类对象时，再执行实例字段和实例代码段，最后执行构造函数，所有这些顺序都是先基类后派生类。
+	总结
 
 	
-��ʼ��������
-	�ù�����ȷ����ʼ��
-	��������
-		�������ط���
-		�漰�������͵�����
-			����������ʵ�η�ΧС�ڷ��������е��βΣ�ʵ���������;ͻᱻ������
-			����������ʵ�η�Χ���ڷ��������е��βΣ�����Ҫͨ������ת��������խ��ת����
-		�Է���ֵ�������ط���
-			�в�ͨ
-	Ĭ�Ϲ�����
-	this�ؼ���
-		�����������÷����Ķ���������Ϊ��һ���������ݸ��˷������ڷ����ڲ�����ͨ��this�ؼ��ֻ��øö������á�
-		�ڹ������е��ù�����
-			�ڹ������У�����Ϊthis�����˲����б����ͱ�ʾ�Է��ϴ˲����б��Ĺ���������ȷ���á�
-			���ܿ�����this����һ������������ȴ���ܵ���������
-			���뽫������������������ʵ����
-			��������֮�⣬��������ֹ���κ����������е��ù�������
-		static�ĺ���
-			��̬�����в��ܵ��÷Ǿ�̬���������������ԡ�
-	�������սᴦ������������
-		һ������������׼�����ͷŶ���ռ�õĴ洢�ռ䣬�����ȵ�����finalize()��������������һ���������ն�������ʱ���Ż��������ոö���ռ�õ��ڴ档
-		finalize����;����
-			��������ֻ���ڴ��й�
-		������ʵʩ����
-			�����������ջ����սᣬ������֤һ���ᷢ��������jvm��δ�����ڴ��ľ������Σ��������˷�ʱ��ȥִ�����������Իָ��ڴ��ġ���
-		�ս�����
-			Ӧ�����Ǽ��������汾��finalizeҲҪ��ĳЩ��Ҫ�����飬����Ҫʹ��super����������
-			����˵���սắ���޷�Ԥ�ϣ�������Σ�յģ���֮�Ƕ����ġ�
-			ͨ������ָ��finalize�����봴����������������������ȷ�ĵ�������
-		�����������ι���
-			��������������ʱ��һ�����տռ䣬һ��ʹ���еĶ����������С�
-			�������ջ��ƣ�
-				1�����ü�����ȱ���Ƕ���ѭ�������޷�������
-				2�������κλ��Ķ�����һ��������׷�ݵ��������ڶ�ջ����̬�洢��֮�е����á����ˣ������Ӷ�ջ�;�̬�洢����ʼ���������е����ã������ҵ����л��Ķ��󡣶���ÿ�����ã�����׷���������õĶ�����Ȼ���Ǵ˶����������������á����ͽ�����ѭ�����õ����⣬��Ϊ��Щ�����������ᱻ���֣����˻ᱻ���յ���
-				�������δ����ҵ��Ļ��Ķ�����ȡ���ڲ�ͬ��������ʵ�֣�
-					1��ֹͣ-���ơ�����ͣ�����������������ں�̨����ģʽ����Ȼ�������л��Ķ�����һ���Ѹ��Ƶ���һ���ѣ�û�б����Ƶ�ȫ�����������Ѷ�����һ�����Ƶ���һ��ʱ������ָ���������ñ�������������λ�ڶ�ջ�;�̬�洢�������ÿ���ֱ��������������ָ����Щ���������ã�ֻ���ڱ����Ĺ����в��ܱ��ҵ��������������и����񣬽��ɵ�ַӳ�����µ�ַ����
-					���ָ���ʽ������Ч�ʱȽϵͣ�ԭ����������
-						1��Ҫ�������ѣ��Ӷ���ά����ʵ����Ҫ��һ���Ĵ洢�ռ䡣ĳЩ�������Դ������Ĵ�����ʽ�ǣ������Ӷ��з��伸���ϴ����ڴ棬���ƶ������⼸���ڴ���֮�����С�
-						2�����ơ����������ȶ�̬�����ܻ��������ٵ��������������ƻ��Ķ����ͻ����˷ѡ�Ϊ�˽����������⣬һЩ�������������м��飬Ҫ��û�������������ͻ��л�����һ�ֹ���ģʽ������-��ɨģʽ��sun���ڰ汾������������������ģʽ����һ����;���ԣ����ַ�ʽ�Ƚ���������ֻ���������������������������ٶȾͺܿ��ˡ�
-						����-��ɨģʽҲ�ǴӶ�ջ�;�̬�洢����ʼ�������ã��������ҵ��Ļ��Ķ��������ǣ������б��ǹ������ɺ󣬿�ʼ�����������ͷŵ�����δ�����ǵĶ��󡣲��ᷢ���κθ��ƶ���������ʣ�µĶѿռ��ǲ������ģ���������������ϣ���õ������Ŀռ䣬����Ҫ��ʣ�µĶ�������������
-						ֹͣ-���ƺͱ���-����������ģʽ�������ڳ�����ͣ�������²��ܽ��С�
+访问权限控制
+	包：库单元
+		代码组织
+		创建独一无二的包名
+		定制工具库
+		用import改变行为
+		对使用包的忠告
+	Java访问权限修饰词
+		包访问权限
+		public：接口访问权限
+			当某个具有默认包的类和某个具有指定包的类在同一文件夹中时（包在文件系统上的放置），他们也有类似于包访问权限。
+		private：你无法访问
+		protected：继承访问权限
+	接口和实现
+	类的访问权限
+		类不可以是private和protected的。内部类除外。
+	总结
+
+	
+初始化与清理
+	用构造器确保初始化
+	方法重载
+		区分重载方法
+		涉及基本类型的重载
+			如果传入的实参范围小于方法声明中的形参，实际数据类型就会被提升。
+			如果传入的实参范围大于方法声明中的形参，就需要通过类型转换来进行窄化转换。
+		以返回值区分重载方法
+			行不通
+	默认构造器
+	this关键字
+		编译器将调用方法的对象引用作为第一个参数传递给了方法。在方法内部可以通过this关键字获得该对象引用。
+		在构造器中调用构造器
+			在构造器中，如果为this添加了参数列表，就表示对符合此参数列表的构造器的明确调用。
+			尽管可以用this调用一个构造器，但却不能调用两个。
+			必须将构造器调用置于最其实处。
+			除构造器之外，编译器禁止在任何其他方法中调用构造器。
+		static的含义
+			静态方法中不能调用非静态方法，反过来可以。
+	清理：终结处理与垃圾回收
+		一旦垃圾回收器准备好释放对象占用的存储空间，就首先调用其finalize()方法，并且在下一次垃圾回收动作发生时，才会真正回收该对象占用的内存。
+		finalize的用途何在
+			垃圾回收只与内存有关
+		你必须实施清理
+			无论垃圾回收还是终结，都不保证一定会发生。如果jvm并未面临内存耗尽的情形，他不会浪费时间去执行垃圾回收以恢复内存的。、
+		终结条件
+			应该总是假设基类版本的finalize也要做某些重要的事情，因此要使用super来调用它。
+			有人说：终结函数无法预料，常常是危险的，总之是多余的。
+			通常不能指望finalize，必须创建其他的清理方法，并明确的调用他们
+		垃圾回收如何工作
+			垃圾回收器工作时，一面回收空间，一面使堆中的对象紧凑排列。
+			垃圾回收机制：
+				1。引用计数。缺点是对于循环引用无法处理。
+				2。对于任何活的对象，一定能最终追溯到其存活在堆栈或静态存储区之中的引用。因此，如果从堆栈和静态存储区开始，遍历所有的引用，就能找到所有活的对象。对于每个引用，必须追踪它所引用的对象，然后是此对象包含的所有引用。这就解决了循环引用的问题，因为这些对象根本不会被发现，因此会被回收掉。
+				至于如何处理找到的活的对象，取决于不同的虚拟机实现：
+					1。停止-复制。先暂停程序（因此它不属于后台回收模式），然后将所有活的对象从一个堆复制到另一个堆，没有被复制的全是垃圾。当把对象从一处复制到另一处时，所有指向它的引用必须进行修正。位于堆栈和静态存储区的引用可以直接修正，但其他指向这些对象的引用，只有在遍历的过程中才能被找到。（可以想象有个表格，将旧地址映射至新地址）。
+					这种复制式回收器效率比较低，原因有两个：
+						1。要有两个堆，从而得维护比实际需要多一倍的存储空间。某些虚拟机对此问题的处理方式是，按需从堆中分配几块较大的内存，复制动作在这几个内存块之间进行。
+						2。复制。程序进入稳定态后可能会产生很少的垃圾，这样复制活的对象就会很浪费。为了解决这个问题，一些虚拟机都会进行检查，要是没有垃圾产生，就会切换到另一种工作模式，标记-清扫模式。sun早期版本的虚拟机采用了这种模式。对一般用途而言，这种方式比较慢，但对只会产生少量垃圾的情况，他的速度就很快了。
+						标记-清扫模式也是从堆栈和静态存储区开始遍历引用，给所有找到的活的对象打标记，当所有标记工作完成后，开始进行清理，释放掉所有未被标记的对象。不会发生任何复制动作。所以剩下的堆空间是不连续的，如果垃圾回收器希望得到连续的空间，就需要对剩下的对象重新整理。
+						停止-复制和标记-清除这两种模式，必须在程序暂停的情况下才能进行。
 					
-						Java�����������м��ӣ��������ж��󶼺��ȶ���������������Ч�ʽ��͵Ļ������л�������-��ɨģʽ��ͬ���������������ٱ���-��ɨ��Ч���������ѿռ����ֺܶ���Ƭ���ͻ��л���ֹͣ-����ģʽ����������Ӧ������
-			java�������������฽�Ӽ������������ٶȡ��������������йصģ�����Ϊ��ʱ�������ļ����������԰ѳ���ȫ���򲿷ַ����ɱ��ػ����롣���������������ֽ���װ���ڴ����������ַ����ɹ�ѡ����
-					1���ü�ʱ�������������еĴ��롣ȱ�ݣ�1�����ض�������ɢ���������������������ڣ��ۼ�����Ҫ���ܶ�ʱ�䡣2�������ӿ�ִ�д����ĳ��ȣ����п��ܵ���ҳ�����ȣ��Ӷ����ͳ�����Ч�ʡ�
-					2�����ж�����������ʱ������ֻ������Ҫʱ�ű������롣�°�jdk�е�java HotSpot�����Ͳ��������Ƶķ���������ÿ��ִ�е�ʱ�򶼻���һЩ�Ż�������ִ�еĴ���Խ�࣬�����ٶȾ�Խ�졣
+						Java虚拟机会进行监视，如果所有对象都很稳定，垃圾回收器的效率降低的话，就切换到标记-清扫模式；同样，虚拟机会跟踪标记-清扫的效果，如果堆空间出现很多碎片，就会切换回停止-复制模式，这叫自适应技术。
+			java虚拟机中有许多附加技术用以提升速度。与加载器操作有关的，被称为即时编译器的技术。它可以把程序全部或部分翻译成本地机器码。当加载器将类的字节码装入内存后，有两种方案可供选择：
+					1。让即时编译器编译所有的代码。缺陷：1。加载动作发生散落在整个程序生命周期内，累加起来要花很多时间。2。会增加可执行代码的长度，这有可能导致页面调度，从而降低程序的效率。
+					2。进行惰性评估。即时编译器只有在需要时才编译代码。新版jdk中的java HotSpot技术就采用了类似的方法，代码每次执行的时候都会做一些优化，所以执行的次数越多，它的速度就越快。
 						
-	��Ա��ʼ��
-		������ǿ�Ʒ����ľֲ�������ʹ��ǰ�������г�ʼ����
-		ָ����ʼ��
-			����ͨ�����÷�����Ϊ���Ը�ֵ���������Ĳ����������Ѿ���ʼ�����ġ�
-	��������ʼ��
-		�Զ���ʼ���ڹ�����֮ǰ���С�
-		��ʼ��˳��
-			�Զ���ʼ���У������������Ⱥ�˳������������ʼ��˳����
-		��̬���ݵĳ�ʼ��
-			���۴������ٶ��󣬾�̬���ݶ�ֻռһ�ݴ洢������
-			���ĳ�ʼ�����̣�
-				1�����״δ��������Ķ��󣬻������ľ�̬����/��̬���״α�ʹ��ʱ��java������������·������λ��class�ļ���
-				2������class�ļ�����ʱ��ִ�о�̬��ʼ�������ж�����
-				3������new��������ʱ�����ڶ���Ϊ�����������洢�ռ䡣
-				4�������洢�ռ��ᱻ���㡣�����Զ����ö����е������ֶζ���ΪĬ��ֵ��
-				5��ִ�����г������ֶζ��崦�ĳ�ʼ��������
-				6��ִ�й����������м̳д���ʱ�Ƚϸ��ӡ�
-		��ʽ�ľ�̬��ʼ��
-			��̬��ִֻ��һ�Ρ�
-			��̬��Ա�����;�̬����ִ��˳�����䶨��˳���йء�
-		�Ǿ�̬ʵ����ʼ��
-			�Ǿ�̬�飨ʵ����ʼ���飩��ÿ�ζ��󴴽�ʱ����ִ�С�
-			�Ǿ�̬��Ա�����ͷǾ�̬����ִ��˳�����䶨��˳���йء�
-	������ʼ��
-		����һ���ɻ�������������ֵ����ʼ������ʱ�����������鶨�崦���У���ʱ�洢�ռ��ķ����ɱ�����������
-		����������ֵͬ���ø�ֵ
-		�ɱ������б�
-			�ɱ������б��ײ�ʵ����Ϊ���顣������������foreach��ѭ����ͬ����ʹ�ÿɱ������б��ĵط���Ҳ���Դ���һ�����顣
-			��0���������ݸ��ɱ������б�Ҳ�������ġ�
-			�ɱ�����Ҳ��length����
-			���ж����ɱ�������ͬ������ʱ��������Щ����ʱ�������ݵĲ�������Ϊ0����ô����������֪�������ĸ������������ǲ������ġ�
-	ö������
-		����enumʱ�����������Զ�Ϊ������һЩ������
-			1��toString()����ӡ��enumʵ�������֡�
-			2��ordinal()��������enumʵ��������˳����
-			3��values()������enumʵ��������˳�򣬲�����Щ�������ɵ����顣
-		enum����
-		enum����Ӧ����switch����
-	�ܽ�
+	成员初始化
+		编译器强制方法的局部变量在使用前必须进行初始化。
+		指定初始化
+			可以通过调用方法来为属性赋值，但方法的参数必须是已经初始化过的。
+	构造器初始化
+		自动初始化在构造器之前进行。
+		初始化顺序
+			自动初始化中，变量定义的先后顺序决定了其初始化顺序。
+		静态数据的初始化
+			无论创建多少对象，静态数据都只占一份存储区域。
+			类的初始化过程；
+				1。当首次创建该类的对象，或该类的静态方法/静态域首次被使用时，java解释器查找类路径，定位其class文件。
+				2。载入class文件，此时会执行静态初始化的所有动作。
+				3。当用new创建对象时，会在堆上为其对象分配存储空间。
+				4。这块存储空间会被清零。这就自动将该对象中的所有字段都设为默认值。
+				5。执行所有出现在字段定义处的初始化动作。
+				6。执行构造器。当有继承存在时比较复杂。
+		显式的静态初始化
+			静态块只执行一次。
+			静态成员变量和静态块的执行顺序和其定义顺序有关。
+		非静态实例初始化
+			非静态块（实例初始化块）在每次对象创建时都会执行。
+			非静态成员变量和非静态块的执行顺序和其定义顺序有关。
+	数组初始化
+		当用一组由花括号括起来的值来初始化数组时，必须在数组定义处进行，此时存储空间的分配由编译器负责。
+		数组变量赋值同引用赋值
+		可变参数列表
+			可变参数列表底层实现仍为数组。所以其可以用foreach来循环。同样在使用可变参数列表的地方，也可以传递一个数组。
+			将0个参数传递给可变参数列表也是允许的。
+			可变参数也有length属性
+			当有多个可变参数的同名方法时，调用这些方法时如果传递的参数个数为0，那么编译器将不知道调用哪个方法，所以是不允许的。
+	枚举类型
+		创建enum时，编译器会自动为你添加一些方法：
+			1。toString()。打印该enum实例的名字。
+			2。ordinal()。表明该enum实例的声明顺序。
+			3。values()。根据enum实例声明的顺序，产生这些常量组成的数组。
+		enum是类
+		enum可以应用于switch语句
+	总结
 		
 		
-����ִ������
-	true��false
-		java��������һ��������Ϊ����ֵʹ��
+控制执行流程
+	true和false
+		java不允许将一个数字作为布尔值使用
 	if-else
-	����
+	迭代
 		do-while
 		for
-		���Ų�����
-			ͨ�����Ų��������Զ������������������Ǳ�������ͬ�����͡�
-	foreach�﷨
+		逗号操作符
+			通过逗号操作符可以定义多个变量，但他们必须是相同的类型。
+	foreach语法
 	return
-	break��continue
-	����������goto
-		javaû��goto	
+	break和continue
+	臭名昭著的goto
+		java没有goto	
 	switch
-		switch��ѡ�����ӱ�����int��char����������ֵ���ַ����򸡵��������С�
-	�ܽ�
+		switch的选择因子必须是int或char那样的整数值，字符串或浮点数均不行。
+	总结
 
 	
-������
-	���򵥵Ĵ�ӡ����
-	ʹ��java������
-	���ȼ�
-	��ֵ
-		���������еı�������
-	����������
-		һԪ�Ӽ�������
-				һԪ�ӺŲ��������Խ���С���͵Ĳ���������Ϊint��
-	�Զ������͵ݼ�
-	��ϵ������
-		���Զ����ĵȼ���
-	�߼�������
-		��·
-	ֱ�ӳ���
-		ָ��������
-			e����10
-	��λ������
-	��λ������
-		�з������Ʋ�����ʹ�÷�����չ��������Ϊ�������ڸ�λ����0��������Ϊ�������ڸ�λ����1���޷������Ʋ������������������ڸ�λ����0��
-		�ڶ�char��byte��short���͵���ֵ������λ����ʱ������λ֮ǰ�����ǻᱻת��Ϊint���ͣ����ҵõ��Ľ���Ҳ��int���͵�ֵ��
-	��Ԫ������
-	�ַ���������+��+=
-	ʹ�ò�����ʱ�����Ĵ���
-	����ת��������
-		��ִ������ת��ʱ����ϣ���õ������ͷ���Բ�����ڣ���Ҫ��������ת����ֵ�������ߡ�
-		�������Ͳ����������κ����͵�ת��������
-		��β������
-			�ڽ�float��doubleת��Ϊ����ֵʱ�����ǶԸ����ֽ��н�β��������Ҫ�õ������Ľ�������Ҫʹ��java.lang.Math��round()��
-		����
-			ͨ��������ʽ�г��ֵ������������;����������������������͡�
-	Javaû��sizeof
-		javaû��sizeof�������������������л����ϴ�С������ͬ�ġ�
-	������С��
-		�ܹ��Բ���ֵ���еĲ���ʮ�����ޡ�
-		��boolean�⣬�κλ����������Ͷ���ͨ������ת����Ϊ������������
-	�ܽ�
+操作符
+	更简单的打印语句
+	使用java操作符
+	优先级
+	赋值
+		方法调用中的别名问题
+	算术操作符
+		一元加减操作符
+				一元加号操作符可以将较小类型的操作数提升为int。
+	自动递增和递减
+	关系操作符
+		测试对象的等价性
+	逻辑操作符
+		短路
+	直接常量
+		指数计数法
+			e代表10
+	按位操作符
+	移位操作符
+		有符号右移操作符使用符号扩展：若符号为正，则在高位插入0；若符号为负，则在高位插入1。无符号右移操作符，无论正负都在高位插入0。
+		在对char、byte和short类型的数值进行移位处理时，在移位之前，他们会被转化为int类型，并且得到的结果也是int类型的值。
+	三元操作符
+	字符串操作符+和+=
+	使用操作符时常犯的错误
+	类型转换操作符
+		在执行类型转换时，将希望得到的类型放在圆括号内，将要进行类型转换的值放在左边。
+		布尔类型不允许进行任何类型的转换处理。
+		截尾和舍入
+			在将float和double转型为整形值时，总是对该数字进行截尾。如果想要得到舍入的结果，就要使用java.lang.Math的round()。
+		提升
+			通常，表达式中出现的最大数据类型决定了最后结果的数据类型。
+	Java没有sizeof
+		java没有sizeof，所有数据类型在所有机器上大小都是相同的。
+	操作符小结
+		能够对布尔值进行的操作十分有限。
+		除boolean外，任何基本数据类型都可通过类型转换变为其他基本类型
+	总结
