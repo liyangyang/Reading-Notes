@@ -1,0 +1,815 @@
+Java Concurrency in Practice
+
+Introduction
+  A Very Brief History of Concurrency
+	Benefits of Threads
+		Exploiting Multiple Processors
+		Simplicity of Modeling
+		Simplified Handling of Asynchronous Events
+		More Responsive User Interfaces
+	Risk of Threads
+		Safety Hazards
+		Liveness Hazards
+		Performance hazards
+			Context switches: saving and restoring execution context, loss of locality, and CPU time spent scheduling threads instead of running them.
+			When threads share data, they must use synchronization mechanisms that can inhibit compiler optimizations, flush or invalidate memory caches, and create synchronization traffic on the shared memory bus.
+	Threads are everywhere
+		Timer
+		Servlets and JavaServer Pages(JSP)
+			Servlets often access state information shared with other servlets, such as application‐scoped objects (those stored in the ServletContext) or session‐scoped objects (those stored in the per‐client HttpSession).
+		RMI
+		Swing and AWT
+
+
+Part 1: Fundamentals
+		
+Thread Safety
+	Writing thread‐safe code is, at its core, about managing access to state, and in particular to shared,	mutable state.
+	When designing thread‐safe classes, good object‐oriented techniques ‐ encapsulation, immutability, and clear specification of invariants ‐ are your best friends.
+	What is Thread Safety
+		A class is thread‐safe if it behaves correctly when accessed from multiple threads, regardless of the scheduling or interleaving of the execution of those threads by the runtime environment, and with no additional synchronization or other coordination on the part of the calling code.
+		Thread‐safe classes encapsulate any needed synchronization so that clients need not provide their own.
+		Example: A Stateless Servlet
+			Stateless objects are always thread‐safe.
+	Atomicity
+		Race Conditions
+		Example: Race Conditions in Lazy Initialization
+			race condition: check-and-set(like lazy initialization), read-and-modify(like increment)
+		Compound Actions
+	Locking
+		To preverse state consistency, update related state variables in a single atomic operation.
+		Intrinsic Locks
+			synchronized
+			The lock is automatically acquired by the executing thread before entering a synchronized block and automatically released when control exits the synchronized block, whether by the normal control path or by throwing an exception out of the block.
+		Renentrancy
+			Because intrinsic locks are reentrant, if a thread tries to acquire a lock that it already holds, the request succeeds.
+			Reentrancy is implemented by associating with each lock an acquisition count and an owning thread.
+	Guarding State with Locks
+		For each mutable state variable that may be accessed by more than one thread, all accesses to that variable must be performed with the same lock held. In this case, we say that the variable is guarded by that lock.
+		Acquiring the lock associated with an object does not prevent other threads from accessing that object ‐ the only thing that acquiring a lock prevents any other thread from doing is acquiring that same lock.
+		Every shared, mutable variable should be guarded by exactly one lock. Make it clear to maintainers which lock that is.
+		A common locking convention is to encapsulate all mutable state within an object and to protect it from concurrent access by synchronizing any code path that accesses mutable state using the object's intrinsic lock. This pattern is used by many thread‐safe classes, such as Vector and other synchronized collection classes.
+		For every invariant that involves more than one variable, all the variables involved in that invariant must be guarded by the same lock.
+	Liveness and Performance
+		It is reasonable to try to exclude from synchronized blocks long‐running operations that do not affect shared state, so that other threads are not prevented from accessing the shared state while the long‐running operation is in progress.
+		Acquiring and releasing a lock has some overhead, so it is undesirable to break down synchronized blocks too far.
+		Avoid holding locks during lengthy computations or operations at risk of not completing quickly such as network or console I/O.
+		There is frequently a tension between simplicity and performance. When implementing a synchronization policy, resist the temptation to prematurely sacrifice simplicity (potentially compromising safety) for the sake of performance.
+
+		
+Sharing Objects
+	We want not only to prevent one thread from modifying the state of an object when another is using it, but also to ensure that when a thread modifies the state of an object, other threads can actually see the changes that were made. But without synchronization, this may not happen.
+	Visibility
+		In the absence of synchronization, the compiler, processor, and runtime can do some downright weird things to the order in which operations appear to execute. Attempts to reason about the order in which memory actions "must" happen in insufficiently synchronized multithreaded programs will almost certainly be incorrect.
+		Stale Data
+		Non-atomic 64-bit Operations
+			It is not safe to use shared mutable long and double variables in multithreaded programs unless they are declared volatile or guarded by a lock.
+		Locking and Visibility	
+			Everything A did in or prior to a synchronized block is visible to B when it executes a synchronized block guarded by the same lock.
+			Locking is not just about mutual exclusion; it is also about memory visibility. To ensure that all threads see the most up-to-date values of shared mutable variables, the reading and writing threads must synchronize on a common lock.
+		Volatile Variables
+			When a field is declared volatile, the compiler and runtime are put on notice that this variable is shared and that operations on it should not be reordered with other memory operations. Volatile variables are not cached in registers or in caches where they are hidden from other processors, so a read of a volatile variable always returns the most recent write by any thread.
+			When thread A writes to a volatile variable and subsequently thread B reads that same variable, the values of all variables that were visible to A prior to writing to the volatile variable become visible to B after reading the volatile variable. So from a memory visibility perspective, writing a volatile variable is like exiting a synchronized block and reading a volatile variable is like entering a synchronized block.
+			Use volatile variables only when they simplify implementing and verifying your synchronization policy; avoid using volatile variables when verifying correctness would require subtle reasoning about visibility. Good uses of volatile variables include ensuring the visibility of their own state, that of the object they refer to, or indicating that an important lifecycle event (such as initialization or shutdown) has occurred.
+			Locking can guarantee both visibility and atomicity; volatile variables can only guarantee visibility.
+			You can use volatile variables only when all the following criteria are met:
+				1 Writes to the variable do not depend on its current value, or you can ensure that only a single thread ever updates the value;
+				2 The variable does not participate in invariants with other state variables; and
+				3 Locking is not required for any other reason while the variable is being accessed.
+			Debugging tip: For server applications, be sure to always specify the -server JVM command line switch when invoking the JVM, even for development and testing. The server JVM performs more optimization than the client JVM, such as hoisting variables out of a loop that are not modified in the loop; code that might appear to work in the development environment (client JVM) can break in the deployment environment (server JVM). For example, had we "forgotten" to declare the variable asleep as volatile in Listing 3.4, the server JVM could hoist the test out of the loop (turning it into an infinite loop), but the client JVM would not. An infinite loop that shows up in development is far less costly than one that only shows up in production.
+	Publication and Escape
+		Publishing an object means making it available to code outside of its current scope, such as by storing a reference to it where other code can find it, returning it from a non‐private method, or passing it to a method in another class.
+		An object that is published when it should not have been is said to have escaped.
+		Publishing one object may indirectly publish others.
+		Returning a reference from a non‐private method also publishes the returned object.
+		Passing an object to an alien method must also be considered publishing that object.
+		This is a compelling reason to use encapsulation: it makes it practical to analyze programs for correctness and harder to violate design constraints accidentally.
+		A final mechanism by which an object or its internal state can be published is to publish an inner class instance, because inner class instances contain a hidden reference to the enclosing instance.
+		Safe Construction Practices
+			An object is in a predictable, consistent state only after its constructor returns, so publishing an object from within its constructor can publish an incompletely constructed object.
+			Do not allow the this reference to escape during construction.
+			A common mistake that can let the this reference escape during construction is to start a thread from a constructor. When an object creates a thread from its constructor, it almost always shares its this reference with the new thread, either explicitly (by passing it to the constructor) or implicitly (because the Thread or Runnable is an inner class of the owning object). The new thread might then be able to see the owning object before it is fully constructed. There's nothing wrong with creating a thread in a constructor, but it is best not to start the thread immediately. Instead, expose a start or initialize method that starts the owned thread. (See Chapter 7 for more on service lifecycle issues.) Calling an overrideable instance method (one that is neither private nor final) from the constructor can also allow the this reference to escape.
+			If you are tempted to register an event listener or start a thread from a constructor, you can avoid the improper construction by using a private constructor and a public factory method.
+	Thread Confinement
+		If data is only accessed from a single thread, no synchronization is needed.
+		Ad-hoc Thread Confinement
+			Because of its fragility, ad‐hoc thread confinement should be used sparingly; if possible, use one of the stronger forms of thread confinement (stack confinement or ThreadLocal) instead.
+		Stack Confinement
+			Stack confinement is a special case of thread confinement in which an object can only be reached through local variables.
+			There is no way to obtain a reference to a primitive variable, so the language semantics ensure that primitive local variables are always stack confined.
+			Using a non‐thread‐safe object in a within‐thread context is still thread‐safe. However, be careful: the design requirement that the object be confined to the executing thread, or the awareness that the confined object is not thread‐safe, often exists only in the head of the developer when the code is written. If the assumption of within‐thread usage is not clearly documented, future maintainers might mistakenly allow the object to escape.
+		ThreadLocal
+			This technique can also be used when a frequently used operation requires a temporary object such as a buffer and wants to avoid reallocating the temporary object on each invocation. For example, before Java 5.0, Integer.toString used a ThreadLocal to store the 12‐byte buffer used for formatting its result, rather than using a shared static buffer (which would require locking) or allocating a new buffer for each invocation.
+			This is convenient in that it reduces the need to pass execution context information into every method, but couples any code that uses this mechanism to the framework.
+		Immutability
+			Immutable objects are always thread‐safe.
+			Neither the Java Language Specification nor the Java Memory Model formally defines immutability, but immutability is not equivalent to simply declaring all fields of an object final. An object whose fields are all final may still be mutable, since final fields can hold references to mutable objects.
+			An object is immutable if:
+				? Its state cannot be modified after construction;
+				? All its fields are final;[12] and
+				? It is properly constructed (the this reference does not escape during construction).
+			It is technically possible to have an immutable object without all fields being final. String is such a class ‐ but this relies on delicate reasoning about benign data races that requires a deep understanding of the Java Memory Model. (For the curious: String lazily computes the hash code the first time hashCode is called and caches it in a non‐final field, but this works only because that field can take on only one non‐default value that is the same every time it is computed because it is derived deterministically from immutable state. Don't try this at home.)
+			Final Fields
+				It is the use of final fields that makes possible the guarantee of initialization safety (see Section 3.5.2) that lets immutable objects be freely accessed and shared without synchronization.
+				Just as it is a good practice to make all fields private unless they need greater visibility [EJ Item 12], it is a good practice to make all fields final unless they need to be mutable.
+			Example: Using Volatile to Publish Immutable Objects
+	Safe Publication	
+		Unfortunately, simply storing a reference to an object into a public field, as in Listing 3.14, is not enough to publish that object safely.
+		Improper Publication: When Good Objects Go Bad
+		Immutable Objects and Initialization Safety
+			Immutable objects can be used safely by any thread without additional synchronization, even when synchronization is not used to publish them.
+			However, if final fields refer to mutable objects, synchronization is still required to access the state of the objects they refer to.
+		Safe Publication Idioms
+			To publish an object safely, both the reference to the object and the object's state must be made visible to other threads at the same time. A properly constructed object can be safely published by:
+				? Initializing an object reference from a static initializer;
+				? Storing a reference to it into a volatile field or AtomicReference;
+				? Storing a reference to it into a final field of a properly constructed object; or
+				? Storing a reference to it into a field that is properly guarded by a lock.
+			If thread A places object X in a thread‐safe collection and thread B subsequently retrieves it, B is guaranteed to see the state of X as A left it, even though the application code that hands X off in this manner has no explicit synchronization. The thread‐safe library collections offer the following safe publication guarantees, even if the Javadoc is less than clear on the subject:
+				? Placing a key or value in a Hashtable, synchronizedMap, or Concurrent-Map safely publishes it to any thread that retrieves it from the Map (whether directly or via an iterator);
+				? Placing an element in a Vector, CopyOnWriteArrayList, CopyOnWrite-ArraySet, synchronizedList, or synchronizedSet safely publishes it to any thread that retrieves it from the collection;
+				? Placing an element on a BlockingQueue or a ConcurrentLinkedQueue safely publishes it to any thread that retrieves it from the queue.
+		Effectively Immutable Objects
+			Objects that are not technically immutable, but whose state will not be modified after publication, are called effectively immutable.
+			Using effectively immutable objects can simplify development and improve performance by reducing the need for synchronization.
+			Safely published effectively immutable objects can be used safely by any thread without additional synchronization.
+		Mutable Objects
+			Synchronization must be used not only to publish a mutable object, but also every time the object is accessed to ensure visibility of subsequent modifications.
+			The publication requirements for an object depend on its mutability:
+				? Immutable objects can be published through any mechanism;
+				? Effectively immutable objects must be safely published;
+				? Mutable objects must be safely published, and must be either thread‐safe or guarded by a lock.
+		Sharing Objects Safely
+			The most useful policies for using and sharing objects in a concurrent program are: 
+				Thread‐confined. A thread‐confined object is owned exclusively by and confined to one thread, and can be modified by its owning thread.
+				Shared read‐only. A shared read‐only object can be accessed concurrently by multiple threads without additional synchronization, but cannot be modified by any thread. Shared read‐only objects include immutable and effectively	immutable objects.
+				Shared thread‐safe. A thread‐safe object performs synchronization internally, so multiple threads can freely access it through its public interface without further synchronization. 
+				Guarded. A guarded object can be accessed only with a specific lock held. Guarded objects include those that are encapsulated within other thread‐safe objects and published objects that are known to be guarded by a specific lock.
+			
+			
+Composing Objects
+	The design process for a thread‐safe class should include these three basic elements:
+		? Identify the variables that form the object's state;
+		? Identify the invariants that constrain the state variables;
+		? Establish a policy for managing concurrent access to the object's state.
+	Gathering Synchronization Requirements
+		You cannot ensure thread safety without understanding an object's invariants and post‐conditions. Constraints on the valid values or state transitions for state variables can create atomicity and encapsulation requirements.
+		State-dependent Operations
+			Operations with state‐based preconditions are called state‐dependent
+		State Ownership
+	Instance Confinement
+		Encapsulating data within an object confines access to the data to the object's methods, making it easier to ensure that the data is always accessed with the appropriate lock held.
+		Encapsulation simplifies making classes thread‐safe by promoting instance confinement, often just called confinement
+		Confinement makes it easier to build thread‐safe classes because a class that confines its state can be analyzed for thread safety without having to examine the whole program.
+		The Java Monitor Pattern
+			Example: Tracking Fleet Vehicles
+		Delegating Thread Safety
+			In some cases a composite made of thread‐safe components is thread‐safe (Listings 4.7 and 4.9), and in others it is merely a good start (4.10).
+			If count were not final, the thread safety analysis of CountingFactorizer would be more complicated. If CountingFactorizer could modify count to reference a different AtomicLong, we would then have to ensure that this update was visible to all threads that might access the count, and that there were no race conditions regarding the value of the count reference. This is another good reason to use final fields wherever practical.
+			Example: Vehicle Tracker Using Delegation
+			Indenpendent State Variables
+				We can also delegate thread safety to more than one underlying state variable as long as those underlying state variables are independent, meaning that the composite class does not impose any invariants involving the multiple state variables.
+			When Delegation Fails
+				If a class is composed of multiple independent thread‐safe state variables and has no operations that have any invalid state transitions, then it can delegate thread safety to the underlying state variables.
+				a variable is suitable for being declared volatile only if it does not participate in invariants involving other state variables.
+			Publishing Underlying State Variables
+				If a state variable is thread‐safe, does not participate in any invariants that constrain its value, and has no prohibited state transitions for any of its operations, then it can safely be published.
+			Example: Vehicle Tracker That Publishes Its State
+	Adding Thread Safety to Existing Thread-Safe Classes
+		Client-side Locking
+		Composition
+	Documenting Synchronization Policies
+		Document a class's thread safety guarantees for its clients; document its synchronization policy for its maintainers.
+		Interpreting Vague Documentations
+			
+			
+Building Blocks
+	Synchronized Collections
+		Problems with Synchronized Collections
+		Iterators and ConcurrentModificationException
+		Hidden Iterators
+			Just as encapsulating an object's state makes it easier to preserve its invariants, encapsulating its synchronization makes it easier to enforce its synchronization policy.
+			The string concatenation gets turned by the compiler into a call to StringBuilder.append(Object), which in turn invokes the collection's toString method ‐ and the implementation of toString in the standard collections iterates the collection and calls toString on each element to produce a nicely formatted representation of the collection's contents.
+			Iteration is also indirectly invoked by the collection's hashCode and equals methods, which may be called if the collection is used as an element or key of another collection. Similarly, the containsAll, removeAll, and retainAll methods, as well as the constructors that take collections are arguments, also iterate the collection. All of these indirect uses of iteration can cause ConcurrentModificationException.
+	Concurrent Collections
+		Synchronized collections achieve their thread safety by serializing all access to the collection's state. The cost of this approach is poor concurrency; when multiple threads contend for the collection‐wide lock, throughput suffers.
+		Java 5.0 adds ConcurrentHashMap, a replacement for synchronized hash‐based Map implementations, and CopyOnWriteArrayList, a replacement for synchronized List implementations for cases where traversal is the dominant operation.	The new ConcurrentMap interface adds support for common compound actions such as put‐if‐absent, replace, and conditional remove.
+		Replacing synchronized collections with concurrent collections can offer dramatic scalability improvements with little risk.	
+		BlockingQueue extends Queue to add blocking insertion and retrieval operations.
+		Just as ConcurrentHashMap is a concurrent replacement for a synchronized hash‐based Map, Java 6 adds ConcurrentSkipListMap and ConcurrentSkipListSet, which are concurrent replacements for a synchronized SortedMap or SortedSet (such as TreeMap or TreeSet wrapped with synchronizedMap).
+		ConcurrentHashMap
+			ConcurrentHashMap is a hash‐based Map like HashMap, but it uses an entirely different locking strategy that offers better concurrency and scalability. Instead of synchronizing every method on a common lock, restricting access to a single thread at a time, it uses a finer‐grained locking mechanism called lock striping (see Section 11.4.3) to allow a greater degree of shared access. Arbitrarily many reading threads can access the map concurrently, readers can access the map concurrently with writers, and a limited number of writers can modify the map concurrently. The result is far higher throughput under concurrent access, with little performance penalty for single‐threaded access.
+			ConcurrentHashMap, along with the other concurrent collections, further improve on the synchronized collection classes by providing iterators that do not throw ConcurrentModificationException, thus eliminating the need to lock the collection during iteration. The iterators returned by ConcurrentHashMap are weakly consistent instead of fail‐fast. A weakly consistent iterator can tolerate concurrent modification, traverses elements as they existed when the iterator was constructed, and may (but is not guaranteed to) reflect modifications to the collection after the construction of the iterator.
+			As with all improvements, there are still a few tradeoffs. The semantics of methods that operate on the entire Map, such as size and isEmpty, have been slightly weakened to reflect the concurrent nature of the collection. Since the result of size could be out of date by the time it is computed, it is really only an estimate
+			The one feature offered by the synchronized Map implementations but not by ConcurrentHashMap is the ability to lock the map for exclusive access.
+			Replacing synchronized Map implementations with ConcurrentHashMap in most cases results only in better scalability.
+		Additional Atomic Map Operations
+		CopyOnWriteArrayList
+			The copy‐on‐write collections derive their thread safety from the fact that as long as an effectively immutable object is properly published, no further synchronization is required when accessing it. They implement mutability by creating and republishing a new copy of the collection every time it is modified. Iterators for the copy‐on‐write collections retain a reference to the backing array that was current at the start of iteration, and since this will never change, they need to synchronize only briefly to ensure visibility of the array contents. As a result, multiple threads can iterate the collection without interference from one another or from threads wanting to modify the collection. The iterators returned by the copy‐on‐write collections do not throw ConcurrentModificationException and return the elements exactly as they were at the time the iterator was created, regardless of subsequent modifications.
+			Obviously, there is some cost to copying the backing array every time the collection is modified, especially if the collection is large; the copy‐on‐write collections are reasonable to use only when iteration is far more common than modification. This criterion exactly describes many event‐notification systems: delivering a notification requires iterating the list of registered listeners and calling each one of them, and in most cases registering or unregistering an event listener is far less common than receiving an event notification.
+	Blocking Queues and the Producer-consumer Pattern
+		Blocking queues support the producer‐consumer design pattern. A producer‐consumer design separates the identification of work to be done from the execution of that work by placing work items on a "to do" list for later processing, rather than processing them immediately as they are identified. The producer‐consumer pattern simplifies development because it removes code dependencies between producer and consumer classes, and simplifies workload management by decoupling activities that may produce or consume data at different or variable rates.
+		Bounded queues are a powerful resource management tool for building reliable applications: they make your program more robust to overload by throttling activities that threaten to produce more work than can be handled.
+		If blocking queues don't fit easily into your design, you can create other blocking data structures using Semaphore
+		Just like other sorted collections, PriorityBlockingQueue can compare elements according to their natural order (if they implement Comparable) or using a Comparator.	
+		The last BlockingQueue implementation, SynchronousQueue, is not really a queue at all, in that it maintains no storage space for queued elements. Instead, it maintains a list of queued threads waiting to enqueue or dequeue an element. In the dish‐washing analogy, this would be like having no dish rack, but instead handing the washed dishes directly to the next available dryer. While this may seem a strange way to implement a queue, it reduces the latency associated with moving data from producer to consumer because the work can be handed off directly. (In a traditional queue, the enqueue and dequeue operations must complete sequentially before a unit of work can be handed off.) The direct handoff also feeds back more information about the state of the task to the producer; when the handoff is accepted, it knows a consumer has taken responsibility for it, rather than simply letting it sit on a queue somewhere ‐ much like the difference between handing a document to a colleague and merely putting it in her mailbox and hoping she gets it soon. Since a SynchronousQueue has no storage capacity, put and take will block unless another thread is already waiting to participate in the handoff. Synchronous queues are generally suitable only when there are enough consumers that there nearly always will be one ready to take the handoff.
+		Example: Desktop Search
+		Serial Thread Confinement
+		Deques Work Stealing
+			Java 6 also adds another two collection types, Deque (pronounced "deck") and BlockingDeque, that extend Queue and BlockingQueue. A Deque is a double‐ended queue that allows efficient insertion and removal from both the head and the tail. Implementations include ArrayDeque and LinkedBlockingDeque.
+			Just as blocking queues lend themselves to the producer‐consumer pattern, deques lend themselves to a related pattern called work stealing. A producer‐consumer design has one shared work queue for all consumers; in a work stealing design, every consumer has its own deque. If a consumer exhausts the work in its own deque, it can steal work from the tail of someone else's deque. Work stealing can be more scalable than a traditional producer‐consumer design because workers don't contend for a shared work queue; most of the time they access only their own deque, reducing contention. When a worker has to access another's queue, it does so from the tail rather than the head, further reducing contention.
+			Work stealing is well suited to problems in which consumers are also producers ‐ when performing a unit of work is likely to result in the identification of more work. For example, processing a page in a web crawler usually results in the identification of new pages to be crawled. Similarly, many graph‐exploring algorithms, such as marking the heap during garbage collection, can be efficiently parallelized using work stealing. When a worker identifies a new unit of work, it places it at the end of its own deque (or alternatively, in a work sharing design, on that of another worker); when its deque is empty, it looks for work at the end of someone else's deque, ensuring that each worker stays busy.
+	Blocking And Interruptible Methods
+		Threads may block, or pause, for several reasons: waiting for I/O completion, waiting to acquire a lock, waiting to wake up from Thread.sleep, or waiting for the result of a computation in another thread. When a thread blocks, it is usually suspended and placed in one of the blocked thread states (BLOCKED, WAITING, or TIMED_WAITING).
+		Interruption is a cooperative mechanism.
+		When your code calls a method that throws InterruptedException, then your method is a blocking method too, and must have a plan for responding to interruption. For library code, there are basically two choices:
+		Propagate the InterruptedException. This is often the most sensible policy if you can get away with it ‐ just propagate the InterruptedException to your caller. This could involve not catching InterruptedException, or catching it and throwing it again after performing some brief activity‐specific cleanup.
+		Restore the interrupt. Sometimes you cannot throw InterruptedException, for instance when your code is part of a Runnable. In these situations, you must catch InterruptedException and restore the interrupted status by calling interrupt on the current thread, so that code higher up the call stack can see that an interrupt was issued
+	Synchronizers
+		A synchronizer is any object that coordinates the control flow of threads based on its state. Blocking queues can act as synchronizers; other types of synchronizers include semaphores, barriers, and latches.
+		All synchronizers share certain structural properties: they encapsulate state that determines whether threads arriving at the synchronizer should be allowed to pass or forced to wait, provide methods to manipulate that state, and provide methods to wait efficiently for the synchronizer to enter the desired state.
+		Latches
+			A latch is a synchronizer that can delay the progress of threads until it reaches its terminal state [CPJ 3.4.2]. A latch acts as a gate: until the latch reaches the terminal state the gate is closed and no thread can pass, and in the terminal state the gate opens, allowing all threads to pass. Once the latch reaches the terminal state, it cannot change state again, so it remains open forever. Latches can be used to ensure that certain activities do not proceed until other one‐time activities complete
+			CountDownLatch is a flexible latch implementation that can be used in any of these situations; it allows one or more threads to wait for a set of events to occur. The latch state consists of a counter initialized to a positive number, representing the number of events to wait for. The countDown method decrements the counter, indicating that an event has occurred, and the await methods wait for the counter to reach zero, which happens when all the events have occurred. If the counter is nonzero on entry, await blocks until the counter reaches zero, the waiting thread is interrupted, or the wait times out.
+		FutureTask
+			FutureTask also acts like a latch. (FutureTask implements Future, which describes an abstract result‐bearing computation [CPJ 4.3.3].) A computation represented by a FutureTask is implemented with a Callable, the resultbearing equivalent of Runnable, and can be in one of three states: waiting to run, running, or completed. Completion subsumes all the ways a computation can complete, including normal completion, cancellation, and exception. Once a FutureTask enters the completed state, it stays in that state forever.
+			The behavior of Future.get depends on the state of the task. If it is completed, get returns the result immediately, and otherwise blocks until the task transitions to the completed state and then returns the result or throws an exception. FutureTask conveys the result from the thread executing the computation to the thread(s) retrieving the result; the specification of FutureTask guarantees that this transfer constitutes a safe publication of the result.
+			Provides a start method to start the thread, since it is inadvisable to start a thread from a constructor or static initializer.
+		Semaphores
+			Counting semaphores are used to control the number of activities that can access a certain resource or perform a given action at the same time [CPJ 3.4.1]. Counting semaphores can be used to implement resource pools or to impose a bound on a collection.
+			A Semaphore manages a set of virtual permits; the initial number of permits is passed to the Semaphore constructor. Activities can acquire permits (as long as some remain) and release permits when they are done with them. If no permit is available, acquire blocks until one is (or until interrupted or the operation times out). The release method returns a permit to the semaphore.
+			Similarly, you can use a Semaphore to turn any collection into a blocking bounded collection
+		Barriers
+			Latches are single‐use objects; once a latch enters the terminal state, it cannot be reset.
+			Barriers are similar to latches in that they block a group of threads until some event has occurred [CPJ 4.4.3]. The key difference is that with a barrier, all the threads must come together at a barrier point at the same time in order to proceed. Latches are for waiting for events; barriers are for waiting for other threads. A barrier implements the protocol some families use to rendezvous during a day at the mall: "Everyone meet at McDonald's at 6:00; once you get there, stay there until everyone shows up, and then we'll figure out what we're doing next."
+			CyclicBarrier allows a fixed number of parties to rendezvous repeatedly at a barrier point and is useful in parallel iterative algorithms that break down a problem into a fixed number of independent subproblems. Threads call await when they reach the barrier point, and await blocks until all the threads have reached the barrier point. If all threads meet at the barrier point, the barrier has been successfully passed, in which case all threads are released and the barrier is reset so it can be used again. If a call to await times out or a thread blocked in await is interrupted, then the barrier is considered broken and all outstanding calls to await terminate with BrokenBarrierException. If the barrier is successfully passed, await returns a unique arrival index for each thread, which can be used to "elect" a leader that takes some special action in the next iteration. CyclicBar rier also lets you pass a barrier action to the constructor; this is a Runnable that is executed (in one of the subtask threads) when the barrier is successfully passed but before the blocked threads are released.
+			For computational problems like this that do no I/O and access no shared data, Ncpu or Ncpu + 1 threads yield optimal throughput; more threads do not help, and may in fact degrade performance as the threads compete for CPU and memory resources.
+			Another form of barrier is Exchanger, a two‐party barrier in which the parties exchange data at the barrier point [CPJ 3.4.3].
+			When two threads exchange objects via an Exchanger, the exchange constitutes a safe publication of both objects to the other party.
+	Building an Effecient, Scalable Result Cache
+
+	
+Summary of Part 1
+	? It's the mutable state, stupid. [1]
+		All concurrency issues boil down to coordinating access to mutable state. The less mutable state, the easier it is to ensure thread safety.
+	? Make fields final unless they need to be mutable.
+	? Immutable objects are automatically thread‐safe.
+		Immutable objects simplify concurrent programming tremendously. They are simpler and safer, and can be shared freely without locking or defensive copying.
+	? Encapsulation makes it practical to manage the complexity.
+		You could write a thread‐safe program with all data stored in global variables, but why would you want to?
+		Encapsulating data within objects makes it easier to preserve their invariants; encapsulating synchronization within objects makes it easier to comply with their synchronization policy.
+	? Guard each mutable variable with a lock.
+	? Guard all variables in an invariant with the same lock.
+	? Hold locks for the duration of compound actions.
+	? A program that accesses a mutable variable from multiple threads without synchronization is a broken program.
+	? Don't rely on clever reasoning about why you don't need to synchronize.
+	? Include thread safety in the design processor explicitly document that your class is not thread‐safe.
+	? Document your synchronization policy.		
+			
+			
+Part 2: Structuring Concurrent Applications
+
+Task Execution
+	Executing Tasks in Threads
+		Most server applications offer a natural choice of task boundary: individual client requests.
+		Executing Tasks Sequentially
+		Expliciting Create Threads for Tasks
+		Disadvantages of Unbounded Thread Creation
+			Thread lifecycle overhead.
+			Resource consumption. Active threads consume system resources, especially memory.When there are more runnable threads than available processors, threads sit idle. Having many idle threads can tie up a lot of memory, putting pressure on the garbage collector, and having many threads competing for the CPUs can impose other performance costs as well. If you have enough threads to keep all the CPUs busy, creating more threads won't help and may even hurt.
+			Stability. There is a limit on how many threads can be created. The limit varies by platform and is affected by factors including JVM invocation parameters, the requested stack size in the Thread constructor, and limits on threads placed by the underlying operating system.[2] When you hit this limit, the most likely result is an OutOfMemoryError.
+			On 32‐bit machines, a major limiting factor is address space for thread stacks. Each thread maintains two execution stacks, one for Java code and one for native code. Typical JVM defaults yield a combined stack size of around half a megabyte. (You can change this with the -Xss JVM flag or through the Thread constructor.) If you divide the per‐thread stack size into 232, you get a limit of a few thousands or tens of thousands of threads. Other factors, such as OS limitations, may impose stricter limits.
+	The Executor Framework
+		java.util.concurrent provides a flexible thread pool implementation as part of the Executor framework. The primary abstraction for task execution in the Java class libraries is not Thread, but Executor
+		Executor is based on the producer‐consumer pattern, where activities that submit tasks are the producers (producing units of work to be done) and the threads that execute tasks are the consumers (consuming those units of work). Using an Executor is usually the easiest path to implementing a producer‐consumer design in your application.	
+		Example: Web Server Using Executor
+		Execution Policies
+			An execution policy specifies the "what, where, when, and how" of task execution, including:
+				? In what thread will tasks be executed?
+				? In what order should tasks be executed (FIFO, LIFO, priority order)?
+				? How many tasks may execute concurrently?
+				? How many tasks may be queued pending execution?
+				? If a task has to be rejected because the system is overloaded, which task should be selected as the victim, and how should the application be notified?
+				? What actions should be taken before or after executing a task?
+		Thread Pools
+			You can create a thread pool by calling one of the static factory methods in Executors:
+				newFixedThreadPool.
+				newCachedThreadPool.
+					A cached thread pool has more flexibility to reap idle threads when the current size of the pool exceeds the demand for processing, and to add new threads when demand increases, but places no bounds on the size of the pool.
+				newSingleThreadExecutor
+					Single‐threaded executors also provide sufficient internal synchronization to guarantee that any memory writes made by tasks are visible to subsequent tasks; this means that objects can be safely confined to the "task thread" even though that thread may be replaced with another from time to time.
+				newScheduledThreadPool. 
+					A fixed‐size thread pool that supports delayed and periodic task execution, similar to Timer.
+			While the server may not fail due to the creation of too many threads, if the task arrival rate exceeds the task service rate for long enough it is still possible (just harder) to run out of memory because of the growing queue of Runnables awaiting execution. This can be addressed within the Executor framework by using a bounded work queue
+		Executor Lifecycle
+			The JVM can't exit until all the (non‐daemon) threads have terminated, so failing to shut down an Executor could prevent the JVM from exiting.
+			To address the issue of execution service lifecycle, the ExecutorService interface extends Executor, adding a number of methods for lifecycle management (as well as some convenience methods for task submission).
+			The lifecycle implied by ExecutorService has three states ‐ running, shutting down, and terminated. ExecutorServices are initially created in the running state. The shutdown method initiates a graceful shutdown: no new tasks are accepted but previously submitted tasks are allowed to complete ‐ including those that have not yet begun execution. The shutdownNow method initiates an abrupt shutdown: it attempts to cancel outstanding tasks and does not start any tasks that are queued but not begun.
+			Tasks submitted to an ExecutorService after it has been shut down are handled by the rejected execution handler (see Section 8.3.3), which might silently discard the task or might cause execute to throw the unchecked RejectedExecutionException. Once all tasks have completed, the ExecutorService transitions to the terminated state. You can wait for an ExecutorService to reach the terminated state with awaitTermination, or poll for whether it has yet terminated with isTerminated. It is common to follow shutdown immediately by awaitTermination, creating the effect of synchronously shutting down the ExecutorService.
+		Delayed and Periodic Tasks
+			The Timer facility manages the execution of deferred ("run this task in 100 ms") and periodic ("run this task every 10 ms") tasks. However, Timer has some drawbacks, and ScheduledThreadPoolExecutor should be thought of as its replacement.[6] You can construct a ScheduledThreadPoolExecutor through its constructor or through the newScheduledThreadPool factory.
+			Timer does have support for scheduling based on absolute, not relative time, so that tasks can be sensitive to changes in the system clock; ScheduledThreadPoolExecutor supports only relative time.
+			A Timer creates only a single thread for executing timer tasks. If a timer task takes too long to run, the timing accuracy of other TimerTasks can suffer. If a recurring TimerTask is scheduled to run every 10 ms and another Timer-Task takes 40 ms to run, the recurring task either (depending on whether it was scheduled at fixed rate or fixed delay) gets called four times in rapid succession after the long‐running task completes, or "misses" four invocations completely. Scheduled thread pools address this limitation by letting you provide multiple threads for executing deferred and periodic tasks.
+			Another problem with Timer is that it behaves poorly if a TimerTask throws an unchecked exception. The Timer thread doesn't catch the exception, so an unchecked exception thrown from a TimerTask terminates the timer thread. Timer also doesn't resurrect the thread in this situation; instead, it erroneously assumes the entire Timer was cancelled. In this case, TimerTasks that are already scheduled but not yet executed are never run, and new tasks cannot be scheduled.
+			If you need to build your own scheduling service, you may still be able to take advantage of the library by using a DelayQueue, a BlockingQueue implementation that provides the scheduling functionality of ScheduledThreadPoolExecutor. A DelayQueue manages a collection of Delayed objects. A Delayed has a delay time associated with it: DelayQueue lets you take an element only if its delay has expired. Objects are returned from a DelayQueue ordered by the time associated with their delay.
+	Finding Exploitable Parallelism
+		Example: Sequential Page Renderer
+		Result-bearing Tasks: Callable and Future
+			Many tasks are effectively deferred computations ‐ executing a database query, fetching a resource over the network, or computing a complicated function. For these types of tasks, Callable is a better abstraction: it expects that the main entry point, call, will return a value and anticipates that it might throw an exception.[7] Executors includes several utility methods for wrapping other types of tasks, including Runnable and java.security.PrivilegedAction, with a Callable.
+			To express a non‐value‐returning task with Callable, use Callable<Void>.
+			The lifecycle of a task executed by an Executor has four phases: created, submitted, started, and completed. Since tasks can take a long time to run, we also want to be able to cancel a task. In the Executor framework, tasks that have been submitted but not yet started can always be cancelled, and tasks that have started can sometimes be cancelled if they are responsive to interruption. Cancelling a task that has already completed has no effect.
+			Future represents the lifecycle of a task and provides methods to test whether the task has completed or been cancelled, retrieve its result, and cancel the task. Implicit in the specification of Future is that task lifecycle can only move forwards, not backwards ‐ just like the ExecutorService lifecycle. Once a task is completed, it stays in that state forever.
+			The behavior of get varies depending on the task state (not yet started, running, completed). It returns immediately or throws an Exception if the task has already completed, but if not it blocks until the task completes. If the task completes by throwing an exception, get rethrows it wrapped in an ExecutionException; if it was cancelled, get throws CancellationException. If get throws ExecutionException, the underlying exception can be retrieved with getCause.
+			You can also explicitly instantiate a FutureTask for a given Runnable or Callable. (Because FutureTask implements Runnable, it can be submitted to an Executor for execution or executed directly by calling its run method.)
+			Submitting a Runnable or Callable to an Executor constitutes a safe publication (see Section 3.5) of the Runnable or Callable from the submitting thread to the thread that will eventually execute the task. Similarly, setting the result value for a Future constitutes a safe publication of the result from the thread in which it was computed to any thread that retrieves it via get.
+		Example: Page Renderer with Future
+			The exception handling code surrounding Future.get deals with two possible problems: that the task encountered an Exception, or the thread calling get was interrupted before the results were available.
+		Limitations of Parallelizing Heterogeneous Tasks
+			The real performance payoff of dividing a program's workload into tasks comes when there are a large number of independent, homogeneous tasks that can be processed concurrently.
+		CompletionService: Executor Meets BlockingQueue
+			CompletionService combines the functionality of an Executor and a BlockingQueue. You can submit Callable tasks to it for execution and use the queue‐like methods take and poll to retrieve completed results, packaged as Futures, as they become available. ExecutorCompletionService implements CompletionService, delegating the computation to an Executor.
+			The implementation of ExecutorCompletionService is quite straightforward. The constructor creates a BlockingQueue to hold the completed results. Future-Task has a done method that is called when the computation completes. When a task is submitted, it is wrapped with a QueueingFuture, a subclass of FutureTask that overrides done to place the result on the BlockingQueue, as shown in Listing 6.14. The take and poll methods delegate to the BlockingQueue, blocking if results are not yet available.
+		Example: Page Renderer with CompletionService
+		Placing Time Limits on Tasks
+			The timed version of Future.get supports this requirement: it returns as soon as the result is ready, but throws TimeoutException if the result is not ready within the timeout period.
+			If a timed get completes with a TimeoutException, you can cancel the task through the Future. If the task is written to be cancellable (see Chapter 7), it can be terminated early so as not to consume excessive resources.
+			The timeout passed to get is computed by subtracting the current time from the deadline; this may in fact yield a negative number, but all the timed methods in java.util.concurrent treat negative timeouts as zero, so no extra code is needed to deal with this case.
+			The true parameter to Future.cancel means that the task thread can be interrupted if the task is currently running
+		Example: A Travel Reservations Portal
+			The timed version of invokeAll to submit multiple tasks to an ExecutorService and retrieve the results. The invokeAll method takes a collection of tasks and returns a collection of Futures. The two collections have identical structures; invokeAll adds the Futures to the returned collection in the order imposed by the task collection's iterator, thus allowing the caller to associate a Future with the Callable it represents. The timed version of invokeAll will return when all the tasks have completed, the calling thread is interrupted, or the timeout expires. Any tasks that are not complete when the timeout expires are cancelled. On return from invokeAll, each task will have either completed normally or been cancelled; the client code can call get or isCancelled to find out which.
+	Summary
+		
+		
+Cancellation and Shutdown
+	Task Cancellation
+		Interruption
+			Thread interruption is a cooperative mechanism for a thread to signal another thread that it should, at its convenience and if it feels like it, stop what it is doing and do something else.
+			There is nothing in the API or language specification that ties interruption to any specific cancellation semantics, but in practice, using interruption for anything but cancellation is fragile and difficult to sustain in larger applications.
+			The interrupt method interrupts the target thread, and isInterrupted returns the interrupted status of the target thread. The poorly named static interrupted method clears the interrupted status of the current thread and returns its previous value; this is the only way to clear the interrupted status.
+			Blocking library methods like Thread.sleep and Object.wait try to detect when a thread has been interrupted and return early. They respond to interruption by clearing the interrupted status and throwing InterruptedException, indicating that the blocking operation completed early due to interruption. The JVM makes no guarantees on how quickly a blocking method will detect interruption, but in practice this happens reasonably quickly.
+			If a thread is interrupted when it is not blocked, its interrupted status is set, and it is up to the activity being cancelled to poll the interrupted status to detect interruption. In this way interruption is "sticky” if it doesn't trigger an InterruptedException, evidence of interruption persists until someone deliberately clears the interrupted status.
+			Calling interrupt does not necessarily stop the target thread from doing what it is doing; it merely delivers the message that interruption has been requested.
+			A good way to think about interruption is that it does not actually interrupt a running thread; it just requests that the thread interrupt itself at the next convenient opportunity. (These opportunities are called cancellation points.) Some methods, such as wait, sleep, and join, take such requests seriously, throwing an exception when they receive an interrupt request or encounter an already set interrupt status upon entry. Well behaved methods may totally ignore such requests so long as they leave the interruption request in place so that calling code can do something with it. Poorly behaved methods swallow the interrupt request, thus denying code further up the call stack the opportunity to act on it.
+			The static interrupted method should be used with caution, because it clears the current thread's interrupted status. If you call interrupted and it returns TRue, unless you are planning to swallow the interruption, you should do something with it ‐ either throw InterruptedException or restore the interrupted status by calling interrupt again
+			Interruption is usually the most sensible way to implement cancellation.
+		Interruption Policies
+			If it is not simply going to propagate InterruptedException to its caller, it should restore the interruption status after catching InterruptedException
+			Because each thread has its own interruption policy, you should not interrupt a thread unless you know what interruption means to that thread.
+			Critics have derided the Java interruption facility because it does not provide a preemptive interruption capability and yet forces developers to handle InterruptedException. However, the ability to postpone an interruption request enables developers to craft flexible interruption policies that balance responsiveness and robustness as appropriate for the application.
+		Responding to Interruption
+			When you call an interruptible blocking method such as Thread.sleep or BlockingQueue.put, there are two practical strategies for handling InterruptedException:
+				? Propagate the exception (possibly after some task‐specific cleanup), making your method an interruptible blocking method, too; or
+				? Restore the interruption status so that code higher up on the call stack can deal with it.
+			Only code that implements a thread's interruption policy may swallow an interruption request. General‐purpose task and library code should never swallow interruption requests.
+			Setting the interrupted status too early could result in an infinite loop, because most interruptible blocking methods check the interrupted status on entry and throw InterruptedException immediately if it is set. (Interruptible methods usually poll for interruption before blocking or doing any significant work, so as to be as responsive to interruption as possible.)
+			If your code does not call interruptible blocking methods, it can still be made responsive to interruption by polling the current thread's interrupted status throughout the task code.
+		Exampale: Timed Run
+			Future has a cancel method that takes a boolean argument, mayInterruptIfRunning, and returns a value indicating whether the cancellation attempt was successful. (This tells you only whether it was able to deliver the interruption, not whether the task detected and acted on it.) When mayInterruptIfRunning is true and the task is currently running in some thread, then that thread is interrupted. Setting this argument to false means "don't run this task if it hasn't started yet", and should be used for tasks that are not designed to handle interruption.
+			Since you shouldn't interrupt a thread unless you know its interruption policy, when is it OK to call cancel with an argument of TRue? The task execution threads created by the standard Executor implementations implement an interruption policy that lets tasks be cancelled using interruption, so it is safe to set mayInterruptIfRunning when cancelling tasks through their Futures when they are running in a standard Executor. You should not interrupt a pool thread directly when attempting to cancel a task, because you won't know what task is running when the interrupt request is delivered ‐ do this only through the task's Future. This is yet another reason to code tasks to treat interruption as a cancellation request: then they can be cancelled through their Futures.
+			When Future.get throws InterruptedException or TimeoutException and you know that the result is no longer needed by the program, cancel the task with Future.cancel.
+		Dealing with Non-interruptable Blocking
+			If a thread is blocked performing synchronous socket I/O or waiting to acquire an intrinsic lock, interruption has no effect other than setting the thread's interrupted status.
+			Synchronous socket I/O in java.io. The common form of blocking I/O in server applications is reading or writing to a socket. Unfortunately, the read and write methods in InputStream and OutputStream are not responsive to interruption, but closing the underlying socket makes any threads blocked in read or write throw a SocketException.
+			Synchronous I/O in java.nio. Interrupting a thread waiting on an InterruptibleChannel causes it to throw ClosedByInterruptException and close the channel (and also causes all other threads blocked on the channel to throw ClosedByInterruptException). Closing an InterruptibleChannel causes threads blocked on channel operations to throw AsynchronousCloseException. Most standard Channels implement InterruptibleChannel.
+			Asynchronous I/O with Selector. If a thread is blocked in Selector.select (in java.nio.channels), wakeup causes it to return prematurely by throwing a ClosedSelectorException.
+			Lock acquisition. If a thread is blocked waiting for an intrinsic lock, there is nothing you can do to stop it short of ensuring that it eventually acquires the lock and makes enough progress that you can get its attention some other way. However, the explicit Lock classes offer the lockInterruptibly method, which allows you to wait for a lock and still be esponsive to interrupts
+		Encapsulating Nonstandard Cancellation with newTaskFor
+			The newTaskFor hook is a factory method that creates the Future representing the task. It returns a RunnableFuture, an interface that extends both Future and Runnable (and is implemented by FutureTask).
+			Customizing the task Future allows you to override Future.cancel.
+	Stopping a Thread-based Service
+		Provide lifecycle methods whenever a thread‐owning service has a lifetime longer than that of the method that created it.
+		ExecutorService provides the shutdown and shutdownNow methods; other thread‐owning services should provide a similar shutdown mechanism.	
+		Example: A Logging Service
+			Stream classes like PrintWriter are thread‐safe, so this simple approach would require no explicit synchronization. If you are logging multiple lines as part of a single log message, you may need to use additional client‐side locking to prevent undesirable interleaving of output from multiple threads. If two threads logged multiline stack traces to the same stream with one println call per line, the results would be interleaved unpredictably, and could easily look like one large but meaningless stack trace.
+			Cancelling a producer-consumer activity requires cancelling both the producers and the consumers.
+		ExecutorService: Shutdown
+			ExecutorService offers two ways to shut down: graceful shutdown with shutdown, and abrupt shutdown with shutdownNow. In an abrupt shutdown, shutdownNow returns the list of tasks that had not yet started after attempting to cancel all actively executing tasks.
+			The two different termination options offer a tradeoff between safety and responsiveness: abrupt termination is faster but riskier because tasks may be interrupted in the middle of execution, and normal termination is slower but safer because the ExecutorService does not shut down until all queued tasks are processed.
+		Poison Pills
+		Example: A One-shot Execution Service
+		Limitations of Shutdownnow
+			The Runnable objects returned by shutdownNow might not be the same objects that were submitted to the ExecutorService: they might be wrapped instances of the submitted tasks.
+	Handling Abnormal Thread Termination
+		Uncaught Exception Handler
+			The Thread API also provides the UncaughtExceptionHandler facility, which lets you detect when a thread dies due to an uncaught exception.
+			When a thread exits due to an uncaught exception, the JVM reports this event to an application‐provided UncaughtExceptionHandler (see Listing 7.24); if no handler exists, the default behavior is to print the stack trace to System.err.
+			Before Java 5.0, the only way to control the UncaughtExceptionHandler was by subclassing ThreadGroup. In Java 5.0 and later, you can set an UncaughtExceptionHandler on a per‐thread basis with Thread.setUncaughtExceptionHandler, and can also set the default UncaughtExceptionHandler with Thread.setDefaultUncaughtExceptionHandler. However, only one of these handlers is calledfirst the JVM looks for a per‐thread handler, then for a ThreadGroup handler. The default handler implementation in ThreadGroup delegates to its parent thread group, and so on up the chain until one of the ThreadGroup handlers deals with the uncaught exception or it bubbles up to the toplevel thread group. The top‐level thread group handler delegates to the default system handler (if one exists; the default is none) and otherwise prints the stack trace to the console.
+			Somewhat confusingly, exceptions thrown from tasks make it to the uncaught exception handler only for tasks submitted with execute; for tasks submitted with submit, any thrown exception, checked or not, is considered to be part of the task's return status. If a task submitted with submit terminates with an exception, it is rethrown by Future.get, wrapped in an ExecutionException.
+	JVM Shutdown
+		The JVM can shut down in either an orderly or abrupt manner. An orderly shutdown is initiated when the last "normal" (non‐daemon) thread terminates, someone calls System.exit, or by other platform‐specific means (such as sending a SIGINT or hitting Ctrl-C). While this is the standard and preferred way for the JVM to shut down, it can also be shut down abruptly by calling Runtime.halt or by killing the JVM process through the operating system (such as sending a SIGKILL).
+		Shutdown Hooks
+			In an orderly shutdown, the JVM first starts all registered shutdown hooks. Shutdown hooks are unstarted threads that are registered with Runtime.addShutdownHook. The JVM makes no guarantees on the order in which shutdown hooks are started. If any application threads (daemon or nondaemon) are still running at shutdown time, they continue to run concurrently with the shutdown process. When all shutdown hooks have completed, the JVM may choose to run finalizers if runFinalizersOnExit is true, and then halts. The JVM makes no attempt to stop or interrupt any application threads that are still running at shutdown time; they are abruptly terminated when the JVM eventually halts. If the shutdown hooks or finalizers don't complete, then the orderly shutdown process "hangs" and the JVM must be shut down abruptly. In an abrupt shutdown, the JVM is not required to do anything other than halt the JVM; shutdown hooks will not run.
+			Shutdown hooks should be thread‐safe: they must use synchronization when accessing shared data and should be careful to avoid deadlock, just like any other concurrent code. Further, they should not make assumptions about the state of the application (such as whether other services have shut down already or all normal threads have completed) or about why the JVM is shutting down, and must therefore be coded extremely defensively. Finally, they should exit as quickly as possible, since their existence delays JVM termination at a time when the user may be expecting the JVM to terminate quickly.
+			Shutdown hooks can be used for service or application cleanup, such as deleting temporary files or cleaning up resources that are not automatically cleaned up by the OS.
+		Daemon Threads
+			Threads are divided into two types: normal threads and daemon threads. When the JVM starts up, all the threads it creates (such as garbage collector and other housekeeping threads) are daemon threads, except the main thread. When a new thread is created, it inherits the daemon status of the thread that created it, so by default any threads created by the main thread are also normal threads.
+			Normal threads and daemon threads differ only in what happens when they exit. When a thread exits, the JVM performs an inventory of running threads, and if the only threads that are left are daemon threads, it initiates an orderly shutdown. When the JVM halts, any remaining daemon threads are abandoned ‐ finally blocks are not executed, stacks are not unwound ‐ the JVM just exits.
+			Daemon threads should be used sparingly ‐ few processing activities can be safely abandoned at any time with no cleanup. In particular, it is dangerous to use daemon threads for tasks that might perform any sort of I/O. Daemon threads are best saved for "housekeeping" tasks, such as a background thread that periodically removes expired entries from an in‐memory cache.
+			Daemon threads are not a good substitute for properly managing the lifecycle of services within an application.
+		Finalizers
+			Finalizers offer no guarantees on when or even if they run, and they impose a significant performance cost on objects with nontrivial finalizers.
+			Avoid finalizers.
+			In most cases, the combination of finally blocks and explicit close methods does a better job of resource management than finalizers; the sole exception is when you need to manage objects that hold resources acquired by native methods.
+	Summary	
+		Java does not provide a preemptive mechanism for cancelling activities or terminating threads. Instead, it provides a cooperative interruption mechanism that can be used to facilitate cancellation, but it is up to you to construct protocols for cancellation and use them consistently. Using FutureTask and the Executor framework simplifies building cancellable tasks and services.	
+			
+			
+Applying Thread Pools
+	Implicit Couplings Between Tasks and Execution Policies
+		ThreadLocal makes sense to use in pool threads only if the thread‐local value has a lifetime that is bounded by that of a task; Thread-Local should not be used in pool threads to communicate values between tasks.
+		Some tasks have characteristics that require or preclude a specific execution policy. Tasks that depend on other tasks require that the thread pool be large enough that tasks are never queued or rejected; tasks that exploit thread confinement require sequential execution. Document these requirements so that future maintainers do not undermine safety or liveness by substituting an incompatible execution policy.	
+		Thread Starvation Deadlock
+			Whenever you submit to an Executor tasks that are not independent, be aware of the possibility of thread starvation deadlock, and document any pool sizing or configuration constraints in the code or configuration file where the Executor is configured.
+		Long-running Tasks
+			One technique that can mitigate the ill effects of long‐running tasks is for tasks to use timed resource waits instead of unbounded waits. Most blocking methods in the plaform libraries come in both untimed and timed versions, such as Thread.join, BlockingQueue.put, CountDownLatch.await, and Selector.select.
+	Sizing Thread Pools
+		Sizing thread pools is not an exact science, but fortunately you need only avoid the extremes of "too big" and "too small". If a thread pool is too big, then threads compete for scarce CPU and memory resources, resulting in higher memory usage and possible resource exhaustion. If it is too small, throughput suffers as processors go unused despite available work.
+		int N_CPUS = Runtime.getRuntime().availableProcessors();
+	Configuring ThreadPoolExecutor
+		Thread Creation and Teardown
+			The core pool size, maximum pool size, and keep‐alive time govern thread creation and teardown. The core size is the target size; the implementation attempts to maintain the pool at this size even when there are no tasks to execute,[2] and will not create more threads than this unless the work queue is full.[3] The maximum pool size is the upper bound on how many pool threads can be active at once. A thread that has been idle for longer than the keep‐alive time becomes a candidate for reaping and can be terminated if the current pool size exceeds the core size.
+			When a ThreadPoolExecutor is initially created, the core threads are not started immediately but instead as tasks are submitted, unless you call prestartAllCoreThreads.
+			Developers are sometimes tempted to set the core size to zero so that the worker threads will eventually be torn down and therefore won't prevent the JVM from exiting, but this can cause some strange‐seeming behavior in thread pools that don't use a SynchronousQueue for their work queue (as newCachedThreadPool does). If the pool is already at the core size, ThreadPoolExecutor creates a new thread only if the work queue is full. So tasks submitted to a thread pool with a work queue that has any capacity and a core size of zero will not execute until the queue fills up, which is usually not what is desired. In Java 6, allowCoreThreadTimeOut allows you to request that all pool threads be able to time out; enable this feature with a core size of zero if you want a bounded thread pool with a bounded work queue but still have all the threads torn down when there is no work to do.
+		Managing Queued Tasks
+			Representing a waiting task with a Runnable and a list node is certainly a lot cheaper than with a thread, but the risk of resource exhaustion still remains if clients can throw requests at the server faster than it can handle them.
+			ThreadPoolExecutor allows you to supply a BlockingQueue to hold tasks awaiting execution. There are three basic approaches to task queuing: unbounded queue, bounded queue, and synchronous handoff. The choice of queue interacts with other configuration parameters such as pool size.
+			For very large or unbounded pools, you can also bypass queuing entirely and instead hand off tasks directly from producers to worker threads using a SynchronousQueue. A SynchronousQueue is not really a queue at all, but a mechanism for managing handoffs between threads. In order to put an element on a SynchronousQueue, another thread must already be waiting to accept the handoff. If no thread is waiting but the current pool size is less than the maximum, Thread-PoolExecutor creates a new thread; otherwise the task is rejected according to the saturation policy. Using a direct handoff is more efficient because the task can be handed right to the thread that will execute it, rather than first placing it on a queue and then having the worker thread fetch it from the queue. SynchronousQueue is a practical choice only if the pool is unbounded or if rejecting excess tasks is acceptable. The newCachedThreadPool factory uses a SynchronousQueue.
+			The newCachedThreadPool factory is a good default choice for an Executor, providing better queuing performance than a fixed thread pool.[5] A fixed size thread pool is a good choice when you need to limit the number of concurrent tasks for resource‐management purposes, as in a server application that accepts requests from network clients and would otherwise be vulnerable to overload.
+		Saturation Policies
+			The saturation policy for a ThreadPoolExecutor can be modified by calling setRejectedExecutionHandler. (The saturation policy is also used when a task is submitted to an Executor that has been shut down.) Several implementations of RejectedExecutionHandler are provided, each implementing a different saturation policy: AbortPolicy, CallerRunsPolicy, DiscardPolicy, and DiscardOldestPolicy.
+			The caller‐runs policy implements a form of throttling that neither discards tasks nor throws an exception, but instead tries to slow down the flow of new tasks by pushing some of the work back to the caller. It executes the newly submitted task not in a pool thread, but in the thread that calls execute. If we modified our WebServer example to use a bounded queue and the caller‐runs policy, after all the pool threads were occupied and the work queue filled up the next task would be executed in the main thread during the call to execute. Since this would probably take some time, the main thread cannot submit any more tasks for at least a little while, giving the worker threads some time to catch up on the backlog. The main thread would also not be calling accept during this time, so incoming requests will queue up in the TCP layer instead of in the application. If the overload persisted, eventually the TCP layer would decide it has queued enough connection requests and begin discarding connection requests as well. As the server becomes overloaded, the overload is gradually pushed outward ‐ from the pool threads to the work queue to the application to the TCP layer, and eventually to the client ‐ enabling more graceful degradation under load.
+		Thread Factories
+			The default thread factory creates a new, nondaemon thread with no special configuration.
+			If your application takes advantage of security policies to grant permissions to particular codebases, you may want to use the privilegedThreadFactory factory method in Executors to construct your thread factory. It creates pool threads that have the same permissions, AccessControlContext, and contextClassLoader as the thread creating the privilegedThreadFactory. Otherwise, threads created by the thread pool inherit permissions from whatever client happens to be calling execute or submit at the time a new thread is needed, which could cause confusing securityrelated exceptions.
+		Customizing ThreadPoolExecutor After Construction
+			Executors includes a factory method, unconfigurableExecutorService, which takes an existing ExecutorService and wraps it with one exposing only the methods of ExecutorService so it cannot be further configured. Unlike the pooled implementations, newSingleThreadExecutor returns an ExecutorService wrapped in this manner, rather than a raw ThreadPoolExecutor.
+			If you will be exposing an ExecutorService to code you don't trust not to modify it, you can wrap it with an unconfigurableExecutorService.
+	Extending ThreadPoolExecutor
+		ThreadPoolExecutor was designed for extension, providing several "hooks" for subclasses to overridebeforeExecute, afterExecute, and terminatethat can be used to extend the behavior of ThreadPoolExecutor.
+		The beforeExecute and afterExecute hooks are called in the thread that executes the task, and can be used for adding logging, timing, monitoring, or statistics gathering. The afterExecute hook is called whether the task completes by returning normally from run or by throwing an Exception. (If the task completes with an Error, afterExecute is not called.) If beforeExecute throws a RuntimeException, the task is not executed and afterExecute is not called.
+		The terminated hook is called when the thread pool completes the shutdown process, after all tasks have finished and all worker threads have shut down. It can be used to release resources allocated by the Executor during its lifecycle, perform notification or logging, or finalize statistics gathering.
+		Example: Adding Statistic to a Thread Pool
+			Because execution hooks are called in the thread that executes the task, a value placed in a ThreadLocal by beforeExecute can be retrieved by afterExecute.
+	Parallelizing Recursive Algorithms
+		If you want to submit a set of tasks and wait for them all to complete, you can use ExecutorService.invokeAll; to retrieve the results as they become available, you can use a CompletionService
+		Sequential loop iterations are suitable for parallelization when each iteration is independent of the others and the work done in each iteration of the loop body is significant enough to offset the cost of managing a new task.
+		Example: A Puzzle Framework
+	Summary
+		
+			
+GUI Applications
+	Why are GUIs Single-threaded?
+		Modern GUI frameworks use a model that is only slightly different: they create a dedicated event dispatch thread (EDT) for handling GUI events.
+		Sequential Event Processing
+		Thread Confinement in Swing
+			The Swing single‐thread rule: Swing components and models should be created, modified, and queried only from the event‐dispatching thread.
+	Short-running GUI Tasks
+	Long-running GUI Tasks
+		Cancellation
+		Progress and Completion Indication
+		SwingWorker
+	Shared Data Models
+		Thread-safe Data Models
+		Split Data Models
+			Consider a split‐model design when a data model must be shared by more than one thread and implementing a threadsafe data model would be inadvisable because of blocking, consistency, or complexity reasons.
+	Other Forms of Single-threaded Subsystems
+	Summary
+		
+		
+	
+Part 3: Liveness, Performance and Testing
+Avoiding Liveness Hazards
+	Deadlock
+		Lock-ordering Deadlocks
+			A program will be free of lock‐ordering deadlocks if all threads acquire the locks they need in a fixed global order.
+		Dynamic Lock Order Deadlocks
+		Deadlocks Between Cooperating Objects
+			Invoking an alien method with a lock held is asking for liveness trouble. The alien method might acquire other locks (risking deadlock) or block for an unexpectedly long time, stalling other threads that need the lock you hold.
+		Open Calls
+			Calling a method with no locks held is called an open call [CPJ 2.4.1.3], and classes that rely on open calls are more wellbehaved and composable than classes that make calls with locks held. Using open calls to avoid deadlock is analogous to using encapsulation to provide thread safety: while one can certainly construct a thread‐safe program without any encapsulation, the thread safety analysis of a program that makes effective use of encapsulation is far easier than that of one that does not. Similarly, the liveness analysis of a program that relies exclusively on open calls is far easier than that of one that does not. Restricting yourself to open calls makes it far easier to identify the code paths that acquire multiple locks and therefore to ensure that locks are acquired in a consistent order.
+			Strive to use open calls throughout your program. Programs that rely on open calls are far easier to analyze for deadlock‐freedom than those that allow calls to alien methods with locks held.
+		Resource Deadlocks
+	Avoiding and Diagnosing Deadlocks
+		Timed Lock Attempts
+			Another technique for detecting and recovering from deadlocks is to use the timed tryLock feature of the explicit Lock classes (see Chapter 13) instead of intrinsic locking.
+		Deadlock Analysis with Thread Dumps
+			While preventing deadlocks is mostly your problem, the JVM can help identify them when they do happen using thread dumps. A thread dump includes a stack trace for each running thread, similar to the stack trace that accompanies an exception. Thread dumps also include locking information, such as which locks are held by each thread, in which stack frame they were acquired, and which lock a blocked thread is waiting to acquire.[4] Before generating a thread dump, the JVM searches the is‐waiting‐for graph for cycles to find deadlocks. If it finds one, it includes deadlock information identifying which locks and threads are involved, and where in the program the offending lock acquisitions are.
+			If you are using the explicit Lock classes instead of intrinsic locking, Java 5.0 has no support for associating Lock information with the thread dump; explicit Locks do not show up at all in thread dumps. Java 6 does include thread dump support and deadlock detection with explicit Locks, but the information on where Locks are acquired is necessarily less precise than for intrinsic locks. Intrinsic locks are associated with the stack frame in which they were acquired; explicit Locks are associated only with the acquiring thread.
+	Other Liveness Hazards
+		Starvation
+			Starvation occurs when a thread is perpetually denied access to resources it needs in order to make progress; the most commonly starved resource is CPU cycles.
+			The thread priorities defined in the Thread API are merely scheduling hints. The Thread API defines ten priority levels that the JVM can map to operating system scheduling priorities as it sees fit. This mapping is platform‐specific, so two Java priorities can map to the same OS priority on one system and different OS priorities on another. Some operating systems have fewer than ten priority levels, in which case multiple Java priorities map to the same OS priority.
+			As soon as you start modifying priorities, the behavior of your application becomes platform‐specific and you introduce the risk of starvation.
+			The semantics of Thread.yield (and Thread.sleep(0)) are undefined [JLS 17.9]; the JVM is free to implement them as no‐ops or treat them as scheduling hints. In particular, they are not required to have the semantics of sleep(0) on Unix systems ‐ put the current thread at the end of the run queue for that priority, yielding to other threads of the same priority ‐ though some JVMs implement yield in this way.
+			Avoid the temptation to use thread priorities, since they increase platform dependence and can cause liveness problems. Most concurrent applications can use the default priority for all threads.
+		Poor Responsiveness
+		Livelock
+			Livelock is a form of liveness failure in which a thread, while not blocked, still cannot make progress because it keeps retrying an operation that will always fail.
+			Livelock often occurs in transactional messaging applications, where the messaging infrastructure rolls back a transaction if a message cannot be processed successfully, and puts it back at the head of the queue. If a bug in the message handler for a particular type of message causes it to fail, every time the message is dequeued and passed to the buggy handler, the transaction is rolled back. Since the message is now back at the head of the queue, the handler is called over and over with the same result.
+			The solution for this variety of livelock is to introduce some randomness into the retry mechanism. For example, when two stations in an Ethernet network try to send a packet on the shared carrier at the same time, the packets collide. The stations detect the collision, and each tries to send their packet again later. If they each retry exactly one second later, they collide over and over, and neither packet ever goes out, even if there is plenty of available bandwidth. To avoid this, we make each wait an amount of time that includes a random component. (The Ethernet protocol also includes exponential back‐off after repeated collisions, reducing both congestion and the risk of repeated failure with multiple colliding stations.) Retrying with random waits and back‐offs can be equally effective for avoiding livelock in concurrent applications.
+	Summary
+		
+		
+Performance and Scalability
+	Thinking about Performance
+		Using multiple threads always introduces some performance costs compared to the single‐threaded approach. These include the overhead associated with coordinating between threads (locking, signaling, and memory synchronization), increased context switching, thread creation and teardown, and scheduling overhead.
+		Performance Versus Scalability
+			Scalability describes the ability to improve throughput or capacity when additional computing resources (such as additional CPUs, memory, storage, or I/O bandwidth) are added.
+			When tuning for scalability, you are instead trying to find ways to parallelize the problem so you can take advantage of additional processing resources to do more work with more resources.
+		Evaluating Performance Tradeoffs
+			Avoid premature optimization. First make it right, then make it fast ‐ if it is not already fast enough.
+			Measure, don't guess.
+	Amdahl's Law
+		Example: Serialization Hidden in Frameworks
+			The difference in throughput comes from differing degrees of serialization between the two queue implementations. The synchronized LinkedList guards the entire queue state with a single lock that is held for the duration of the offer or remove call; ConcurrentLinkedQueue uses a sophisticated non‐blocking queue algorithm (see Section 15.4.2) that uses atomic references to update individual link pointers. In one, the entire insertion or removal is serialized; in the other, only updates to individual pointers are serialized.
+		Applying Amdahl's Law Qualitatively
+	Costs Introduced by Threads
+		Context Switching
+			Context switches are not free; thread scheduling requires manipulating shared data structures in the OS and JVM. The OS and JVMuse the same CPUs your program does; more CPU time spent in JVM and OS code means less is available for your program. But OS and JVM activity is not the only cost of context switches. When a new thread is switched in, the data it needs is unlikely to be in the local processor cache, so a context switch causes a flurry of cache misses, and thus threads run a little more slowly when they are first scheduled. This is one of the reasons that schedulers give each runnable thread a certain minimum time quantum even when many other threads are waiting: it amortizes the cost of the context switch and its consequences over more uninterrupted execution time, improving overall throughput (at some cost to responsiveness).
+			When a thread blocks because it is waiting for a contended lock, the JVM usually suspends the thread and allows it to be switched out. If threads block frequently, they will be unable to use their full scheduling quantum. A program that does more blocking (blocking I/O, waiting for contended locks, or waiting on condition variables) incurs more context switches than one that is CPU‐bound, increasing scheduling overhead and reducing throughput.
+			The vmstat command on Unix systems and the perfmon tool on Windows systems report the number of context switches and the percentage of time spent in the kernel. High kernel usage (over 10%) often indicates heavy scheduling activity, which may be caused by blocking due to I/O or lock contention.
+		Memory Synchronization
+			The visibility guarantees provided by synchronized and volatile may entail using special instructions called memory barriers that can flush or invalidate caches, flush hardware write buffers, and stall execution pipelines. Memory barriers may also have indirect performance consequences because they inhibit other compiler optimizations; most operations cannot be reordered with memory barriers.
+			When assessing the performance impact of synchronization, it is important to distinguish between contended and uncontended synchronization. The synchronized mechanism is optimized for the uncontended case (volatile is always uncontended), and at this writing, the performance cost of a "fast‐path" uncontended synchronization ranges from 20 to 250 clock cycles for most systems. While this is certainly not zero, the effect of needed, uncontended synchronization is rarely significant in overall application performance
+			Modern JVMs can reduce the cost of incidental synchronization by optimizing away locking that can be proven never to contend.
+			More sophisticated JVMs can use escape analysis to identify when a local object reference is never published to the heap and is therefore thread‐local.
+			Even without escape analysis, compilers can also perform lock coarsening, the merging of adjacent synchronized blocks using the same lock.
+			Don't worry excessively about the cost of uncontended synchronization. The basic mechanism is already quite fast, and JVMs can perform additional optimizations that further reduce or eliminate the cost. Instead, focus optimization efforts on areas where lock contention actually occurs.
+			Synchronization by one thread can also affect the performance of other threads. Synchronization creates traffic on the shared memory bus; this bus has a limited bandwidth and is shared across all processors. If threads must compete for synchronization bandwidth, all threads using synchronization will suffer.
+			This aspect is sometimes used to argue against the use of non‐blocking algorithms without some sort of backoff, because under heavy contention, non‐blocking algorithms generate more synchronization traffic than lock‐based ones.
+		Blocking
+			When locking is contended, the losing thread(s) must block. The JVM can implement blocking either via spin‐waiting (repeatedly trying to acquire the lock until it succeeds) or by suspending the blocked thread through the operating system. Which is more efficient depends on the relationship between context switch overhead and the time until the lock becomes available; spin‐waiting is preferable for short waits and suspension is preferable for long waits. Some JVMs choose between the two adaptively based on profiling data of past wait times, but most just suspend threads waiting for a lock.
+	Reducing Lock Contention
+		The principal threat to scalability in concurrent applications is the exclusive resource lock.
+		Two factors influence the likelihood of contention for a lock: how often that lock is requested and how long it is held once acquired.
+		There are three ways to reduce lock contention:
+			? Reduce the duration for which locks are held;
+			? Reduce the frequency with which locks are requested; or
+			? Replace exclusive locks with coordination mechanisms that permit greater concurrency.
+		Narrowing Lock Scope("Get in, Get out")
+			An effective way to reduce the likelihood of contention is to hold locks as briefly as possible. This can be done by moving code that doesn't require the lock out of synchronized blocks, especially for expensive operations and potentially blocking operations such as I/O.
+		Reducing Lock Granularity
+			The other way to reduce the fraction of time that a lock is held (and therefore the likelihood that it will be contended) is to have threads ask for it less often. This can be accomplished by lock splitting and lock striping, which involve using separate locks to guard multiple independent state variables previously guarded by a single lock. These techniques reduce the granularity at which locking occurs, potentially allowing greater scalabilitybut using more locks also increases the risk of deadlock.
+		Lock Striping
+			Lock splitting can sometimes be extended to partition locking on a variablesized set of independent objects, in which case it is called lock striping. For example, the implementation of ConcurrentHashMap uses an array of 16 locks, each of which guards 1/16 of the hash buckets; bucket N is guarded by lock N mod 16. Assuming the hash function provides reasonable spreading characteristics and keys are accessed uniformly, this should reduce the demand for any given lock by approximately a factor of 16. It is this technique that enables ConcurrentHashMap to support up to 16 concurrent writers.
+		Avoiding Hot Fields
+			If you were implementing HashMap, you would have a choice of how size computes the number of entries in the Map. The simplest approach is to count the number of entries every time it is called. A common optimization is to update a separate counter as entries are added or removed; this slightly increases the cost of a put or remove operation to keep the counter up‐to‐date, but reduces the cost of the size operation from O(n) to O(1).
+			Keeping a separate count to speed up operations like size and isEmpty works fine for a single‐threaded or fully synchronized implementation, but makes it much harder to improve the scalability of the implementation because every operation that modifies the map must now update the shared counter.
+			ConcurrentHashMap avoids this problem by having size enumerate the stripes and add up the number of elements in each stripe, instead of maintaining a global count. To avoid enumerating every element, ConcurrentHashMap maintains a separate count field for each stripe, also guarded by the stripe lock.
+			If size is called frequently compared to mutative operations, striped data structures can optimize for this by caching the collection size in a volatile whenever size is called and invalidating the cache (setting it to ‐1) whenever the collection is modified. If the cached value is nonnegative on entry to size, it is accurate and can be returned; otherwise it is recomputed.
+		Alternatives to Exclusive Locks
+		Monitoring CPU Utilization
+		Just Say No to Object Pooling
+			To work around "slow" object lifecycles, many developers turned to object pooling, where objects are recycled instead of being garbage collected and allocated anew when needed. Even taking into account its reduced garbage collection overhead, object pooling has been shown to be a performance loss[14] for all but the most expensive objects (and aserious loss for light‐ and medium‐weight objects) in single‐threaded programs
+			In addition to being a loss in terms of CPU cycles, object pooling has a number of other problems, among them the challenge of setting pool sizes correctly (too small, and pooling has no effect; too large, and it puts pressure on the garbage collector, retaining memory that could be used more effectively for something else); the risk that an object will not be properly reset to its newly allocated state, introducing subtle bugs; the risk that a thread will return an object to the pool but continue using it; and that it makes more work for generational garbage collectors by encouraging a pattern of old‐to‐young references.
+			In concurrent applications, pooling fares even worse. When threads allocate new objects, very little inter‐thread coordination is required, as allocators typically use thread‐local allocation blocks to eliminate most synchronization on heap data structures. But if those threads instead request an object from a pool, some synchronization is necessary to coordinate access to the pool data structure, creating the possibility that a thread will block. Because blocking a thread due to lock contention is hundreds of times more expensive than an allocation, even a small amount of pool‐induced contention would be a scalability bottleneck. (Even an uncontended synchronization is usually more expensive than allocating an object.) This is yet another technique intended as a performance optimization but that turned into a scalability hazard. Pooling has its uses,[15] but is of limited utility as a performance optimization.
+			Allocating objects is usually cheaper than synchronizing.
+	Example: Comparing Map Performance
+	Reducing Context Switch Overhead
+		One source of blocking in server applications is generating log messages in the course of processing requests
+		The service time for a logging operation includes whatever computation is associated with the I/O stream classes; if the I/O operation blocks, it also includes the duration for which the thread is blocked. The operating system will deschedule the blocked thread until the I/O completes, and probably a little longer. When the I/O completes, other threads are probably active and will be allowed to finish out their scheduling quanta, and threads may already be waiting ahead of us on the scheduling queue ‐ further adding to service time. Alternatively, if multiple threads are logging simultaneously, there may be contention for the output stream lock, in which case the result is the same as with blocking I/O ‐ the thread blocks waiting for the lock and gets switched out. Inline logging involves I/O and locking, which can lead to increased context switching and therefore increased service times.
+		Moving the I/O out of the request‐processing thread is likely to shorten the mean service time for request processing. Threads calling log no longer block waiting for the output stream lock or for I/O to complete; they need only queue the message and can then return to their task.
+	Summary
+		Because one of the most common reasons to use threads is to exploit multiple processors, in discussing the performance of concurrent applications, we are usually more concerned with throughput or scalability than we are with raw service time. Amdahl's law tells us that the scalability of an application is driven by the proportion of code that must be executed serially. Since the primary source of serialization in Java programs is the exclusive resource lock, scalability can often be improved by spending less time holding locks, either by reducing lock granularity, reducing the duration for which locks are held, or replacing exclusive locks with nonexclusive or non‐blocking alternatives.
+		
+		
+Testing Concurrent Programs
+	Testing for Correctness
+		Basic Unit Tests
+		Testing Blocking Operations
+		Testing Safety
+			The challenge to constructing effective safety tests for concurrent classes is identifying easily checked properties that will, with high probability, fail if something goes wrong, while at the same time not letting the failure‐auditing code limit concurrency artificially. It is best if checking the test property does not require any synchronization.
+			Tests should be run on multiprocessor systems to increase the diversity of potential interleavings. However, having more than a few CPUs does not necessarily make tests more effective. To maximize the chance of detecting timingsensitive data races, there should be more active threads than CPUs, so that at any given time some threads are running and some are switched out, thus reducing the predictability of interactions between threads.
+		Testing Resource Management
+		Using Callbacks
+		Generating More Interleavings
+			A useful trick for increasing the number of interleavings, and therefore more effectively exploring the state space of your programs, is to use Thread.yield to encourage more context switches during operations that access shared state. (The effectiveness of this technique is platform‐specific, since the JVM is free to treat Thread.yield as a no‐op [JLS 17.9]; using a short but nonzero sleep would be slower but more reliable.)
+	Testing for Performance
+		Extending PutTakeTest to Add Timing
+		Comparing Multiple Algorithms
+		Measuring Responsiveness
+	Avoiding Performance Testing Pitfalls
+		Garbage Collection
+			There are two strategies for preventing garbage collection from biasing your results. One is to ensure that garbage collection does not run at all during your test (you can invoke the JVM with -verbose:gc to find out); alternatively, you can make sure that the garbage collector runs a number of times during your run so that the test program adequately reflects the cost of ongoing allocation and garbage collection. The latter strategy is often betterit requires a longer test and is more likely to reflect real‐world performance.
+		Dynamic Compilation
+			The JVM may choose to perform compilation in the application thread or in the background thread; each can bias timing results in different ways.
+			Code may also be decompiled (reverting to interpreted execution) and recompiled for various reasons, such as loading a class that invalidates assumptions made by prior compilations, or gathering sufficient profiling data to decide that a code path should be recompiled with different optimizations.
+		Unrealistic Sampling of Code Paths
+			Runtime compilers use profiling information to help optimize the code being compiled. The JVM is permitted to use information specific to the execution in order to produce better code, which means that compiling method M in one program may generate different code than compiling M in another. In some cases, the JVM may make optimizations based on assumptions that may only be true temporarily, and later back them out by invalidating the compiled code if they become untrue.
+			For example, the JVM can use monomorphic call transformation to convert a virtual method call to a direct method call if no classes currently loaded override that method, but it invalidates the compiled code if a class is subsequently loaded that overrides the method.
+		Unrealistic Degrees of Contention
+		Dead Code Elimination
+			Many micro‐benchmarks perform much "better" when run with HotSpot's -server compiler than with -client, not just because the server compiler can produce more efficient code, but also because it is more adept at optimizing dead code.
+			Writing effective performance tests requires tricking the optimizer into not optimizing away your benchmark as dead code. This requires every computed result to be used somehow by your program ‐ in a way that does not require synchronization or substantial computation.
+	Complementary Testing Approaches		
+		Code Review puttet
+		Static Analysis Tools
+			Unlike intrinsic locks, explicit locks (see Chapter 13) are not automatically released when control exits the scope in which they were acquired. The standard idiom is to release the lock from a finally block; otherwise the lock can remain unreleased in the event of an Exception.
+			Starting a thread from a constructor introduces the risk of subclassing problems, and can allow the this reference to escape the constructor.
+			The notify and notifyAll methods indicate that an object's state may have changed in a way that would unblock threads that are waiting on the associated condition queue. These methods should be called only when the state associated with the condition queue has changed. A synchronized block that calls notify or notifyAll but does not modify any state is likely to be an error.
+			When waiting on a condition queue, Object.wait or Condition. await should be called in a loop, with the appropriate lock held, after testing some state predicate (see Chapter 14). Calling Object.wait or Condition.await without the lock held, not in a loop, or without testing some state predicate is almost certainly an error.
+			Calling Thread.sleep with a lock held can prevent other threads from making progress for a long time and is therefore a potentially serious liveness hazard. Calling Object.wait or Condition.await with two locks held poses a similar hazard.
+			Code that does nothing but spin (busy wait) checking a field for an expected value can waste CPU time and, if the field is not volatile, is not guaranteed to terminate. Latches or condition waits are often a better technique when waiting for a state transition to occur.
+		Aspect-oriented Test Techniques
+		Profilers and Monitoring Tools
+	Summary
+		
+		
+		
+Part 4: Advanced Topics
+Explicit Locks
+	ReentrantLock is not a replacement for intrinsic locking, but rather an alternative with advanced features for when intrinsic locking proves too limited.		
+	Lock and ReentrantLock
+		Lock implementations must provide the same memory‐visibility semantics as intrinsic locks, but can differ in their locking semantics, scheduling algorithms, ordering guarantees, and performance characteristics.
+		ReentrantLock implements Lock, providing the same mutual exclusion and memory‐visibility guarantees as synchronized. Acquiring a ReentrantLock has the same memory semantics as entering a synchronized block, and releasing a ReentrantLock has the same memory semantics as exiting a synchronized block. (Memory visibility is covered in Section 3.1 and in Chapter 16.) And, like synchronized, ReentrantLock offers reentrant locking semantics
+		When using locking, you must also consider what happens if an exception is thrown out of the try block; if it is possible for the object to be left in an inconsistent state, additional TRy-catch or TRy-finally blocks may be needed.
+		Pooled and Timed Lock Acquisition
+			Using timed or polled lock acquisition (TryLock) lets you regain control if you cannot acquire all the required locks, release the ones you did acquire, and try again (or at least log the failure and do something else).
+		Interruptible Lock Acquisition
+			Just as timed lock acquisition allows exclusive locking to be used within time‐limited activities, interruptible lock acquisition allows locking to be used within cancellable activities.
+			The lockInterruptibly method allows you to try to acquire a lock while remaining responsive to interruption, and its inclusion in Lock avoids creating another category of noninterruptibleblocking mechanisms.
+			The canonical structure of interruptible lock acquisition is slightly more complicated than normal lock acquisition, as two TRy blocks are needed. (If the interruptible lock acquisition can throw InterruptedException, the standard tryfinally locking idiom works.)
+			The timed TRyLock is also responsive to interruption and so can be used when you need both timed and interruptible lock acquisition.
+		Non-block-structured Locking
+			With intrinsic locks, acquire‐release pairs are block‐structureda lock is always released in the same basic block in which it was acquired, regardless of how control exits the block.
+	Performance Considerations
+		Java 6 uses an improved algorithm for managing intrinsic locks, similar to that used by ReentrantLock, that closes the scalability gap considerably. Figure 13.1 shows the performance difference between intrinsic locks and ReentrantLock on Java 5.0 and on a prerelease build of Java 6 on a four‐way Opteron system running Solaris. The curves represent the "speedup" of ReentrantLock over intrinsic locking on a single JVM version. On Java 5.0, ReentrantLock offers considerably better throughput, but on Java 6, the two are quite close.
+		Performance is a moving target; yesterday's benchmark showing that X is faster than Y may already be out of date today.
+	Fairness
+		The ReentrantLock constructor offers a choice of two fairness options: create a nonfair lock (the default) or a fair lock. Threads acquire a fair lock in the order in which they requested it, whereas a nonfair lock permits barging: threads requesting a lock can jump ahead of the queue of waiting threads if the lock happens to be available when it is requested. (Semaphore also offers the choice of fair or nonfair acquisition ordering.) Nonfair ReentrantLocks do not go out of their way to promote bargingthey simply don't prevent a thread from barging if it shows up at the right time. With a fair lock, a newly requesting thread is queued if the lock is held by another thread or if threads are queued waiting for the lock; with a nonfair lock, the thread is queued only if the lock is currently held.
+		The polled tryLock always barges, even for fair locks.
+		In most cases, the performance benefits of non‐fair locks outweigh the benefits of fair queuing.
+		One reason barging locks perform so much better than fair locks under heavy contention is that there can be a significant delay between when a suspended thread is resumed and when it actually runs.
+		Like the default ReentrantLock, intrinsic locking offers no deterministic fairness guarantees, but the statistical fairness guarantees of most locking implementations are good enough for almost all situations. The language specification does not require the JVM to implement intrinsic locks fairly, and no production JVMs do. ReentrantLock does not depress lock fairness to new lowsit only makes explicit something that was present all along.
+	Choosing Between Synchronized and ReentrantLock
+		ReentrantLock is an advanced tool for situations where intrinsic locking is not practical. Use it if you need its advanced features: timed, polled, or interruptible lock acquisition, fair queuing, or non‐block‐structured locking. Otherwise, prefer synchronized.
+		The performance of ReentrantLock appears to dominate that of intrinsic locking, winning slightly on Java 6 and dramatically on Java 5.0.
+		Future performance improvements are likely to favor synchronized over ReentrantLock. Because synchronized is built into the JVM, it can perform optimizations such as lock elision for thread‐confined lock objects and lock coarsening to eliminate synchronization with intrinsic locks (see Section 11.3.2); doing this with library‐based locks seems far less likely. Unless you are deploying on Java 5.0 for the foreseeable future and you have a demonstrated need for ReentrantLock's scalability benefits on that platform, it is not a good idea to choose ReentrantLock over synchronized for performance reasons.
+	Read-Write Locks
+		The interaction between the read and write locks allows for a number of possible implementations. Some of the implementation options for a ReadWriteLock are:
+			Release preference. When a writer releases the write lock and both readers and writers are queued up, who should be given preference ‐ readers, writers, or whoever asked first?
+			Reader barging. If the lock is held by readers but there are waiting writers, should newly arriving readers be granted immediate access, or should they wait behind the writers? Allowing readers to barge ahead of writers enhances concurrency but runs the risk of starving writers.
+			Reentrancy. Are the read and write locks reentrant?
+			Downgrading. If a thread holds the write lock, can it acquire the read lock without releasing the write lock? This would let a writer "downgrade" to a read lock without letting other writers modify the guarded resource in the meantime.
+			Upgrading. Can a read lock be upgraded to a write lock in preference to other waiting readers or writers? Most readwrite lock implementations do not support upgrading, because without an explicit upgrade operation it is deadlockprone. (If two readers simultaneously attempt to upgrade to a write lock, neither will release the read lock.)
+		ReentrantReadWriteLock provides reentrant locking semantics for both locks. Like ReentrantLock, a ReentrantReadWriteLock can be constructed as non‐fair (the default) or fair. With a fair lock, preference is given to the thread that has been waiting the longest; if the lock is held by readers and a thread requests the write lock, no more readers are allowed to acquire the read lock until the writer has been serviced and releases the write lock. With a nonfair lock, the order in which threads are granted access is unspecified. Downgrading from writer to reader is permitted; upgrading from reader to writer is not (attempting to do so results in deadlock).
+		In Java 5.0, the read lock behaves more like a Semaphore than a lock, maintaining only the count of active readers, not their identities. This behavior was changed in Java 6 to keep track also of which threads have been granted the read lock.
+		One reason for this change is that under Java 5.0, the lock implementation cannot distinguish between a thread requesting the read lock for the first time and a reentrant lock request, which would make fair read‐write locks deadlock‐prone.
+	Summary
+		Explicit Locks offer an extended feature set compared to intrinsic locking, including greater flexibility in dealing with lock unavailability and greater control over queuing behavior. But ReentrantLock is not a blanket substitute for synchronized; use it only when you need features that synchronized lacks.
+		Read‐write locks allow multiple readers to access a guarded object concurrently, offering the potential for improved scalability when accessing read‐mostly data structures.
+
+		
+Building Custom Synchronizers
+	Managing State Dependence
+		void blockingAction() throws InterruptedException {
+			acquire lock on object state
+			while (precondition does not hold) {
+				release lock
+				wait until precondition might hold
+				optionally fail if interrupted or timeout expires
+				reacquire lock
+			}
+			perform action
+		}
+		Example: Propagating Precondition Failure to Callers
+			Queue offers both of these options ‐ poll returns null if the queue is empty, and remove throws an exception ‐ but Queue is not intended for use in producer‐consumer designs. BlockingQueue, whose operations block until the queue is in the right state to proceed, is a better choice when producers and consumers will execute concurrently.
+			Somewhere between busy waiting and sleeping would be calling Thread.yield in each iteration, which is a hint to the scheduler that this would be a reasonable time to let another thread run. If you are waiting for another thread to do something, that something might happen faster if you yield the processor rather than consuming your full scheduling quantum.
+		Example: Crude Blocking by Pooling and Sleeping
+			It is usually a bad idea for a thread to go to sleep or otherwise block with a lock held
+		Condition Queues to the Rescue
+			Object.wait atomically releases the lock and asks the OS to suspend the current thread, allowing other threads to acquire the lock and therefore modify the object state. Upon waking, it reacquires the lock before returning. Intuitively, calling wait means "I want to go to sleep, but wake me when something interesting happens", and calling the notification methods means "something interesting happened".
+			This is not quite true; a fair condition queue can guarantee the relative order in which threads are released from the wait set. Intrinsic condition queues, like intrinsic locks, do not offer fair queuing; explicit Conditions offer a choice of fair or non‐fair queuing.
+	Using Condition Queues
+		The Condition Predicate
+			Document the condition predicate(s) associated with a condition queue and the operations that wait on them.
+			A thread waking up from wait gets no special priority in reacquiring the lock; it contends for the lock just like any other thread attempting to enter a synchronized block.
+			Every call to wait is implicitly associated with a specific condition predicate. When calling wait regarding a particular condition predicate, the caller must already hold the lock associated with the condition queue, and that lock must also guard the state variables from which the condition predicate is composed.
+		Waking up too soon
+			For all these reasons, when you wake up from wait you must test the condition predicate again, and go back to waiting (or fail) if it is not yet true. Since you can wake up repeatedly without your condition predicate being true, you must therefore always call wait from within a loop, testing the condition predicate in each iteration.
+			When using condition waits (Object.wait or Condition.await):
+				? Always have a condition predicatesome test of object state that must hold before proceeding;
+				? Always test the condition predicate before calling wait, and again after returning from wait;
+				? Always call wait in a loop;
+				? Ensure that the state variables making up the condition predicate are guarded by the lock associated with the condition queue;
+				? Hold the lock associated with the the condition queue when calling wait, notify, or notifyAll; and
+				? Do not release the lock after checking the condition predicate but before acting on it.
+		Missed Signals
+		Notification
+			Whenever you wait on a condition, make sure that someone will perform a notification whenever the condition predicate becomes true.
+			Single notify can be used instead of notifyAll only when both of the following conditions hold:	
+				? Uniform waiters. Only one condition predicate is associated with the condition queue, and each thread executes the same logic upon returning from wait; and
+				? One‐in, one‐out. A notification on the condition variable enables at most one thread to proceed.
+			This "prevailing wisdom" makes some people uncomfortable, and for good reason. Using notifyAll when only one thread can make progress is inefficientsometimes a little, sometimes grossly so. If ten threads are waiting on a condition queue, calling notifyAll causes each of them to wake up and contend for the lock; then most or all of them will go right back to sleep. This means a lot of context switches and a lot of contended lock acquisitions for each event that enables (maybe) a single thread to make progress. (In the worst case, using notify-All results in O(n2) wakeups where n would suffice.)
+		Example: A Gate Class
+		Subclass Safety Issues
+		Encapsulating Condition Queues
+		Entry and Exist Protocols
+	Explicit Condition Objects
+		A Condition is associated with a single Lock, just as a condition queue is associated with a single intrinsic lock; to create a Condition, call Lock.newCondition on the associated lock.
+		Condition objects inherit the fairness setting of their associated Lock; for fair locks, threads are released from Condition.await in FIFO order.
+		Hazard warning: The equivalents of wait, notify, and notifyAll for Condition objects are await, signal, and signalAll. However, Condition extends Object, which means that it also has wait and notify methods. Be sure to use the proper versions ‐ await and signal - instead!
+		Using the more efficient signal instead of signalAll reduces the number of context switches and lock acquisitions triggered by each buffer operation.
+		Choose between using explicit Conditions and intrinsic condition queues in the same way as you would choose between ReentrantLock and synchronized: use Condition if you need its advanced features such as fair queueing or multiple wait sets per lock, and otherwise prefer intrinsic condition queues.
+	Anatomy of a Synchronizer
+		In actuality, they are both implemented using a common base class, Abstract-QueuedSynchronizer (AQS)as are many other synchronizers. AQS is a framework for building locks and synchronizers, and a surprisingly broad range of synchronizers can be built easily and efficiently using it. Not only are ReentrantLock and Semaphore built using AQS, but so are CountDownLatch, ReentrantReadWriteLock, SynchronousQueue,[12] and FutureTask.
+	AbstractQueuedSynchronizer
+		A synchronizer supporting exclusive acquisition should implement the protected methods TRyAcquire, TRyRelease, and isHeldExclusively, and those supporting shared acquisition should implement tryAcquireShared and TRyReleaseShared. The acquire, acquireShared, release, and releaseShared methods in AQS call the TRy forms of these methods in the synchronizer subclass to determine if the operation can proceed. The synchronizer subclass can use getState, setState, and compareAndSetState to examine and update the state according to its acquire and release semantics, and informs the base class through the return status whether the attempt to acquire or release the synchronizer was successful. For example, returning a negative value from TRyAcquireShared indicates acquisition failure; returning zero indicates the synchronizer was acquired exclusively; and returning a positive value indicates the synchronizer was acquired nonexclusively. The TRyRelease and TRyReleaseShared methods should return true if the release may have unblocked threads attempting to acquire the synchronizer.
+		A Simple Latch
+			None of the synchronizers in java.util.concurrent extends AQS directly ‐ they all delegate to private inner subclasses of AQS instead.
+	AQS in java.util.concurrent Synchronizer Classes
+		ReentrantLock
+		Semaphore and CountDownLatch
+			Semaphore uses the AQS synchronization state to hold the count of permits currently available. The tryAcquireShared method (see Listing 14.16) first computes the number of permits remaining, and if there are not enough, returns a value indicating that the acquire failed. If sufficient permits appear to be left, it attempts to atomically reduce the permit count using compareAndSetState. If that succeeds (meaning that the permit count had not changed since it last looked), it returns a value indicating that the acquire succeeded. The return value also encodes whether other shared acquisition attempts might succeed, in which case other waiting threads will also be unblocked.
+			CountDownLatch uses AQS in a similar manner to Semaphore: the synchronization state holds the current count. The countDown method calls release, which causes the counter to be decremented and unblocks waiting threads if the counter has reached zero; await calls acquire, which returns immediately if the counter has reached zero and otherwise blocks.
+		FutureTask
+			FutureTask uses the AQS synchronization state to hold the task statusrunning, completed, or cancelled. It also maintains additional state variables to hold the result of the computation or the exception it threw. It further maintains a reference to the thread that is running the computation (if it is currently in the running state), so that it can be interrupted if the task is cancelled.
+		ReentrantReadWriteLock	
+			The interface for ReadWriteLock suggests there are two locksa reader lock and a writer lockbut in the AQS‐based implementation of ReentrantReadWriteLock, a single AQS subclass manages both read and write locking. ReentrantRead-WriteLock uses 16 bits of the state for the write‐lock count, and the other 16 bits for the read‐lock count. Operations on the read lock use the shared acquire and release methods; operations on the write lock use the exclusive acquire and release methods.
+			Internally, AQS maintains a queue of waiting threads, keeping track of whether a thread has requested exclusive or shared access. In ReentrantRead-WriteLock, when the lock becomes available, if the thread at the head of the queue was looking for write access it will get it, and if the thread at the head of the queue was looking for read access, all queued threads up to the first writer will get it.[
+			This mechanism does not permit the choice of a reader‐preference or writer‐preference policy, as some read‐write lock implementations do. For that, either the AQS wait queue would need to be something other than a FIFO queue, or two queues would be needed. However, such a strict ordering policy is rarely needed in practice; if the nonfair version of ReentrantReadWriteLock does not offer acceptable liveness, the fair version usually provides satisfactory ordering and guarantees nonstarvation of readers and writers.
+	Summary
+		If you need to implement a state‐dependent class ‐ one whose methods must block if a state‐based precondition does not hold ‐ the best strategy is usually to build upon an existing library class such as Semaphore, BlockingQueue, or CountDownLatch, as in ValueLatch on page 187. However, sometimes existing library classes do not provide a sufficient foundation; in these cases, you can build your own synchronizers using intrinsic condition queues, explicit Condition objects, or AbstractQueuedSynchronizer. Intrinsic condition queues are tightly bound to intrinsic locking, since the mechanism for managing state dependence is necessarily tied to the mechanism for ensuring state consistency. Similarly, explicit Conditions are tightly bound to explicit Locks, and offer an extended feature set compared to intrinsic condition queues, including multiple wait sets per lock, interruptible or uninterruptible condition waits, fair or nonfair queuing, and deadline‐based waiting.
+		
+		
+Atomic Variables and Non-blocking Synchronzation
+	Much of the recent research on concurrent algorithms has focused on non‐blocking algorithms, which use low‐level atomic machine instructions such as compare‐and‐swap instead of locks to ensure data integrity under concurrent access.		
+	Disadvantages of Locking
+		Coordinating access to shared state using a consistent locking protocol ensures that whichever thread holds the lock guarding a set of variables has exclusive access to those variables, and that any changes made to those variables are visible to other threads that subsequently acquire the lock.
+		Modern JVMs can optimize uncontended lock acquisition and release fairly effectively, but if multiple threads request the lock at the same time the JVM enlists the help of the operating system. If it gets to this point, some unfortunate thread will be suspended and have to be resumed later.[1] When that thread is resumed, it may have to wait for other threads to finish their scheduling quanta before it is actually scheduled. Suspending and resuming a thread has a lot of overhead and generally entails a lengthy interruption. For lock‐based classes with fine‐grained operations (such as the synchronized collections classes, where most methods contain only a few operations), the ratio of scheduling overhead to useful work can be quite high when the lock is frequently contended.
+		A smart JVM need not necessarily suspend a thread if it contends for a lock; it could use profiling data to decide adaptively between suspension and spin locking based on how long the lock has been held during previous acquisitions.
+		Volatile variables are a lighter‐weight synchronization mechanism than locking because they do not involve context switches or thread scheduling. However, volatile variables have some limitations compared to locking: while they provide similar visibility guarantees, they cannot be used to construct atomic compound actions.
+	Hardware Support for Concurrency	
+		Compare and Swap
+			CAS has three operands ‐ a memory location V on which to operate, the expected old value A, and the new value B. CAS atomically updates V to the new value B, but only if the value in V matches the expected old value A; otherwise it does nothing. In either case, it returns the value currently in V.
+		A Non-blocking Counter
+			The language syntax for locking may be compact, but the work done by the JVM and OS to manage locks is not. Locking entails traversing a relatively complicated code path in the JVM and may entail OS‐level locking, thread suspension, and context switches. In the best case, locking requires at least one CAS, so using locks moves the CAS out of sight but doesn't save any actual execution cost. On the other hand, executing a CAS from within the program involves no JVM code, system calls, or scheduling activity. What looks like a longer code path at the application level is in fact a much shorter code path when JVM and OS activity are taken into account. The primary disadvantage of CAS is that it forces the caller to deal with contention (by retrying, backing off, or giving up), whereas locks deal with contention automatically by blocking until the lock is available.
+		CAS Support in the JVM
+	Atomic Variable Classes
+		While the atomic scalar classes extend Number, they do not extend the primitive wrapper classes such as Integer or Long. In fact, they cannot: the primitive wrapper classes are immutable whereas the atomic variable classes are mutable. The atomic variable classes also do not redefine hashCode or equals; each instance is distinct. Like most mutable objects, they are not good candidates for keys in hash‐based collections.
+		Atomic as "Better Volatiles"
+		Performance Comparison: Locks Versus Atomic Variables
+			As these graphs show, at high contention levels locking tends to outperform atomic variables, but at more realistic contention levels atomic variables outperform locks.
+			The same holds true in other domains: traffic lights provide better throughput for high traffic but rotaries provide better throughput for low traffic; the contention scheme used by Ethernet networks performs better at low traffic levels, but the token‐passing scheme used by token ring networks does better with heavy traffic.
+			In practice, atomics tend to scale better than locks because atomics deal more effectively with typical contention levels.
+			The performance reversal between locks and atomics at differing levels of contention illustrates the strengths and weaknesses of each. With low to moderate contention, atomics offer better scalability; with high contention, locks offer better contention avoidance. (CAS‐based algorithms also outperform lock‐based ones on single‐CPU systems, since a CAS always succeeds on a single‐CPU system except in the unlikely case that a thread is preempted in the middle of the read‐modify‐write operation.)
+	Non-blocking Algorithms
+		A Non-blocking Stack
+			The key to creating nonblocking algorithms is figuring out how to limit the scope of atomic changes to a single variable while maintaining data consistency.
+			compareAndSet, which has the memory effects of a volatile write. When a thread examines the stack, it does so by calling get on the same AtomicReference, which has the memory effects of a volatile read.
+		A Non-blocking LinkedList
+			To make the algorithm non‐blocking, we must ensure that the failure of a thread does not prevent other threads from making progress. Thus, the second trick is to make sure that if B arrives to find the data structure in the middle of an update by A, enough information is already embodied in the data structure for B to finish the update for A. If B "helps" A by finishing A's operation, B can proceed with its own operation without waiting for A. When A gets around to finishing its operation, it will find that B already did the job for it.
+		Atomic Field Updater
+			AtomicReferenceFieldUpdater, The atomic field updater classes (available in Integer, Long, and Reference versions) represent a reflection‐based "view" of an existing volatile field so that CAS can be used on existing volatile fields. The updater classes have no constructors; to create one, you call the newUpdater factory method, specifying the class and field name. The field updater classes are not tied to a specific instance; one can be used to update the target field for any instance of the target class. The atomicity guarantees for the updater classes are weaker than for the regular atomic classes because you cannot guarantee that the underlying fields will not be modified directlythe compareAndSet and arithmetic methods guarantee atomicity only with respect to other threads using the atomic field updater methods.
+		The ABA Problem
+	Summary
+		
+		
+The Java Memory Model
+	What is a Memory Model, and Why would I want One?
+		The Java Language Specification requires the JVM to maintain within thread as‐if‐serial semantics: as long as the program has the same result as if it were executed in program order in a strictly sequential environment, all these games are permissible.
+		Platform Memory Model
+			An architecture's memory model tells programs what guarantees they can expect from the memory system, and specifies the special instructions required (called memory barriers or fences) to get the additional memory coordination guarantees required when sharing data. In order to shield the Java developer from the differences between memory models across architectures, Java provides its own memory model, and the JVM deals with the differences between the JMM and the underlying platform's memory model by inserting memory barriers at the appropriate places.
+			The bottom line is that modern shared‐memory multiprocessors (and compilers) can do some surprising things when data is shared across threads, unless you've told them not to through the use of memory barriers. Fortunately, Java programs need not specify the placement of memory barriers; they need only identify when shared state is being accessed, through the proper use of synchronization.
+		Reordering
+			Synchronization inhibits the compiler, runtime, and hardware from reordering memory operations in ways that would violate the visibility guarantees provided by the JMM.
+			On most popular processor architectures, the memory model is strong enough that the performance cost of a volatile read is in line with that of a nonvolatile read.
+		The Java Memory Model in 500 Words or Less
+			The JMM defines a partial ordering [2] called happens‐before on all actions within the program.
+			The rules for happens‐before are:
+				? Program order rule. Each action in a thread happens‐before every action in that thread that comes later in the program order.
+				? Monitor lock rule. An unlock on a monitor lock happens‐before every subsequent lock on that same monitor lock.[3]
+				? Volatile variable rule. A write to a volatile field happens‐before every subsequent read of that same field.[4]
+				? Thread start rule. A call to Thread.start on a thread happens‐before every action in the started thread.
+				? Thread termination rule. Any action in a thread happens‐before any other thread detects that thread has terminated, either by successfully return from Thread.join or by Thread.isAlive returning false.
+				? Interruption rule. A thread calling interrupt on another thread happens‐before the interrupted thread detects the interrupt (either by having InterruptedException thrown, or invoking isInterrupted or interrupted).
+				? Finalizer rule. The end of a constructor for an object happens‐before the start of the finalizer for that object.
+				? Transitivity. If A happens‐before B, and B happens‐before C, then A happens‐before C.
+			Locks and unlocks on explicit Lock objects have the same memory semantics as intrinsic locks.
+			Reads and writes of atomic variables have the same memory semantics as volatile variables.
+		Piggybacking on Synchronization
+			Because of the strength of the happens‐before ordering, you can sometimes piggyback on the visibility properties of an existing synchronization. This entails combining the program order rule for happens‐before with one of the other ordering rules (usually the monitor lock or volatile variable rule) to order accesses to a variable not otherwise guarded by a lock.
+			The implementation of the protected AbstractQueuedSynchronizer methods in FutureTask illustrates piggybacking. AQS maintains an integer of synchronizer state that FutureTask uses to store the task state: running, completed, or cancelled. But FutureTask also maintains additional variables, such as the result of the computation. When one thread calls set to save the result and another thread calls get to retrieve it, the two had better be ordered by happens‐before. This could be done by making the reference to the result volatile, but it is possible to exploit existing synchronization to achieve the same result at lower cost.
+			We call this technique "piggybacking" because it uses an existing happens‐before ordering that was created for some other reason to ensure the visibility of object X, rather than creating a happens‐before ordering specifically for publishing X.
+			safe publication using a BlockingQueue is a form of piggybacking. One thread putting an object on a queue and another thread subsequently retrieving it constitutes safe publication because there is guaranteed to be sufficient internal synchronization in a BlockingQueue implementation to ensure that the enqueue happens‐before the dequeue.
+			Other happens‐before orderings guaranteed by the class library include:
+				? Placing an item in a thread‐safe collection happens‐before another thread retrieves that item from the collection;
+				? Counting down on a CountDownLatch happens‐before a thread returns from await on that latch;
+				? Releasing a permit to a Semaphore happens‐before acquiring a permit from that same Semaphore;
+				? Actions taken by the task represented by a Future happens‐before another thread successfully returns from Future.get;
+				? Submitting a Runnable or Callable to an Executor happens‐before the task begins execution; and
+				? A thread arriving at a CyclicBarrier or Exchanger happens‐before the other threads are released from that same barrier or exchange point. If CyclicBarrier uses a barrier action, arriving at the barrier happens‐before the barrier action, which in turn happens‐before threads are released from the barrier.
+	Publication
+		Unsafe Publication
+			With the exception of immutable objects, it is not safe to use an object that has been initialized by another thread unless the publication happens‐before the consuming thread uses it.
+		Safe Publication
+			This happens‐before guarantee is actually a stronger promise of visibility and ordering than made by safe publication. When X is safely published from A to B, the safe publication guarantees visibility of the state of X, but not of the state of other variables A may have touched. But if A putting X on a queue happens‐before B fetches X from that queue, not only does B see X in the state that A left it (assuming that X has not been subsequently modified by A or anyone else), but Bsees everything A did before the handoff (again, subject to the same caveat).
+		Safe Initialization Idioms
+			It sometimes makes sense to defer initialization of objects that are expensive to initialize until they are actually needed, but we have seen how the misuse of lazy initialization can lead to trouble. UnsafeLazyInitialization can be fixed by making the geTResource method synchronized
+			The treatment of static fields with initializers (or fields whose value is initialized in a static initialization block [JPL 2.2.1 and 2.5.3]) is somewhat special and offers additional thread‐safety guarantees. Static initializers are run by the JVM at class initialization time, after class loading but before the class is used by any thread. Because the JVM acquires a lock during initialization [JLS 12.4.2] and this lock is acquired by each thread at least once to ensure that the class has been loaded, memory writes made during static initialization are automatically visible to all threads. Thus statically initialized objects require no explicit synchronization either during construction or when being referenced. However, this applies only to the as‐constructed state ‐ if the object is mutable, synchronization is still required by both readers and writers to make subsequent modifications visible and to avoid data corruption.
+		Double-checked Locking
+			Initialization safety guarantees that for properly constructed objects, all threads will see the correct values of final fields that were set by the constructor, regardless of how the object is published. Further, any variables that can be reached through a final field of a properly constructed object (such as the elements of a final array or the contents of a HashMap referenced by a final field) are also guaranteed to be visible to other threads.
+			For objects with final fields, initialization safety prohibits reordering any part of construction with the initial load of a reference to that object. All writes to final fields made by the constructor, as well as to any variables reachable through those fields, become "frozen" when the constructor completes, and any thread that obtains a reference to that object is guaranteed to see a value that is at least as up to date as the frozen value. Writes that initialize variables reachable through final fields are not reordered with operations following the post‐construction freeze.
+			Initialization safety makes visibility guarantees only for the values that are reachable through final fields as of the time the constructor finishes. For values reachable through non‐final fields, or values that may change after construction, you must use synchronization to ensure visibility.
+	Summary
+		The Java Memory Model specifies when the actions of one thread on memory are guaranteed to be visible to another. The specifics involve ensuring that operations are ordered by a partial ordering called happens‐before, which is specified at the level of individual memory and synchronization operations. In the absence of sufficient synchronization, some very strange things can happen when threads access shared data.
