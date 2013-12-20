@@ -1,4 +1,4 @@
 Reading-Notes
 =============
 
-reading notes
+reading notes and logs
